@@ -4,6 +4,11 @@ namespace HttpSignatures;
 
 class Algorithm
 {
+    private function __construct()
+    {
+        // static class.
+    }
+
     public static function create($name)
     {
         switch ($name) {

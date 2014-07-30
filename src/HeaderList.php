@@ -4,7 +4,7 @@ namespace HttpSignatures;
 
 class HeaderList
 {
-    private $names;
+    public $names;
 
     public function __construct($names)
     {

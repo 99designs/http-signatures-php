@@ -14,4 +14,34 @@ class Signer
         $this->algorithm = $algorithm;
         $this->headerList = $headerList;
     }
+
+    public function sign($message)
+    {
+        $signatureParameters = $this->signatureParametersForMessage($message);
+        $message->headers->set("Signature", (string)$signatureParameters);
+        $message->headers->set("Authorization", "Signature " . (string)$signatureParameters);
+    }
+
+    private function signatureParametersForMessage($message)
+    {
+      return new SignatureParameters(
+        $this->key,
+        $this->algorithm,
+        $this->headerList,
+        $this->signatureForMessage($message)
+      );
+    }
+
+    private function signatureForMessage($message)
+    {
+        return $this->algorithm->sign(
+            $this->key->secret,
+            $this->signingStringForMessage($message)
+        );
+    }
+
+    private function signingStringForMessage($message)
+    {
+        return (string)new SigningString($this->headerList, $message);
+    }
 }
