@@ -4,15 +4,16 @@ namespace HttpSignatures;
 
 class Context
 {
-    private $keys;
     private $algorithm;
     private $headers;
+    private $keyStore;
+    private $keys;
     private $signingKeyId;
 
     public function __construct($args)
     {
-        $this->keyStore = new KeyStore($args['keys']);
-        $this->algorithm = $args['algorithm'];
+        $this->keys = $args['keys'];
+        $this->algorithmName = $args['algorithm'];
         $this->headers = $args['headers'];
         $this->signingKeyId = isset($args['signingKeyId']) ? $args['signingKeyId'] : null;
     }
@@ -21,17 +22,35 @@ class Context
     {
         return new Signer(
             $this->signingKey(),
-            null, // TODO: algorithm
-            null // TODO: headerList
+            $this->algorithm(),
+            $this->headerList()
         );
     }
 
     private function signingKey()
     {
         if ($this->signingKeyId) {
-            return $this->keyStore->fetch($this->signingKeyId);
+            return $this->keyStore()->fetch($this->signingKeyId);
         } else {
-            return $this->keyStore->onlyKey();
+            return $this->keyStore()->onlyKey();
         }
+    }
+
+    private function algorithm()
+    {
+        return Algorithm::create($this->algorithmName);
+    }
+
+    private function headerList()
+    {
+        return new HeaderList($this->headers);
+    }
+
+    private function keyStore()
+    {
+        if (empty($this->keyStore)) {
+            $this->keyStore = new KeyStore($this->keys);
+        }
+        return $this->keyStore;
     }
 }
