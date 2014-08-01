@@ -14,6 +14,11 @@ class HeaderList
         );
     }
 
+    public static function fromString($string)
+    {
+        return new static(explode(' ', $string));
+    }
+
     public function __toString()
     {
         return implode(' ', $this->names);
