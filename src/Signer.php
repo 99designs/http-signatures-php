@@ -2,6 +2,8 @@
 
 namespace HttpSignatures;
 
+use HttpSignatures\Signature;
+
 class Signer
 {
     private $key;
@@ -28,20 +30,17 @@ class Signer
         $this->key,
         $this->algorithm,
         $this->headerList,
-        $this->signatureForMessage($message)
+        $this->signature($message)
       );
     }
 
-    private function signatureForMessage($message)
+    private function signature($message)
     {
-        return $this->algorithm->sign(
-            $this->key->secret,
-            $this->signingStringForMessage($message)
+        return new Signature(
+            $message,
+            $this->key,
+            $this->algorithm,
+            $this->headerList
         );
-    }
-
-    private function signingStringForMessage($message)
-    {
-        return (string)new SigningString($this->headerList, $message);
     }
 }
