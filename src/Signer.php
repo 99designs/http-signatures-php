@@ -17,12 +17,12 @@ class Signer
 
     public function sign($message)
     {
-        $signatureParameters = $this->signatureParametersForMessage($message);
+        $signatureParameters = $this->signatureParameters($message);
         $message->headers->set("Signature", (string)$signatureParameters);
         $message->headers->set("Authorization", "Signature " . (string)$signatureParameters);
     }
 
-    private function signatureParametersForMessage($message)
+    private function signatureParameters($message)
     {
       return new SignatureParameters(
         $this->key,
