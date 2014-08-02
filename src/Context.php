@@ -56,6 +56,7 @@ class Context
         if (empty($this->keyStore)) {
             $this->keyStore = new KeyStore($this->keys);
         }
+
         return $this->keyStore;
     }
 }

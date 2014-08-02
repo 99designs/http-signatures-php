@@ -2,9 +2,6 @@
 
 namespace HttpSignatures;
 
-use HttpSignatures\Algorithm;
-use HttpSignatures\HeaderList;
-
 class Verification
 {
     private $message;
@@ -63,6 +60,7 @@ class Verification
         if (!isset($parameters[$name])) {
             throw new Exception("Signature parameters does not contain '$name'");
         }
+
         return $parameters[$name];
     }
 
@@ -72,6 +70,7 @@ class Verification
             $parser = new SignatureParametersParser($this->fetchHeader('Signature'));
             $this->_parameters = $parser->parse();
         }
+
         return $this->_parameters;
     }
 

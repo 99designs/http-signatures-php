@@ -2,8 +2,6 @@
 
 namespace HttpSignatures;
 
-use HttpSignatures\Signature;
-
 class Signer
 {
     private $key;

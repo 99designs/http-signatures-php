@@ -2,8 +2,6 @@
 
 namespace HttpSignatures;
 
-use HttpSignatures\Exception;
-
 class SignatureParametersParser
 {
     private $input;
@@ -26,6 +24,7 @@ class SignatureParametersParser
         foreach ($pairs as $pair) {
             $result[$pair[0]] = $pair[1];
         }
+
         return $result;
     }
 
@@ -51,6 +50,7 @@ class SignatureParametersParser
             throw new Exception("Signature parameters segment '$segment' invalid");
         }
         array_shift($matches);
+
         return $matches;
     }
 }

@@ -14,6 +14,7 @@ class Verifier
     public function isValid($message)
     {
         $verification = new Verification($message, $this->keyStore);
+
         return $verification->isValid();
     }
 }
