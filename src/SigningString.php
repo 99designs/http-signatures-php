@@ -13,7 +13,7 @@ class SigningString
         $this->message = $message;
     }
 
-    public function __toString()
+    public function string()
     {
         return implode("\n", $this->lines());
     }

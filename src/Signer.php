@@ -20,8 +20,8 @@ class Signer
     public function sign($message)
     {
         $signatureParameters = $this->signatureParameters($message);
-        $message->headers->set("Signature", (string)$signatureParameters);
-        $message->headers->set("Authorization", "Signature " . (string)$signatureParameters);
+        $message->headers->set("Signature", $signatureParameters->string());
+        $message->headers->set("Authorization", "Signature " . $signatureParameters->string());
     }
 
     private function signatureParameters($message)

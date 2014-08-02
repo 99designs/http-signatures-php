@@ -23,7 +23,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             "(request-target): get /path?query=123\ndate: Mon, 28 Jul 2014 15:39:13 -0700",
-            (string)$ss
+            $ss->string()
         );
     }
 
@@ -34,6 +34,6 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
     {
         $headerList = new HeaderList(array('nope'));
         $ss = new SigningString($headerList, $this->message);
-        $ss->__toString();
+        $ss->string();
     }
 }

@@ -12,7 +12,7 @@ class SignatureParameters
         $this->signature = $signature;
     }
 
-    public function __toString()
+    public function string()
     {
         return implode(',', $this->parameterComponents());
     }
@@ -22,13 +22,13 @@ class SignatureParameters
         return array(
             sprintf('keyId="%s"', $this->key->id),
             sprintf('algorithm="%s"', $this->algorithm->name()),
-            sprintf('headers="%s"', (string)$this->headerList),
+            sprintf('headers="%s"', $this->headerList->string()),
             sprintf('signature="%s"', $this->signatureBase64()),
         );
     }
 
     private function signatureBase64()
     {
-        return base64_encode($this->signature);
+        return base64_encode($this->signature->string());
     }
 }

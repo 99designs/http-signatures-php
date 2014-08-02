@@ -24,7 +24,7 @@ class Verification
 
     private function expectedSignatureBase64()
     {
-        return base64_encode($this->expectedSignature()->__toString());
+        return base64_encode($this->expectedSignature()->string());
     }
 
     private function expectedSignature()

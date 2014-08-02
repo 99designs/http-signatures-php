@@ -17,17 +17,17 @@ class Signature
         $this->headerList = $headerList;
     }
 
-    public function __toString()
+    public function string()
     {
         return $this->algorithm->sign(
             $this->key->secret,
-            $this->signingString()
+            $this->signingString()->string()
         );
     }
 
     private function signingString()
     {
-        return (string)new SigningString(
+        return new SigningString(
             $this->headerList,
             $this->message
         );

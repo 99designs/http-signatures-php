@@ -19,7 +19,7 @@ class HeaderList
         return new static(explode(' ', $string));
     }
 
-    public function __toString()
+    public function string()
     {
         return implode(' ', $this->names);
     }
