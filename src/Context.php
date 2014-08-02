@@ -27,6 +27,11 @@ class Context
         );
     }
 
+    public function verifier()
+    {
+        return new Verifier($this->keyStore());
+    }
+
     private function signingKey()
     {
         if ($this->signingKeyId) {

@@ -13,7 +13,7 @@ See also:
 Configure a context with your algorithm, keys, headers to sign.
 This is best placed in an application startup file.
 
-```rb
+```php
 use HttpSignatures\Context;
 
 $context = new Context(array(
@@ -34,7 +34,7 @@ headers via `$message->headers->get($name)` and set them via
 `$message->headers->set($name, $value)`, and for signing requests, methods to
 read the path, query string and request method.
 
-```rb
+```php
 use Symfony\Component\HttpFoundation\Request;
 
 $message = Request::create('/path?query=123', 'GET');
@@ -46,13 +46,13 @@ $message->headers->replace(array(
 
 ### Signing a message
 
-```rb
+```php
 $context->signer()->sign($message);
 ```
 
 Now `$message` contains the signature headers:
 
-```rb
+```php
 $message->headers->get('Signature');
 # keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
 
@@ -62,14 +62,9 @@ $message->headers->get('Authorization');
 
 ### Verifying a signed message
 
-Message verification is not implemented, but will look like this:
-
-* The key ID, algorithm name, header list and provided signature will be parsed
-  from the `Signature` and/or `Authorization` header.
-* The signing string will be derived by selecting the listed headers from the
-  message.
-* The valid signature will be derived by applying the algorithm and secret key.
-* The message is valid if the provided signature matches the valid signature.
+```php
+$context->verifier()->isValid($message); // true or false
+```
 
 
 ## Contributing

@@ -7,18 +7,23 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContextTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSigner()
+    private $context;
+
+    public function setUp()
     {
-        $context = new Context(array(
+        $this->context = new Context(array(
             'keys' => array('pda' => 'secret'),
             'algorithm' => 'hmac-sha256',
             'headers' => array('(request-target)', 'date'),
         ));
+    }
 
+    public function testSigner()
+    {
         $message = Request::create('/path?query=123', 'GET');
         $message->headers->replace(array('date' => 'today', 'accept' => 'llamas'));
 
-        $context->signer()->sign($message);
+        $this->context->signer()->sign($message);
 
         $expectedString = implode(',', array(
             'keyId="pda"',
@@ -36,5 +41,16 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'Signature ' . $expectedString,
             $message->headers->get('Authorization')
         );
+    }
+
+    public function testVerifier()
+    {
+        $message = Request::create('/path?query=123', 'GET');
+        $message->headers->replace(array(
+            'Signature' => 'keyId="pda",algorithm="hmac-sha1",headers="date",signature="x"',
+            'Date' => 'x',
+        ));
+        // assert it works without errors; correctness of results tested elsewhere.
+        $this->assertTrue(is_bool($this->context->verifier()->isValid($message)));
     }
 }
