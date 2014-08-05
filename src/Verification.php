@@ -21,7 +21,11 @@ class Verification
 
     private function signatureMatches()
     {
-        return $this->expectedSignatureBase64() === $this->providedSignatureBase64();
+        try {
+            return $this->expectedSignatureBase64() === $this->providedSignatureBase64();
+        } catch (SignatureParseException $e) {
+            return false;
+        }
     }
 
     private function expectedSignatureBase64()
