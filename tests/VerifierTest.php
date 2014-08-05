@@ -80,4 +80,10 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $this->message->headers->set('Signature', 'not="a",valid="signature"');
         $this->assertFalse($this->verifier->isValid($this->message));
     }
+
+    public function testRejectMessageWithPartialSignatureHeader()
+    {
+        $this->message->headers->set('Signature', 'keyId="aa",algorithm="bb"');
+        $this->assertFalse($this->verifier->isValid($this->message));
+    }
 }
