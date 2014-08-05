@@ -12,7 +12,15 @@ class Context
 
     public function __construct($args)
     {
-        $this->keys = $args['keys'];
+        if (isset($args['keys']) && isset($args['keyStore'])) {
+            throw new Exception(__CLASS__ . ' accepts keys or keyStore but not both');
+        } elseif (isset($args['keys'])) {
+            // array of keyId => keySecret
+            $this->keys = $args['keys'];
+        } elseif (isset($args['keyStore'])) {
+            // KeyStore-compatible object
+            $this->keyStore = $args['keyStore'];
+        }
         $this->algorithmName = $args['algorithm'];
         $this->headers = $args['headers'];
         $this->signingKeyId = isset($args['signingKeyId']) ? $args['signingKeyId'] : null;
