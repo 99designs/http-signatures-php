@@ -41,7 +41,7 @@ class SigningString
         if ($headers->has($name)) {
             return $headers->get($name);
         } else {
-            throw new Exception("Header '$name' not in message");
+            throw new SignedHeaderNotPresentException("Header '$name' not in message");
         }
     }
 
