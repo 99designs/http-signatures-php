@@ -32,7 +32,12 @@ class Context
             $this->headers = $args['headers'];
         }
 
-        $this->signingKeyId = isset($args['signingKeyId']) ? $args['signingKeyId'] : null;
+        // signingKeyId specifies the key used for signing messages.
+        if (isset($args['signingKeyId'])) {
+            $this->signingKeyId = $args['signingKeyId'];
+        } elseif (isset($args['keys']) && count($args['keys']) === 1) {
+            list($this->signingKeyId) = array_keys($args['keys']); // first key
+        }
     }
 
     public function signer()
@@ -51,10 +56,10 @@ class Context
 
     private function signingKey()
     {
-        if ($this->signingKeyId) {
+        if (isset($this->signingKeyId)) {
             return $this->keyStore()->fetch($this->signingKeyId);
         } else {
-            return $this->keyStore()->onlyKey();
+            throw new Exception('no implicit or specified signing key');
         }
     }
 

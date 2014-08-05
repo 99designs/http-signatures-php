@@ -22,14 +22,4 @@ class KeyStore
             throw new Exception("Key '$id' not found");
         }
     }
-
-    public function onlyKey()
-    {
-        $count = count($this->keys);
-        if ($count == 1) {
-            return reset($this->keys); // first item
-        } else {
-            throw new Exception("expected 1 key, found $count");
-        }
-    }
 }
