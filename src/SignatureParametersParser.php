@@ -47,7 +47,7 @@ class SignatureParametersParser
         $matches = array();
         $result = preg_match($segmentPattern, $segment, $matches);
         if ($result !== 1) {
-            throw new Exception("Signature parameters segment '$segment' invalid");
+            throw new SignatureParseException("Signature parameters segment '$segment' invalid");
         }
         array_shift($matches);
 

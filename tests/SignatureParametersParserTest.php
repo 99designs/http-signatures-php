@@ -21,4 +21,14 @@ class SignatureParametersParserTest extends \PHPUnit_Framework_TestCase
             $parser->parse()
         );
     }
+
+    /**
+     * @expectedException HttpSignatures\SignatureParseException
+     */
+    public function testParseThrowsTypedException()
+    {
+        $incompleteSignature = 'nope';
+        $parser = new SignatureParametersParser($incompleteSignature);
+        $parser->parse();
+    }
 }
