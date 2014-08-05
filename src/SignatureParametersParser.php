@@ -13,9 +13,11 @@ class SignatureParametersParser
 
     public function parse()
     {
-        return $this->pairsToAssociative(
+        $result = $this->pairsToAssociative(
             $this->arrayOfPairs()
         );
+        $this->validate($result);
+        return $result;
     }
 
     private function pairsToAssociative($pairs)
@@ -52,5 +54,22 @@ class SignatureParametersParser
         array_shift($matches);
 
         return $matches;
+    }
+
+    private function validate($result)
+    {
+        $this->validateAllKeysArePresent($result);
+    }
+
+    private function validateAllKeysArePresent($result)
+    {
+        // Regexp in pair() ensures no unwanted keys exist.
+        // Ensure that all wanted keys exist.
+        $wanted = array('keyId', 'algorithm', 'headers', 'signature');
+        $missing = array_diff($wanted, array_keys($result));
+        if (!empty($missing)) {
+            $csv = implode(', ', $missing);
+            throw new SignatureParseException("Missing keys $csv");
+        }
     }
 }

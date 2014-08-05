@@ -27,8 +27,18 @@ class SignatureParametersParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseThrowsTypedException()
     {
-        $incompleteSignature = 'nope';
-        $parser = new SignatureParametersParser($incompleteSignature);
+        $parser = new SignatureParametersParser('nope');
+        $parser->parse();
+    }
+
+    /**
+     * @expectedException HttpSignatures\SignatureParseException
+     */
+    public function testParseExceptionForMissingComponents()
+    {
+        $parser = new SignatureParametersParser(
+            'keyId="example",algorithm="hmac-sha1",headers="(request-target) date"'
+        );
         $parser->parse();
     }
 }
