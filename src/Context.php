@@ -21,7 +21,12 @@ class Context
             // KeyStore-compatible object
             $this->keyStore = $args['keyStore'];
         }
-        $this->algorithmName = $args['algorithm'];
+
+        // algorithm for signing; not necessary for verifying.
+        if (isset($args['algorithm'])) {
+            $this->algorithmName = $args['algorithm'];
+        }
+
         $this->headers = $args['headers'];
         $this->signingKeyId = isset($args['signingKeyId']) ? $args['signingKeyId'] : null;
     }
