@@ -93,4 +93,10 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $verifier = new Verifier($keyStore);
         $this->assertFalse($verifier->isValid($this->message));
     }
+
+    public function testRejectsMessageMissingSignedHeaders()
+    {
+        $this->message->headers->remove('Date');
+        $this->assertFalse($this->verifier->isValid($this->message));
+    }
 }

@@ -27,6 +27,8 @@ class Verification
             return false;
         } catch (KeyStoreException $e) {
             return false;
+        } catch (SignedHeaderNotPresentException $e) {
+            return false;
         }
     }
 
