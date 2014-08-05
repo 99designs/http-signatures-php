@@ -16,7 +16,8 @@ class Verification
 
     public function isValid()
     {
-        return $this->expectedSignatureBase64() === $this->providedSignatureBase64();
+        return $this->hasHeader('Signature') &&
+            $this->expectedSignatureBase64() === $this->providedSignatureBase64();
     }
 
     private function expectedSignatureBase64()
@@ -82,5 +83,10 @@ class Verification
         } else {
             throw new Exception("HTTP message has no '$name' header");
         }
+    }
+
+    private function hasHeader($name)
+    {
+        return $this->message->headers->has($name);
     }
 }

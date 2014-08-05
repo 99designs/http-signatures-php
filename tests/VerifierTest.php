@@ -68,4 +68,10 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertFalse($this->verifier->isValid($this->message));
     }
+
+    public function testRejectMessageWithoutSignatureHeader()
+    {
+        $this->message->headers->remove('Signature');
+        $this->assertFalse($this->verifier->isValid($this->message));
+    }
 }
