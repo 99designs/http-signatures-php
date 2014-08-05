@@ -16,7 +16,7 @@ class Verification
 
     public function isValid()
     {
-        return $this->hasHeader('Signature') && $this->signatureMatches();
+        return $this->hasSignatureHeader() && $this->signatureMatches();
     }
 
     private function signatureMatches()
@@ -72,11 +72,21 @@ class Verification
     private function parameters()
     {
         if (!isset($this->_parameters)) {
-            $parser = new SignatureParametersParser($this->fetchHeader('Signature'));
+            $parser = new SignatureParametersParser($this->signatureHeader());
             $this->_parameters = $parser->parse();
         }
 
         return $this->_parameters;
+    }
+
+    private function hasSignatureHeader()
+    {
+        return $this->message->headers->has('Signature');
+    }
+
+    private function signatureHeader()
+    {
+        return $this->fetchHeader('Signature');
     }
 
     private function fetchHeader($name)
@@ -87,10 +97,5 @@ class Verification
         } else {
             throw new Exception("HTTP message has no '$name' header");
         }
-    }
-
-    private function hasHeader($name)
-    {
-        return $this->message->headers->has($name);
     }
 }
