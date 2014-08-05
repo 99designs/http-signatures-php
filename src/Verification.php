@@ -16,8 +16,12 @@ class Verification
 
     public function isValid()
     {
-        return $this->hasHeader('Signature') &&
-            $this->expectedSignatureBase64() === $this->providedSignatureBase64();
+        return $this->hasHeader('Signature') && $this->signatureMatches();
+    }
+
+    private function signatureMatches()
+    {
+        return $this->expectedSignatureBase64() === $this->providedSignatureBase64();
     }
 
     private function expectedSignatureBase64()
