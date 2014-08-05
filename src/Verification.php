@@ -25,6 +25,8 @@ class Verification
             return $this->expectedSignatureBase64() === $this->providedSignatureBase64();
         } catch (SignatureParseException $e) {
             return false;
+        } catch (KeyStoreException $e) {
+            return false;
         }
     }
 
