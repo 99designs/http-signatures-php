@@ -19,7 +19,7 @@ class KeyStore
         if (isset($this->keys[$id])) {
             return $this->keys[$id];
         } else {
-            throw new Exception("Key '$id' not found");
+            throw new KeyStoreException("Key '$id' not found");
         }
     }
 }
