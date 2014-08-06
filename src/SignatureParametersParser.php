@@ -17,6 +17,7 @@ class SignatureParametersParser
             $this->arrayOfPairs()
         );
         $this->validate($result);
+
         return $result;
     }
 
