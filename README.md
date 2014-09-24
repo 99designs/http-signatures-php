@@ -5,6 +5,7 @@ cryptographically sign and verify HTTP requests and responses.
 
 See also:
 
+* https://github.com/99designs/http-signatures-guzzle
 * https://github.com/99designs/http-signatures-ruby
 
 
