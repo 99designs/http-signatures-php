@@ -5,10 +5,15 @@ namespace HttpSignatures;
 class Verification
 {
     private $message;
+
+    /**
+     * @var KeyStoreInterface
+     */
     private $keyStore;
+
     private $_parameters;
 
-    public function __construct($message, $keyStore)
+    public function __construct($message, KeyStoreInterface $keyStore)
     {
         $this->message = $message;
         $this->keyStore = $keyStore;

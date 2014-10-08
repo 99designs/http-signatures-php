@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-class KeyStore
+class KeyStore implements KeyStoreInterface
 {
     private $keys;
 

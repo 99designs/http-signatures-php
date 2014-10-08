@@ -4,9 +4,12 @@ namespace HttpSignatures;
 
 class Verifier
 {
+    /**
+     * @var KeyStoreInterface
+     */
     private $keyStore;
 
-    public function __construct($keyStore)
+    public function __construct(KeyStoreInterface $keyStore)
     {
         $this->keyStore = $keyStore;
     }

@@ -6,6 +6,9 @@ class Context
 {
     private $algorithm;
     private $headers;
+    /**
+     * @var KeyStoreInterface
+     */
     private $keyStore;
     private $keys;
     private $signingKeyId;
@@ -19,6 +22,9 @@ class Context
             $this->keys = $args['keys'];
         } elseif (isset($args['keyStore'])) {
             // KeyStore-compatible object
+            if (!($args['keyStore'] instanceof KeyStoreInterface)) {
+                throw new \Exception("KeyStore should implement KeyStoreInterface");
+            }
             $this->keyStore = $args['keyStore'];
         }
 
