@@ -89,21 +89,29 @@ class Verification
 
     private function hasSignatureHeader()
     {
-        return $this->message->headers->has('Signature');
+        return $this->message->headers->has('Signature') || $this->message->headers->has('Authorization');
     }
 
     private function signatureHeader()
     {
-        return $this->fetchHeader('Signature');
+        if ($signature = $this->fetchHeader('Signature', true)) {
+            return $signature;
+        } else if ($authorization = $this->fetchHeader('Authorization', true)) {
+            return substr($authorization, strlen('Signature '));
+        } else {
+            throw new Exception("HTTP message has no Signature or Authorization header");
+        }
     }
 
-    private function fetchHeader($name)
+    private function fetchHeader($name, $silent = false)
     {
         $headers = $this->message->headers;
         if ($headers->has($name)) {
             return $headers->get($name);
-        } else {
+        } else if (!$silent) {
             throw new Exception("HTTP message has no '$name' header");
+        } else {
+            return null;
         }
     }
 }
