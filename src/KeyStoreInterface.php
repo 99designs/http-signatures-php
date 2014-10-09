@@ -5,10 +5,7 @@ namespace HttpSignatures;
 interface KeyStoreInterface
 {
     /**
-     * return the secret for the specified key_id
-     *
-     * @param $id
-     * @return string|null
+     * return the secret for the specified $keyId
      */
-    public function fetch($id);
+    public function fetch($keyId);
 }

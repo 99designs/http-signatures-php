@@ -4,11 +4,7 @@ namespace HttpSignatures;
 
 class Context
 {
-    private $algorithm;
     private $headers;
-    /**
-     * @var KeyStoreInterface
-     */
     private $keyStore;
     private $keys;
     private $signingKeyId;
@@ -21,11 +17,7 @@ class Context
             // array of keyId => keySecret
             $this->keys = $args['keys'];
         } elseif (isset($args['keyStore'])) {
-            // KeyStore-compatible object
-            if (!($args['keyStore'] instanceof KeyStoreInterface)) {
-                throw new \Exception("KeyStore should implement KeyStoreInterface");
-            }
-            $this->keyStore = $args['keyStore'];
+            $this->setKeyStore($args['keyStore']);
         }
 
         // algorithm for signing; not necessary for verifying.
@@ -86,5 +78,10 @@ class Context
         }
 
         return $this->keyStore;
+    }
+
+    private function setKeyStore(KeyStoreInterface $keyStore)
+    {
+        $this->keyStore = $keyStore;
     }
 }
