@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-class KeyStore
+class KeyStore implements KeyStoreInterface
 {
     private $keys;
 
@@ -14,12 +14,12 @@ class KeyStore
         }
     }
 
-    public function fetch($id)
+    public function fetch($keyId)
     {
-        if (isset($this->keys[$id])) {
-            return $this->keys[$id];
+        if (isset($this->keys[$keyId])) {
+            return $this->keys[$keyId];
         } else {
-            throw new KeyStoreException("Key '$id' not found");
+            throw new KeyStoreException("Key '$keyId' not found");
         }
     }
 }

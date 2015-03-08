@@ -4,7 +4,6 @@ namespace HttpSignatures;
 
 class Context
 {
-    private $algorithm;
     private $headers;
     private $keyStore;
     private $keys;
@@ -18,8 +17,7 @@ class Context
             // array of keyId => keySecret
             $this->keys = $args['keys'];
         } elseif (isset($args['keyStore'])) {
-            // KeyStore-compatible object
-            $this->keyStore = $args['keyStore'];
+            $this->setKeyStore($args['keyStore']);
         }
 
         // algorithm for signing; not necessary for verifying.
@@ -80,5 +78,10 @@ class Context
         }
 
         return $this->keyStore;
+    }
+
+    private function setKeyStore(KeyStoreInterface $keyStore)
+    {
+        $this->keyStore = $keyStore;
     }
 }
