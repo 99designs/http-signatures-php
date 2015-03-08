@@ -11,7 +11,14 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     const DATE = "Fri, 01 Aug 2014 13:44:32 -0700";
     const DATE_DIFFERENT = "Fri, 01 Aug 2014 13:44:33 -0700";
 
+    /**
+     * @var Verifier
+     */
     private $verifier;
+
+    /**
+     * @var Request
+     */
     private $message;
 
     public function setUp()
@@ -39,12 +46,20 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $this->message = Request::create('/path?query=123', 'GET');
         $this->message->headers->replace(array(
             "Date" => self::DATE,
-            "Signature" => $signatureHeader,
+            "Signature" => $signatureHeader
         ));
     }
 
     public function testVerifyValidMessage()
     {
+        $this->assertTrue($this->verifier->isValid($this->message));
+    }
+
+    public function testVerifyValidMessageAuthorizationHeader()
+    {
+        $this->message->headers->set('Authorization', "Signature {$this->message->headers->get('Signature')}");
+        $this->message->headers->remove('Signature');
+
         $this->assertTrue($this->verifier->isValid($this->message));
     }
 
