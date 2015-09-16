@@ -12,7 +12,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->message = Request::create('/path?query=123', 'GET');
+        $this->message = Request::create('/path?query=123&another=yes', 'GET');
         $this->message->headers->replace(array('date' => 'Mon, 28 Jul 2014 15:39:13 -0700'));
     }
 
@@ -22,7 +22,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
         $ss = new SigningString($headerList, $this->message);
 
         $this->assertEquals(
-            "(request-target): get /path?query=123\ndate: Mon, 28 Jul 2014 15:39:13 -0700",
+            "(request-target): get /path?query=123&another=yes\ndate: Mon, 28 Jul 2014 15:39:13 -0700",
             $ss->string()
         );
     }
