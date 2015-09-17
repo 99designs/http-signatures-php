@@ -27,10 +27,18 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testWithoutQueryString()
+    {
+        $message = Request::create('/path', 'GET');
+        $headerList = new HeaderList(array('(request-target)'));
+        $ss = new SigningString($headerList, $message);
+        $this->assertEquals("(request-target): get /path", $ss->string());
+    }
+
     /**
      * @expectedException HttpSignatures\Exception
      */
-    public function testSigningStringHandlesDuplicateHeaders()
+    public function testSigningStringErrorForMissingHeader()
     {
         $headerList = new HeaderList(array('nope'));
         $ss = new SigningString($headerList, $this->message);

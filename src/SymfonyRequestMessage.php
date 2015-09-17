@@ -22,7 +22,11 @@ class SymfonyRequestMessage
     {
         // Symfony\Component\HttpFoundation\Request::getQueryString() is not
         // suitable for HTTP signatures as it mangles the query string.
-        return $this->request->server->get('QUERY_STRING');
+        if ($this->request->getQueryString() === null) {
+            return null;
+        } else {
+            return $this->request->server->get('QUERY_STRING');
+        }
     }
 
     public function getMethod()
