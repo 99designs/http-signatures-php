@@ -62,11 +62,12 @@ class SigningString
 
     private function getPathWithQueryString()
     {
+        $path = $this->message->getPathInfo();
         $qs = $this->message->getQueryString();
         if ($qs === null) {
-            return $this->message->getPathInfo();
+            return $path;
         } else {
-            return sprintf('%s?%s', $this->message->getPathInfo(), $qs);
+            return "$path?$qs";
         }
     }
 }
