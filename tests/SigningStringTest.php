@@ -10,29 +10,37 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
 {
     private $message;
 
-    public function setUp()
+    public function testWithoutQueryString()
     {
-        $this->message = Request::create('/path?query=123&another=yes', 'GET');
-        $this->message->headers->replace(array('date' => 'Mon, 28 Jul 2014 15:39:13 -0700'));
-    }
-
-    public function testSigningString()
-    {
-        $headerList = new HeaderList(array('(request-target)', 'date'));
-        $ss = new SigningString($headerList, $this->message);
+        $headerList = new HeaderList(array('(request-target)'));
+        $ss = new SigningString($headerList, $this->message('/path'));
 
         $this->assertEquals(
-            "(request-target): get /path?query=123&another=yes\ndate: Mon, 28 Jul 2014 15:39:13 -0700",
+            "(request-target): get /path",
             $ss->string()
         );
     }
 
-    public function testWithoutQueryString()
+    public function testSigningStringWithOrderedQueryParameters()
     {
-        $message = Request::create('/path', 'GET');
-        $headerList = new HeaderList(array('(request-target)'));
-        $ss = new SigningString($headerList, $message);
-        $this->assertEquals("(request-target): get /path", $ss->string());
+        $headerList = new HeaderList(array('(request-target)', 'date'));
+        $ss = new SigningString($headerList, $this->message('/path?a=antelope&z=zebra'));
+
+        $this->assertEquals(
+            "(request-target): get /path?a=antelope&z=zebra\ndate: Mon, 28 Jul 2014 15:39:13 -0700",
+            $ss->string()
+        );
+    }
+
+    public function testSigningStringWithUnorderedQueryParameters()
+    {
+        $headerList = new HeaderList(array('(request-target)', 'date'));
+        $ss = new SigningString($headerList, $this->message('/path?z=zebra&a=antelope'));
+
+        $this->assertEquals(
+            "(request-target): get /path?z=zebra&a=antelope\ndate: Mon, 28 Jul 2014 15:39:13 -0700",
+            $ss->string()
+        );
     }
 
     /**
@@ -41,7 +49,14 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
     public function testSigningStringErrorForMissingHeader()
     {
         $headerList = new HeaderList(array('nope'));
-        $ss = new SigningString($headerList, $this->message);
+        $ss = new SigningString($headerList, $this->message('/'));
         $ss->string();
+    }
+
+    private function message($path)
+    {
+        $m = Request::create($path, 'GET');
+        $m->headers->replace(array('date' => 'Mon, 28 Jul 2014 15:39:13 -0700'));
+        return $m;
     }
 }
