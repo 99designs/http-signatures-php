@@ -74,8 +74,11 @@ $context->verifier()->isValid($message); // true or false
 
 Pull Requests are welcome.
 
-
 [draft03]: http://tools.ietf.org/html/draft-cavage-http-signatures-03
 [Symfony\Component\HttpFoundation\Request]: https://github.com/symfony/HttpFoundation/blob/master/Request.php
 [composer]: https://getcomposer.org/
 [package]: https://packagist.org/packages/99designs/http-signatures
+
+## License
+
+HTTP Signatures is licensed under [The MIT License (MIT)](LICENSE).
