@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-use HttpSignatures\SymfonyRequestMessage;
+use Symfony\Component\HttpFoundation\Request;
 
 class SigningString
 {
@@ -12,7 +12,7 @@ class SigningString
     public function __construct($headerList, $message)
     {
         $this->headerList = $headerList;
-        if ($message instanceof \Symfony\Component\HttpFoundation\Request) {
+        if ($message instanceof Request) {
             $this->message = new SymfonyRequestMessage($message);
         } else {
             $this->message = $message;
