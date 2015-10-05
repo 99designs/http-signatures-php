@@ -1,7 +1,6 @@
 {
     "name": "99designs/http-signatures",
     "description": "Sign and verify HTTP messages",
-    "homepage": "https://github.com/99designs/http-signatures-php",
     "keywords": ["http", "https", "signing", "signed", "signature", "hmac"],
     "license": "MIT",
     "authors": [
