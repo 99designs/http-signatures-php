@@ -1,6 +1,6 @@
 <?php
 
-namespace HttpSignatures\Test;
+namespace HttpSignatures\Tests;
 
 use HttpSignatures\Context;
 use Symfony\Component\HttpFoundation\Request;

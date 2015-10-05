@@ -15,6 +15,11 @@
             "HttpSignatures\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "HttpSignatures\\Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": ">=5.3.3",
         "symfony/http-foundation": "~2.5"
