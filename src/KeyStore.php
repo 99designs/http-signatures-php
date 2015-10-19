@@ -4,8 +4,12 @@ namespace HttpSignatures;
 
 class KeyStore implements KeyStoreInterface
 {
+    /** @var Key[] */
     private $keys;
 
+    /**
+     * @param array $keys
+     */
     public function __construct($keys)
     {
         $this->keys = array();
@@ -14,6 +18,11 @@ class KeyStore implements KeyStoreInterface
         }
     }
 
+    /**
+     * @param string $keyId
+     * @return Key
+     * @throws KeyStoreException
+     */
     public function fetch($keyId)
     {
         if (isset($this->keys[$keyId])) {

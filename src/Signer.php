@@ -4,10 +4,20 @@ namespace HttpSignatures;
 
 class Signer
 {
+    /** @var Key */
     private $key;
+
+    /** @var HmacAlgorithm */
     private $algorithm;
+
+    /** @var HeaderList */
     private $headerList;
 
+    /**
+     * @param Key $key
+     * @param HmacAlgorithm $algorithm
+     * @param HeaderList $headerList
+     */
     public function __construct($key, $algorithm, $headerList)
     {
         $this->key = $key;
@@ -15,6 +25,9 @@ class Signer
         $this->headerList = $headerList;
     }
 
+    /**
+     * @param $message
+     */
     public function sign($message)
     {
         $signatureParameters = $this->signatureParameters($message);
@@ -22,6 +35,10 @@ class Signer
         $message->headers->set("Authorization", "Signature " . $signatureParameters->string());
     }
 
+    /**
+     * @param $message
+     * @return SignatureParameters
+     */
     private function signatureParameters($message)
     {
       return new SignatureParameters(
@@ -32,6 +49,10 @@ class Signer
       );
     }
 
+    /**
+     * @param $message
+     * @return Signature
+     */
     private function signature($message)
     {
         return new Signature(
