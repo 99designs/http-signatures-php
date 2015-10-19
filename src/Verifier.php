@@ -19,6 +19,7 @@ class Verifier
 
     /**
      * @param Request|SymfonyRequestMessage $message
+     *
      * @return bool
      */
     public function isValid($message)

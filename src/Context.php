@@ -18,12 +18,13 @@ class Context
 
     /**
      * @param array $args
+     *
      * @throws Exception
      */
     public function __construct($args)
     {
         if (isset($args['keys']) && isset($args['keyStore'])) {
-            throw new Exception(__CLASS__ . ' accepts keys or keyStore but not both');
+            throw new Exception(__CLASS__.' accepts keys or keyStore but not both');
         } elseif (isset($args['keys'])) {
             // array of keyId => keySecret
             $this->keys = $args['keys'];
@@ -51,6 +52,7 @@ class Context
 
     /**
      * @return Signer
+     *
      * @throws Exception
      */
     public function signer()
@@ -72,6 +74,7 @@ class Context
 
     /**
      * @return Key
+     *
      * @throws Exception
      * @throws KeyStoreException
      */
@@ -86,6 +89,7 @@ class Context
 
     /**
      * @return HmacAlgorithm
+     *
      * @throws Exception
      */
     private function algorithm()

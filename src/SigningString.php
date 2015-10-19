@@ -13,7 +13,7 @@ class SigningString
     private $message;
 
     /**
-     * @param HeaderList $headerList
+     * @param HeaderList                    $headerList
      * @param Request|SymfonyRequestMessage $message
      */
     public function __construct($headerList, $message)
@@ -47,7 +47,9 @@ class SigningString
 
     /**
      * @param string $name
+     *
      * @return string
+     *
      * @throws SignedHeaderNotPresentException
      */
     private function line($name)
@@ -61,7 +63,9 @@ class SigningString
 
     /**
      * @param string $name
+     *
      * @return string
+     *
      * @throws SignedHeaderNotPresentException
      */
     private function headerValue($name)

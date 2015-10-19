@@ -13,13 +13,14 @@ class HeaderList
     public function __construct($names)
     {
         $this->names = array_map(
-            array($this, "normalize"),
+            array($this, 'normalize'),
             $names
         );
     }
 
     /**
      * @param $string
+     *
      * @return HeaderList
      */
     public static function fromString($string)
@@ -37,6 +38,7 @@ class HeaderList
 
     /**
      * @param $name
+     *
      * @return string
      */
     private function normalize($name)

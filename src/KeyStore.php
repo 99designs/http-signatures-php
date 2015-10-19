@@ -20,7 +20,9 @@ class KeyStore implements KeyStoreInterface
 
     /**
      * @param string $keyId
+     *
      * @return Key
+     *
      * @throws KeyStoreException
      */
     public function fetch($keyId)
