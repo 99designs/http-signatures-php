@@ -2,8 +2,8 @@
 
 namespace HttpSignatures\Tests;
 
+use GuzzleHttp\Psr7\Request;
 use HttpSignatures\Context;
-use Symfony\Component\HttpFoundation\Request;
 
 class ContextTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,10 +20,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function testSigner()
     {
-        $message = Request::create('/path?query=123', 'GET');
-        $message->headers->replace(array('date' => 'today', 'accept' => 'llamas'));
-
-        $this->context->signer()->sign($message);
+        $message = new Request('GET', '/path?query=123', ['date' => 'today', 'accept' => 'llamas']);
+        $message = $this->context->signer()->sign($message);
 
         $expectedString = implode(',', array(
             'keyId="pda"',
@@ -34,22 +32,22 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $expectedString,
-            $message->headers->get('Signature')
+            $message->getHeader('Signature')[0]
         );
 
         $this->assertEquals(
             'Signature ' . $expectedString,
-            $message->headers->get('Authorization')
+            $message->getHeader('Authorization')[0]
         );
     }
 
     public function testVerifier()
     {
-        $message = Request::create('/path?query=123', 'GET');
-        $message->headers->replace(array(
+        $message = $this->context->signer()->sign(new Request('GET', '/path?query=123', [
             'Signature' => 'keyId="pda",algorithm="hmac-sha1",headers="date",signature="x"',
             'Date' => 'x',
-        ));
+        ]));
+
         // assert it works without errors; correctness of results tested elsewhere.
         $this->assertTrue(is_bool($this->context->verifier()->isValid($message)));
     }

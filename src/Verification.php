@@ -173,6 +173,8 @@ class Verification
      */
     private function fetchHeader($name)
     {
-        return $this->message->getHeader($name);
+        // grab the most recently set header.
+        $header = $this->message->getHeader($name);
+        return end($header);
     }
 }
