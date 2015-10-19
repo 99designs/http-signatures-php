@@ -64,7 +64,8 @@ class SigningString
     private function headerValue($name)
     {
         if ($this->message->hasHeader($name)) {
-            return $this->message->getHeader($name);
+            $header = $this->message->getHeader($name);
+            return end($header);
         } else {
             throw new SignedHeaderNotPresentException("Header '$name' not in message");
         }
@@ -89,7 +90,7 @@ class SigningString
     {
         $path = $this->message->getUri()->getPath();
         $qs = $this->message->getUri()->getQuery();
-        if ($qs === null) {
+        if (empty($qs)) {
             return $path;
         } else {
             return "$path?$qs";

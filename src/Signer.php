@@ -2,6 +2,8 @@
 
 namespace HttpSignatures;
 
+use Psr\Http\Message\MessageInterface;
+
 class Signer
 {
     /** @var Key */
@@ -26,17 +28,18 @@ class Signer
     }
 
     /**
-     * @param $message
+     * @param MessageInterface $message
      */
     public function sign($message)
     {
         $signatureParameters = $this->signatureParameters($message);
-        $message->headers->set("Signature", $signatureParameters->string());
-        $message->headers->set("Authorization", "Signature " . $signatureParameters->string());
+        $message = $message->withAddedHeader("Signature", $signatureParameters->string());
+        $message = $message->withAddedHeader("Authorization", "Signature " . $signatureParameters->string());
+        return $message;
     }
 
     /**
-     * @param $message
+     * @param MessageInterface $message
      * @return SignatureParameters
      */
     private function signatureParameters($message)
@@ -50,7 +53,7 @@ class Signer
     }
 
     /**
-     * @param $message
+     * @param MessageInterface $message
      * @return Signature
      */
     private function signature($message)
