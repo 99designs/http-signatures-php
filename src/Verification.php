@@ -2,11 +2,11 @@
 
 namespace HttpSignatures;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\MessageInterface;
 
 class Verification
 {
-    /** @var Request|SymfonyRequestMessage */
+    /** @var MessageInterface */
     private $message;
 
     /** @var KeyStoreInterface */
@@ -16,10 +16,10 @@ class Verification
     private $_parameters;
 
     /**
-     * @param Request|SymfonyRequestMessage $message
+     * @param MessageInterface $message
      * @param KeyStoreInterface $keyStore
      */
-    public function __construct($message, KeyStoreInterface $keyStore)
+    public function __construct($message, $keyStore)
     {
         $this->message = $message;
         $this->keyStore = $keyStore;
@@ -140,7 +140,7 @@ class Verification
      */
     private function hasSignatureHeader()
     {
-        return $this->message->headers->has('Signature') || $this->message->headers->has('Authorization');
+        return $this->message->hasHeader('Signature') || $this->message->hasHeader('Authorization');
     }
 
     /**
@@ -164,7 +164,6 @@ class Verification
      */
     private function fetchHeader($name)
     {
-        $headers = $this->message->headers;
-        return $headers->has($name) ? $headers->get($name) : null;
+        return $this->message->getHeader($name);
     }
 }

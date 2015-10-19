@@ -41,12 +41,12 @@ class Signer
      */
     private function signatureParameters($message)
     {
-      return new SignatureParameters(
-        $this->key,
-        $this->algorithm,
-        $this->headerList,
-        $this->signature($message)
-      );
+        return new SignatureParameters(
+            $this->key,
+            $this->algorithm,
+            $this->headerList,
+            $this->signature($message)
+        );
     }
 
     /**

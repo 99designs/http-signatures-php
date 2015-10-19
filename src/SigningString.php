@@ -2,28 +2,25 @@
 
 namespace HttpSignatures;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
 
 class SigningString
 {
     /** @var HeaderList */
     private $headerList;
 
-    /** @var Request|SymfonyRequestMessage */
+    /** @var RequestInterface */
     private $message;
 
     /**
      * @param HeaderList $headerList
-     * @param Request|SymfonyRequestMessage $message
+     * @param MessageInterface $message
      */
     public function __construct($headerList, $message)
     {
         $this->headerList = $headerList;
-        if ($message instanceof Request) {
-            $this->message = new SymfonyRequestMessage($message);
-        } else {
-            $this->message = $message;
-        }
+        $this->message = $message;
     }
 
     /**
@@ -66,9 +63,8 @@ class SigningString
      */
     private function headerValue($name)
     {
-        $headers = $this->message->headers;
-        if ($headers->has($name)) {
-            return $headers->get($name);
+        if ($this->message->hasHeader($name)) {
+            return $this->message->getHeader($name);
         } else {
             throw new SignedHeaderNotPresentException("Header '$name' not in message");
         }
@@ -91,8 +87,8 @@ class SigningString
      */
     private function getPathWithQueryString()
     {
-        $path = $this->message->getPathInfo();
-        $qs = $this->message->getQueryString();
+        $path = $this->message->getUri()->getPath();
+        $qs = $this->message->getUri()->getQuery();
         if ($qs === null) {
             return $path;
         } else {
