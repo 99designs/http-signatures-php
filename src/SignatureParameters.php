@@ -5,10 +5,10 @@ namespace HttpSignatures;
 class SignatureParameters
 {
     /**
-     * @param Key $key
+     * @param Key           $key
      * @param HmacAlgorithm $algorithm
-     * @param HeaderList $headerList
-     * @param Signature $signature
+     * @param HeaderList    $headerList
+     * @param Signature     $signature
      */
     public function __construct($key, $algorithm, $headerList, $signature)
     {

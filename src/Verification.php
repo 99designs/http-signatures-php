@@ -17,7 +17,7 @@ class Verification
 
     /**
      * @param Request|SymfonyRequestMessage $message
-     * @param KeyStoreInterface $keyStore
+     * @param KeyStoreInterface             $keyStore
      */
     public function __construct($message, KeyStoreInterface $keyStore)
     {
@@ -72,6 +72,7 @@ class Verification
 
     /**
      * @return string
+     *
      * @throws Exception
      */
     private function providedSignatureBase64()
@@ -81,6 +82,7 @@ class Verification
 
     /**
      * @return Key
+     *
      * @throws Exception
      */
     private function key()
@@ -90,6 +92,7 @@ class Verification
 
     /**
      * @return HmacAlgorithm
+     *
      * @throws Exception
      */
     private function algorithm()
@@ -99,6 +102,7 @@ class Verification
 
     /**
      * @return HeaderList
+     *
      * @throws Exception
      */
     private function headerList()
@@ -108,7 +112,9 @@ class Verification
 
     /**
      * @param string $name
+     *
      * @return string
+     *
      * @throws Exception
      */
     private function parameter($name)
@@ -123,6 +129,7 @@ class Verification
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     private function parameters()
@@ -145,26 +152,29 @@ class Verification
 
     /**
      * @return string
+     *
      * @throws Exception
      */
     private function signatureHeader()
     {
         if ($signature = $this->fetchHeader('Signature')) {
             return $signature;
-        } else if ($authorization = $this->fetchHeader('Authorization')) {
+        } elseif ($authorization = $this->fetchHeader('Authorization')) {
             return substr($authorization, strlen('Signature '));
         } else {
-            throw new Exception("HTTP message has no Signature or Authorization header");
+            throw new Exception('HTTP message has no Signature or Authorization header');
         }
     }
 
     /**
      * @param $name
+     *
      * @return string|null
      */
     private function fetchHeader($name)
     {
         $headers = $this->message->headers;
+
         return $headers->has($name) ? $headers->get($name) : null;
     }
 }

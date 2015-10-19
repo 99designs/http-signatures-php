@@ -14,9 +14,9 @@ class Signer
     private $headerList;
 
     /**
-     * @param Key $key
+     * @param Key           $key
      * @param HmacAlgorithm $algorithm
-     * @param HeaderList $headerList
+     * @param HeaderList    $headerList
      */
     public function __construct($key, $algorithm, $headerList)
     {
@@ -31,17 +31,18 @@ class Signer
     public function sign($message)
     {
         $signatureParameters = $this->signatureParameters($message);
-        $message->headers->set("Signature", $signatureParameters->string());
-        $message->headers->set("Authorization", "Signature " . $signatureParameters->string());
+        $message->headers->set('Signature', $signatureParameters->string());
+        $message->headers->set('Authorization', 'Signature '.$signatureParameters->string());
     }
 
     /**
      * @param $message
+     *
      * @return SignatureParameters
      */
     private function signatureParameters($message)
     {
-      return new SignatureParameters(
+        return new SignatureParameters(
         $this->key,
         $this->algorithm,
         $this->headerList,
@@ -51,6 +52,7 @@ class Signer
 
     /**
      * @param $message
+     *
      * @return Signature
      */
     private function signature($message)

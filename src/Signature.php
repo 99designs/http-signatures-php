@@ -20,9 +20,9 @@ class Signature
 
     /**
      * @param Request|SymfonyRequestMessage $message
-     * @param Key $key
-     * @param HmacAlgorithm $algorithm
-     * @param HeaderList $headerList
+     * @param Key                           $key
+     * @param HmacAlgorithm                 $algorithm
+     * @param HeaderList                    $headerList
      */
     public function __construct($message, $key, $algorithm, $headerList)
     {
