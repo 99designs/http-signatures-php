@@ -2,49 +2,37 @@
 
 namespace HttpSignatures;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\MessageInterface;
 
 class Signature
 {
-    /** @var Request|SymfonyRequestMessage */
-    private $message;
-
     /** @var Key */
     private $key;
 
     /** @var HmacAlgorithm */
     private $algorithm;
 
-    /** @var HeaderList */
-    private $headerList;
+    /** @var SigningString */
+    private $signingString;
 
     /**
-     * @param Request|SymfonyRequestMessage $message
-     * @param Key                           $key
-     * @param HmacAlgorithm                 $algorithm
-     * @param HeaderList                    $headerList
+     * @param MessageInterface $message
+     * @param Key $key
+     * @param HmacAlgorithm $algorithm
+     * @param HeaderList $headerList
      */
     public function __construct($message, $key, $algorithm, $headerList)
     {
-        $this->message = $message;
         $this->key = $key;
         $this->algorithm = $algorithm;
-        $this->headerList = $headerList;
+        $this->signingString = new SigningString($headerList, $message);
     }
 
     public function string()
     {
         return $this->algorithm->sign(
             $this->key->secret,
-            $this->signingString()->string()
-        );
-    }
-
-    private function signingString()
-    {
-        return new SigningString(
-            $this->headerList,
-            $this->message
+            $this->signingString->string()
         );
     }
 }
