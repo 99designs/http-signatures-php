@@ -4,13 +4,20 @@ namespace HttpSignatures;
 
 class SignatureParametersParser
 {
+    /** @var string */
     private $input;
 
+    /**
+     * @param string $input
+     */
     public function __construct($input)
     {
         $this->input = $input;
     }
 
+    /**
+     * @return array
+     */
     public function parse()
     {
         $result = $this->pairsToAssociative(
@@ -21,6 +28,10 @@ class SignatureParametersParser
         return $result;
     }
 
+    /**
+     * @param array $pairs
+     * @return array
+     */
     private function pairsToAssociative($pairs)
     {
         $result = array();
@@ -31,6 +42,9 @@ class SignatureParametersParser
         return $result;
     }
 
+    /**
+     * @return array
+     */
     private function arrayOfPairs()
     {
         return array_map(
@@ -39,11 +53,19 @@ class SignatureParametersParser
         );
     }
 
+    /**
+     * @return array
+     */
     private function segments()
     {
         return explode(',', $this->input);
     }
 
+    /**
+     * @param $segment
+     * @return array
+     * @throws SignatureParseException
+     */
     private function pair($segment)
     {
         $segmentPattern = '/\A(keyId|algorithm|headers|signature)="(.*)"\z/';
@@ -57,11 +79,19 @@ class SignatureParametersParser
         return $matches;
     }
 
+    /**
+     * @param $result
+     * @throws SignatureParseException
+     */
     private function validate($result)
     {
         $this->validateAllKeysArePresent($result);
     }
 
+    /**
+     * @param $result
+     * @throws SignatureParseException
+     */
     private function validateAllKeysArePresent($result)
     {
         // Regexp in pair() ensures no unwanted keys exist.

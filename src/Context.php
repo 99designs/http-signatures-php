@@ -4,11 +4,22 @@ namespace HttpSignatures;
 
 class Context
 {
+    /** @var array */
     private $headers;
+
+    /** @var KeyStoreInterface */
     private $keyStore;
+
+    /** @var array */
     private $keys;
+
+    /** @var string */
     private $signingKeyId;
 
+    /**
+     * @param array $args
+     * @throws Exception
+     */
     public function __construct($args)
     {
         if (isset($args['keys']) && isset($args['keyStore'])) {
@@ -38,6 +49,10 @@ class Context
         }
     }
 
+    /**
+     * @return Signer
+     * @throws Exception
+     */
     public function signer()
     {
         return new Signer(
@@ -47,11 +62,19 @@ class Context
         );
     }
 
+    /**
+     * @return Verifier
+     */
     public function verifier()
     {
         return new Verifier($this->keyStore());
     }
 
+    /**
+     * @return Key
+     * @throws Exception
+     * @throws KeyStoreException
+     */
     private function signingKey()
     {
         if (isset($this->signingKeyId)) {
@@ -61,16 +84,26 @@ class Context
         }
     }
 
+    /**
+     * @return HmacAlgorithm
+     * @throws Exception
+     */
     private function algorithm()
     {
         return Algorithm::create($this->algorithmName);
     }
 
+    /**
+     * @return HeaderList
+     */
     private function headerList()
     {
         return new HeaderList($this->headers);
     }
 
+    /**
+     * @return KeyStore
+     */
     private function keyStore()
     {
         if (empty($this->keyStore)) {
@@ -80,6 +113,9 @@ class Context
         return $this->keyStore;
     }
 
+    /**
+     * @param KeyStoreInterface $keyStore
+     */
     private function setKeyStore(KeyStoreInterface $keyStore)
     {
         $this->keyStore = $keyStore;

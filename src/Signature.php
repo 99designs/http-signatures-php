@@ -2,13 +2,28 @@
 
 namespace HttpSignatures;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class Signature
 {
+    /** @var Request|SymfonyRequestMessage */
     private $message;
+
+    /** @var Key */
     private $key;
+
+    /** @var HmacAlgorithm */
     private $algorithm;
+
+    /** @var HeaderList */
     private $headerList;
 
+    /**
+     * @param Request|SymfonyRequestMessage $message
+     * @param Key $key
+     * @param HmacAlgorithm $algorithm
+     * @param HeaderList $headerList
+     */
     public function __construct($message, $key, $algorithm, $headerList)
     {
         $this->message = $message;

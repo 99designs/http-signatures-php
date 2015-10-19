@@ -6,9 +6,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SigningString
 {
+    /** @var HeaderList */
     private $headerList;
+
+    /** @var Request|SymfonyRequestMessage */
     private $message;
 
+    /**
+     * @param HeaderList $headerList
+     * @param Request|SymfonyRequestMessage $message
+     */
     public function __construct($headerList, $message)
     {
         $this->headerList = $headerList;
@@ -19,11 +26,17 @@ class SigningString
         }
     }
 
+    /**
+     * @return string
+     */
     public function string()
     {
         return implode("\n", $this->lines());
     }
 
+    /**
+     * @return array
+     */
     private function lines()
     {
         return array_map(
@@ -32,6 +45,11 @@ class SigningString
         );
     }
 
+    /**
+     * @param string $name
+     * @return string
+     * @throws SignedHeaderNotPresentException
+     */
     private function line($name)
     {
         if ($name == '(request-target)') {
@@ -41,6 +59,11 @@ class SigningString
         }
     }
 
+    /**
+     * @param string $name
+     * @return string
+     * @throws SignedHeaderNotPresentException
+     */
     private function headerValue($name)
     {
         $headers = $this->message->headers;
@@ -51,6 +74,9 @@ class SigningString
         }
     }
 
+    /**
+     * @return string
+     */
     private function requestTargetLine()
     {
         return sprintf(
@@ -60,6 +86,9 @@ class SigningString
         );
     }
 
+    /**
+     * @return string
+     */
     private function getPathWithQueryString()
     {
         $path = $this->message->getPathInfo();

@@ -9,6 +9,11 @@ class Algorithm
         // static class.
     }
 
+    /**
+     * @param string $name
+     * @return HmacAlgorithm
+     * @throws Exception
+     */
     public static function create($name)
     {
         switch ($name) {
