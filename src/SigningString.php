@@ -2,28 +2,26 @@
 
 namespace HttpSignatures;
 
-use Symfony\Component\HttpFoundation\Request;
+use HttpSignatures\Message\MessageInterface;
 
 class SigningString
 {
     /** @var HeaderList */
     private $headerList;
 
-    /** @var Request|SymfonyRequestMessage */
+    /**
+     * @var MessageInterface
+     */
     private $message;
 
     /**
-     * @param HeaderList                    $headerList
-     * @param Request|SymfonyRequestMessage $message
+     * @param HeaderList $headerList
+     * @param MessageInterface $message
      */
-    public function __construct($headerList, $message)
+    public function __construct($headerList, MessageInterface $message)
     {
         $this->headerList = $headerList;
-        if ($message instanceof Request) {
-            $this->message = new SymfonyRequestMessage($message);
-        } else {
-            $this->message = $message;
-        }
+        $this->message = $message;
     }
 
     /**
@@ -46,10 +44,8 @@ class SigningString
     }
 
     /**
-     * @param string $name
-     *
+     * @param $name
      * @return string
-     *
      * @throws SignedHeaderNotPresentException
      */
     private function line($name)
@@ -62,19 +58,17 @@ class SigningString
     }
 
     /**
-     * @param string $name
-     *
-     * @return string
-     *
+     * @param $name
+     * @return mixed
      * @throws SignedHeaderNotPresentException
      */
     private function headerValue($name)
     {
-        $headers = $this->message->headers;
-        if ($headers->has($name)) {
-            return $headers->get($name);
+        $headers = $this->message->getHeaders();
+        if (isset($headers[$name])) {
+            return $headers[$name][0];
         } else {
-            throw new SignedHeaderNotPresentException("Header '$name' not in message");
+            throw new SignedHeaderNotPresentException("Header '{$name}' not in message");
         }
     }
 
@@ -86,21 +80,7 @@ class SigningString
         return sprintf(
             '(request-target): %s %s',
             strtolower($this->message->getMethod()),
-            $this->getPathWithQueryString()
+            $this->message->getRequestTarget()
         );
-    }
-
-    /**
-     * @return string
-     */
-    private function getPathWithQueryString()
-    {
-        $path = $this->message->getPathInfo();
-        $qs = $this->message->getQueryString();
-        if ($qs === null) {
-            return $path;
-        } else {
-            return "$path?$qs";
-        }
     }
 }
