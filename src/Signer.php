@@ -2,6 +2,9 @@
 
 namespace HttpSignatures;
 
+use HttpSignatures\Message\MessageInterface;
+use HttpSignatures\Message\SymfonyRequestMessage;
+
 class Signer
 {
     /** @var Key */
@@ -25,37 +28,30 @@ class Signer
         $this->headerList = $headerList;
     }
 
-    /**
-     * @param $message
-     */
     public function sign($message)
     {
+        if ($message instanceof \Symfony\Component\HttpFoundation\Request) {
+            $message = new SymfonyRequestMessage($message);
+        } else if (!($message instanceof MessageInterface)) {
+            throw new \InvalidArgumentException("\$message should be instance of \\HttpSignatures\\Message\\MessageInterface, instace of " . get_class($message) . " given");
+        }
+
         $signatureParameters = $this->signatureParameters($message);
-        $message->headers->set('Signature', $signatureParameters->string());
-        $message->headers->set('Authorization', 'Signature '.$signatureParameters->string());
+        $message->setHeader("Signature", $signatureParameters->string());
+        $message->setHeader("Authorization", "Signature " . $signatureParameters->string());
     }
 
-    /**
-     * @param $message
-     *
-     * @return SignatureParameters
-     */
-    private function signatureParameters($message)
+    private function signatureParameters(MessageInterface $message)
     {
         return new SignatureParameters(
-        $this->key,
-        $this->algorithm,
-        $this->headerList,
-        $this->signature($message)
-      );
+            $this->key,
+            $this->algorithm,
+            $this->headerList,
+            $this->signature($message)
+        );
     }
 
-    /**
-     * @param $message
-     *
-     * @return Signature
-     */
-    private function signature($message)
+    private function signature(MessageInterface $message)
     {
         return new Signature(
             $message,

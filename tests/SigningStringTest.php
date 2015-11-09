@@ -3,13 +3,13 @@
 namespace HttpSignatures\Tests;
 
 use HttpSignatures\HeaderList;
+use HttpSignatures\Message\MessageInterface;
+use HttpSignatures\Message\SymfonyRequestMessage;
 use HttpSignatures\SigningString;
 use Symfony\Component\HttpFoundation\Request;
 
 class SigningStringTest extends \PHPUnit_Framework_TestCase
 {
-    private $message;
-
     public function testWithoutQueryString()
     {
         $headerList = new HeaderList(array('(request-target)'));
@@ -44,7 +44,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException HttpSignatures\Exception
+     * @expectedException \HttpSignatures\Exception
      */
     public function testSigningStringErrorForMissingHeader()
     {
@@ -53,10 +53,14 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
         $ss->string();
     }
 
+    /**
+     * @param $path
+     * @return MessageInterface
+     */
     private function message($path)
     {
         $m = Request::create($path, 'GET');
         $m->headers->replace(array('date' => 'Mon, 28 Jul 2014 15:39:13 -0700'));
-        return $m;
+        return new SymfonyRequestMessage($m);
     }
 }

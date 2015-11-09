@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContextTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Context
+     */
     private $context;
 
     public function setUp()
