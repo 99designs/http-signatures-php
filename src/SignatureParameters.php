@@ -6,11 +6,11 @@ class SignatureParameters
 {
     /**
      * @param Key $key
-     * @param HmacAlgorithm $algorithm
+     * @param AlgorithmInterface $algorithm
      * @param HeaderList $headerList
      * @param Signature $signature
      */
-    public function __construct($key, $algorithm, $headerList, $signature)
+    public function __construct(Key $key, AlgorithmInterface $algorithm, HeaderList $headerList, Signature $signature)
     {
         $this->key = $key;
         $this->algorithm = $algorithm;

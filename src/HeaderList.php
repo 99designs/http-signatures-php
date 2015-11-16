@@ -10,7 +10,7 @@ class HeaderList
     /**
      * @param array $names
      */
-    public function __construct($names)
+    public function __construct(array $names)
     {
         $this->names = array_map(
             array($this, "normalize"),

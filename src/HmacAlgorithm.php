@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-class HmacAlgorithm
+class HmacAlgorithm implements AlgorithmInterface
 {
     /** @var string */
     private $digestName;

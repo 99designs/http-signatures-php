@@ -18,10 +18,10 @@ class Signature
     /**
      * @param MessageInterface $message
      * @param Key $key
-     * @param HmacAlgorithm $algorithm
+     * @param AlgorithmInterface $algorithm
      * @param HeaderList $headerList
      */
-    public function __construct($message, $key, $algorithm, $headerList)
+    public function __construct(MessageInterface $message, Key $key, AlgorithmInterface $algorithm, HeaderList $headerList)
     {
         $this->key = $key;
         $this->algorithm = $algorithm;

@@ -21,7 +21,7 @@ class Verifier
      * @param MessageInterface $message
      * @return bool
      */
-    public function isValid($message)
+    public function isValid(MessageInterface $message)
     {
         $verification = new Verification($message, $this->keyStore);
 

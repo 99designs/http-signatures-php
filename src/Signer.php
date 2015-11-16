@@ -29,8 +29,9 @@ class Signer
 
     /**
      * @param MessageInterface $message
+     * @return MessageInterface
      */
-    public function sign($message)
+    public function sign(MessageInterface $message)
     {
         $signatureParameters = $this->signatureParameters($message);
         $message = $message->withAddedHeader("Signature", $signatureParameters->string());
