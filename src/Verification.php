@@ -19,7 +19,7 @@ class Verification
      * @param MessageInterface $message
      * @param KeyStoreInterface $keyStore
      */
-    public function __construct($message, $keyStore)
+    public function __construct(MessageInterface $message, $keyStore)
     {
         $this->message = $message;
         $this->keyStore = $keyStore;

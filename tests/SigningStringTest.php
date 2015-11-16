@@ -4,6 +4,7 @@ namespace HttpSignatures\Tests;
 
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\HeaderList;
+use HttpSignatures\HttpMessageFactory;
 use HttpSignatures\SigningString;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -66,7 +67,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException HttpSignatures\Exception
+     * @expectedException \HttpSignatures\Exception
      */
     public function testSigningStringErrorForMissingHeader()
     {
@@ -85,7 +86,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
         $symfonyRequest = SymfonyRequest::create($path, 'GET');
         $symfonyRequest->headers->replace(array('date' => 'Mon, 28 Jul 2014 15:39:13 -0700'));
 
-        $psr7Factory = new DiactorosFactory();
+        $psr7Factory = new HttpMessageFactory();
         $psrRequest = $psr7Factory->createRequest($symfonyRequest);
 
         return $psrRequest;
