@@ -9,6 +9,13 @@ php:
   - 7.0
   - hhvm
 
-install: composer install
+install: composer require --no-update symfony/http-foundation $SYMFONY_VERSION; composer install
 
 script: vendor/bin/phpunit
+
+env:
+  - SYMFONY_VERSION: ~2.5.0
+  - SYMFONY_VERSION: ~2.6.0
+  - SYMFONY_VERSION: ~2.7.0
+  - SYMFONY_VERSION: ~2.8.0
+  - SYMFONY_VERSION: ~3.0.0
