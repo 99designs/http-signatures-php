@@ -40,7 +40,7 @@ class SigningString
     private function lines()
     {
         return array_map(
-            array($this, 'line'),
+            [$this, 'line'],
             $this->headerList->names
         );
     }

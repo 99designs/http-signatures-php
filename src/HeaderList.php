@@ -13,7 +13,7 @@ class HeaderList
     public function __construct($names)
     {
         $this->names = array_map(
-            array($this, 'normalize'),
+            [$this, 'normalize'],
             $names
         );
     }

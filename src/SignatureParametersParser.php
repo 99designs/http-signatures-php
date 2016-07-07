@@ -35,7 +35,7 @@ class SignatureParametersParser
      */
     private function pairsToAssociative($pairs)
     {
-        $result = array();
+        $result = [];
         foreach ($pairs as $pair) {
             $result[$pair[0]] = $pair[1];
         }
@@ -49,7 +49,7 @@ class SignatureParametersParser
     private function arrayOfPairs()
     {
         return array_map(
-            array($this, 'pair'),
+            [$this, 'pair'],
             $this->segments()
         );
     }
@@ -72,7 +72,7 @@ class SignatureParametersParser
     private function pair($segment)
     {
         $segmentPattern = '/\A(keyId|algorithm|headers|signature)="(.*)"\z/';
-        $matches = array();
+        $matches = [];
         $result = preg_match($segmentPattern, $segment, $matches);
         if ($result !== 1) {
             throw new SignatureParseException("Signature parameters segment '$segment' invalid");
@@ -101,7 +101,7 @@ class SignatureParametersParser
     {
         // Regexp in pair() ensures no unwanted keys exist.
         // Ensure that all wanted keys exist.
-        $wanted = array('keyId', 'algorithm', 'headers', 'signature');
+        $wanted = ['keyId', 'algorithm', 'headers', 'signature'];
         $missing = array_diff($wanted, array_keys($result));
         if (!empty($missing)) {
             $csv = implode(', ', $missing);

@@ -12,7 +12,7 @@ class KeyStore implements KeyStoreInterface
      */
     public function __construct($keys)
     {
-        $this->keys = array();
+        $this->keys = [];
         foreach ($keys as $id => $secret) {
             $this->keys[$id] = new Key($id, $secret);
         }

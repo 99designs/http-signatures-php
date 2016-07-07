@@ -7,7 +7,7 @@ php:
 
 install: composer require --no-update symfony/http-foundation $SYMFONY_VERSION; composer install
 
-script: vendor/bin/phpunit
+script: vendor/bin/phpunit && vendor/bin/php-cs-fixer fix -v --dry-run
 
 env:
   - SYMFONY_VERSION: ~2.8.0
