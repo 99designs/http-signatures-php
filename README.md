@@ -1,11 +1,11 @@
 # HTTP Signatures
 
 PHP implementation of [HTTP Signatures][draft03] draft specification;
-cryptographically sign and verify HTTP requests and responses.
+allowing cryptographic signing and verifying of [PSR7 messages][psr7]).
 
 See also:
 
-* https://github.com/99designs/http-signatures-guzzle
+* https://github.com/99designs/http-signatures-guzzlehttp
 * https://github.com/99designs/http-signatures-ruby
 
 
@@ -31,21 +31,7 @@ Otherwise, specify one via `'signingKeyId' => 'examplekey'`.
 
 ### Messages
 
-A message is an HTTP request or response. A subset of the interface of
-[Symfony\Component\HttpFoundation\Request] is expected; the ability to read
-headers via `$message->headers->get($name)` and set them via
-`$message->headers->set($name, $value)`, and for signing requests, methods to
-read the path, query string and request method.
-
-```php
-use Symfony\Component\HttpFoundation\Request;
-
-$message = Request::create('/path?query=123', 'GET');
-$message->headers->replace(array(
-  'Date' => 'Wed, 30 Jul 2014 16:40:19 -0700',
-  'Accept' => 'llamas',
-));
-```
+A message is assumed to be a PSR-7 compatible request or response object.
 
 ### Signing a message
 
@@ -57,10 +43,10 @@ Now `$message` contains the signature headers:
 
 ```php
 $message->headers->get('Signature');
-# keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
+// keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
 
 $message->headers->get('Authorization');
-# Signature keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
+// Signature keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
 ```
 
 ### Verifying a signed message
@@ -68,7 +54,6 @@ $message->headers->get('Authorization');
 ```php
 $context->verifier()->isValid($message); // true or false
 ```
-
 
 ## Contributing
 
@@ -78,6 +63,7 @@ Pull Requests are welcome.
 [Symfony\Component\HttpFoundation\Request]: https://github.com/symfony/HttpFoundation/blob/master/Request.php
 [composer]: https://getcomposer.org/
 [package]: https://packagist.org/packages/99designs/http-signatures
+[psr7]: http://www.php-fig.org/psr/psr-7/
 
 ## License
 
