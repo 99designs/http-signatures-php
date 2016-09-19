@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\MessageInterface;
 
 class Verifier
 {
@@ -18,11 +18,10 @@ class Verifier
     }
 
     /**
-     * @param Request|SymfonyRequestMessage $message
-     *
+     * @param MessageInterface $message
      * @return bool
      */
-    public function isValid($message)
+    public function isValid(MessageInterface $message)
     {
         $verification = new Verification($message, $this->keyStore);
 
