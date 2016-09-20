@@ -1,6 +1,6 @@
 <?php
 
-namespace HttpSignatures\Tests;
+namespace HttpSignatures\tests;
 
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\Context;
@@ -11,11 +11,11 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->context = new Context(array(
-            'keys' => array('pda' => 'secret'),
+        $this->context = new Context([
+            'keys' => ['pda' => 'secret'],
             'algorithm' => 'hmac-sha256',
-            'headers' => array('(request-target)', 'date'),
-        ));
+            'headers' => ['(request-target)', 'date'],
+        ]);
     }
 
     public function testSigner()
@@ -23,12 +23,12 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $message = new Request('GET', '/path?query=123', ['date' => 'today', 'accept' => 'llamas']);
         $message = $this->context->signer()->sign($message);
 
-        $expectedString = implode(',', array(
+        $expectedString = implode(',', [
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date"',
             'signature="SFlytCGpsqb/9qYaKCQklGDvwgmrwfIERFnwt+yqPJw="',
-        ));
+        ]);
 
         $this->assertEquals(
             $expectedString,

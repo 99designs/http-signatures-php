@@ -1,6 +1,6 @@
 <?php
 
-namespace HttpSignatures\Tests;
+namespace HttpSignatures\tests;
 
 use HttpSignatures\KeyStore;
 
@@ -8,7 +8,7 @@ class KeyStoreTest extends \PHPUnit_Framework_TestCase
 {
     public function testFetchSuccess()
     {
-        $ks = new KeyStore(array('id' => 'secret'));
+        $ks = new KeyStore(['id' => 'secret']);
         $key = $ks->fetch('id');
         $this->assertEquals('id', $key->id);
         $this->assertEquals('secret', $key->secret);
@@ -19,7 +19,7 @@ class KeyStoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetchFail()
     {
-        $ks = new KeyStore(array('id' => 'secret'));
+        $ks = new KeyStore(['id' => 'secret']);
         $key = $ks->fetch('nope');
     }
 }

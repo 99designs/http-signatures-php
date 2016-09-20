@@ -2,13 +2,8 @@
 
 namespace HttpSignatures;
 
-class Algorithm
+abstract class Algorithm
 {
-    private function __construct()
-    {
-        // static class.
-    }
-
     /**
      * @param string $name
      *

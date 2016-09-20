@@ -1,6 +1,6 @@
 <?php
 
-namespace HttpSignatures\Tests;
+namespace HttpSignatures\tests;
 
 use HttpSignatures\SignatureParametersParser;
 
@@ -12,12 +12,12 @@ class SignatureParametersParserTest extends \PHPUnit_Framework_TestCase
             'keyId="example",algorithm="hmac-sha1",headers="(request-target) date",signature="b64"'
         );
         $this->assertEquals(
-            array(
+            [
                 'keyId' => 'example',
                 'algorithm' => 'hmac-sha1',
                 'headers' => '(request-target) date',
                 'signature' => 'b64',
-            ),
+            ],
             $parser->parse()
         );
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace HttpSignatures\Tests;
+namespace HttpSignatures\tests;
 
 use HttpSignatures\HeaderList;
 
@@ -8,7 +8,7 @@ class HeaderListTest extends \PHPUnit_Framework_TestCase
 {
     public function testToString()
     {
-        $hl = new HeaderList(array('(request-target)', 'Date'));
+        $hl = new HeaderList(['(request-target)', 'Date']);
         $this->assertEquals('(request-target) date', $hl->string());
     }
 

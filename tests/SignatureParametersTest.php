@@ -1,9 +1,9 @@
 <?php
 
-namespace HttpSignatures\Tests;
+namespace HttpSignatures\tests;
 
-use HttpSignatures\HmacAlgorithm;
 use HttpSignatures\HeaderList;
+use HttpSignatures\HmacAlgorithm;
 use HttpSignatures\Key;
 use HttpSignatures\SignatureParameters;
 
@@ -13,7 +13,7 @@ class SignatureParametersTest extends \PHPUnit_Framework_TestCase
     {
         $key = new Key('pda', 'secret');
         $algorithm = new HmacAlgorithm('sha256');
-        $headerList = new HeaderList(array('(request-target)', 'date'));
+        $headerList = new HeaderList(['(request-target)', 'date']);
 
         $signature = $this->getMockBuilder('HttpSignatures\Signature')
             ->disableOriginalConstructor()

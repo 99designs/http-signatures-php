@@ -1,6 +1,6 @@
 <?php
 
-namespace HttpSignatures\Tests;
+namespace HttpSignatures\tests;
 
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
@@ -29,7 +29,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     private function setUpVerifier()
     {
-        $keyStore = new KeyStore(array("pda" => "secret"));
+        $keyStore = new KeyStore(["pda" => "secret"]);
         $this->verifier = new Verifier($keyStore);
     }
 
@@ -103,7 +103,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     public function testRejectsMessageWithUnknownKeyId()
     {
-        $keyStore = new KeyStore(array("nope" => "secret"));
+        $keyStore = new KeyStore(["nope" => "secret"]);
         $verifier = new Verifier($keyStore);
         $this->assertFalse($verifier->isValid($this->message));
     }

@@ -21,11 +21,11 @@ This is best placed in an application startup file.
 ```php
 use HttpSignatures\Context;
 
-$context = new Context(array(
-  'keys' => array('examplekey' => 'secret-key-here'),
+$context = new Context([
+  'keys' => ['examplekey' => 'secret-key-here'],
   'algorithm' => 'hmac-sha256',
-  'headers' => array('(request-target)', 'Date', 'Accept'),
-));
+  'headers' => ['(request-target)', 'Date', 'Accept'],
+]);
 ```
 
 If there's only one key in the `keys` hash, that will be used for signing.
