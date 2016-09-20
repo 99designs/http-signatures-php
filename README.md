@@ -1,7 +1,8 @@
-# HTTP Signatures
+HTTP Signatures
+===
 
 PHP implementation of [HTTP Signatures][draft03] draft specification;
-allowing cryptographic signing and verifying of [PSR7 messages][psr7]).
+allowing cryptographic signing and verifying of [PSR7 messages][psr7].
 
 See also:
 
@@ -9,7 +10,8 @@ See also:
 * https://github.com/99designs/http-signatures-ruby
 
 
-## Usage
+Usage
+---
 
 Add [99designs/http-signatures][package] to your [composer.json][composer].
 
@@ -33,7 +35,7 @@ Otherwise, specify one via `'signingKeyId' => 'examplekey'`.
 
 A message is assumed to be a PSR-7 compatible request or response object.
 
-### Signing a message
+#### Signing a message
 
 ```php
 $context->signer()->sign($message);
@@ -49,10 +51,20 @@ $message->headers->get('Authorization');
 // Signature keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
 ```
 
-### Verifying a signed message
+#### Verifying a signed message
 
 ```php
 $context->verifier()->isValid($message); // true or false
+```
+
+### Symfony Integration
+
+Also included is a `HttpMessageFactory` class for converting Symfony `Request` objects into PSR-7 compatible messages.
+
+```php
+$symfonyRequest = \Symfony\Component\HttpFoundation\Request::create('/foo');
+$psr7Factory = new \HttpSignatures\HttpMessageFactory();
+$psrRequest = $psr7Factory->createRequest($symfonyRequest);
 ```
 
 ## Contributing
