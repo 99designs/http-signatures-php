@@ -15,9 +15,9 @@ class SigningString
 
     /**
      * @param HeaderList $headerList
-     * @param MessageInterface $message
+     * @param RequestInterface $message
      */
-    public function __construct(HeaderList $headerList, MessageInterface $message)
+    public function __construct(HeaderList $headerList, RequestInterface $message)
     {
         $this->headerList = $headerList;
         $this->message = $message;
@@ -44,9 +44,7 @@ class SigningString
 
     /**
      * @param string $name
-     *
      * @return string
-     *
      * @throws SignedHeaderNotPresentException
      */
     private function line($name)
@@ -60,9 +58,7 @@ class SigningString
 
     /**
      * @param string $name
-     *
      * @return string
-     *
      * @throws SignedHeaderNotPresentException
      */
     private function headerValue($name)
