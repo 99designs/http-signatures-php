@@ -2,7 +2,6 @@
 
 namespace HttpSignatures;
 
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 
 class SigningString
