@@ -2,11 +2,11 @@
 
 namespace HttpSignatures;
 
-use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
 
 class Verification
 {
-    /** @var MessageInterface */
+    /** @var RequestInterface */
     private $message;
 
     /** @var KeyStoreInterface */
@@ -16,10 +16,10 @@ class Verification
     private $_parameters;
 
     /**
-     * @param MessageInterface $message
+     * @param RequestInterface $message
      * @param KeyStoreInterface $keyStore
      */
-    public function __construct(MessageInterface $message, $keyStore)
+    public function __construct($message, KeyStoreInterface $keyStore)
     {
         $this->message = $message;
         $this->keyStore = $keyStore;
