@@ -16,7 +16,7 @@ class SigningString
      * @param HeaderList $headerList
      * @param RequestInterface $message
      */
-    public function __construct(HeaderList $headerList, RequestInterface $message)
+    public function __construct(HeaderList $headerList, $message)
     {
         $this->headerList = $headerList;
         $this->message = $message;

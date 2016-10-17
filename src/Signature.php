@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
 
 class Signature
 {
@@ -16,12 +16,12 @@ class Signature
     private $signingString;
 
     /**
-     * @param MessageInterface $message
+     * @param RequestInterface $message
      * @param Key $key
      * @param AlgorithmInterface $algorithm
      * @param HeaderList $headerList
      */
-    public function __construct(MessageInterface $message, Key $key, AlgorithmInterface $algorithm, HeaderList $headerList)
+    public function __construct($message, Key $key, AlgorithmInterface $algorithm, HeaderList $headerList)
     {
         $this->key = $key;
         $this->algorithm = $algorithm;

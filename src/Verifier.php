@@ -2,7 +2,7 @@
 
 namespace HttpSignatures;
 
-use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\RequestInterface;
 
 class Verifier
 {
@@ -18,10 +18,10 @@ class Verifier
     }
 
     /**
-     * @param MessageInterface $message
+     * @param RequestInterface $message
      * @return bool
      */
-    public function isValid(MessageInterface $message)
+    public function isValid($message)
     {
         $verification = new Verification($message, $this->keyStore);
 
