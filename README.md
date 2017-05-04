@@ -61,7 +61,7 @@ $context->verifier()->isValid($message); // true or false
 
 Symfony requests normalize query strings which means the resulting request target can be incorrect. See https://github.com/symfony/psr-http-message-bridge/pull/30
 
-When creating PSR-7 requests you should do the following:
+When creating PSR-7 requests you use `withRequestTarget` to ensure the request target is correct. For example
 
 ```php
 use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
