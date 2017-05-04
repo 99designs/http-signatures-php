@@ -78,21 +78,7 @@ class SigningString
         return sprintf(
             '(request-target): %s %s',
             strtolower($this->message->getMethod()),
-            $this->getPathWithQueryString()
+            $this->message->getRequestTarget()
         );
-    }
-
-    /**
-     * @return string
-     */
-    private function getPathWithQueryString()
-    {
-        $path = $this->message->getUri()->getPath();
-        $qs = $this->message->getUri()->getQuery();
-        if (empty($qs)) {
-            return $path;
-        } else {
-            return "$path?$qs";
-        }
     }
 }
