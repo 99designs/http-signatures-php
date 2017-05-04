@@ -4,7 +4,7 @@ namespace HttpSignatures\tests;
 
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\HeaderList;
-use HttpSignatures\HttpMessageFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use HttpSignatures\SigningString;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -85,8 +85,8 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
         $symfonyRequest = SymfonyRequest::create($path, 'GET');
         $symfonyRequest->headers->replace(['date' => 'Mon, 28 Jul 2014 15:39:13 -0700']);
 
-        $psr7Factory = new HttpMessageFactory();
-        $psrRequest = $psr7Factory->createRequest($symfonyRequest);
+        $psr7Factory = new DiactorosFactory();
+        $psrRequest = $psr7Factory->createRequest($symfonyRequest)->withRequestTarget($symfonyRequest->getRequestUri());
 
         return $psrRequest;
     }
