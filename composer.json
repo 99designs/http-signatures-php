@@ -28,6 +28,8 @@
         "friendsofphp/php-cs-fixer": "^1.11",
         "guzzlehttp/psr7": "^1.2",
         "phpunit/phpunit": "~4.8",
-        "symfony/http-foundation": "~2.8|~3.0"
+        "symfony/http-foundation": "~2.8|~3.0",
+        "symfony/psr-http-message-bridge": "^1.0",
+        "zendframework/zend-diactoros": "^1.1"
     }
 }
