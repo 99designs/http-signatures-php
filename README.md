@@ -57,14 +57,20 @@ $message->headers->get('Authorization');
 $context->verifier()->isValid($message); // true or false
 ```
 
-### Symfony Integration
+### Symfony compatibility
 
-Also included is a `HttpMessageFactory` class for converting Symfony `Request` objects into PSR-7 compatible messages.
+Symfony requests normalize query strings which means the resulting request target can be incorrect. See https://github.com/symfony/psr-http-message-bridge/pull/30
+
+When creating PSR-7 requests you should do the following:
 
 ```php
-$symfonyRequest = \Symfony\Component\HttpFoundation\Request::create('/foo');
-$psr7Factory = new \HttpSignatures\HttpMessageFactory();
-$psrRequest = $psr7Factory->createRequest($symfonyRequest);
+use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+use Symfony\Component\HttpFoundation\Request;
+
+$symfonyRequest = Request::create('/foo?b=1&a=2');
+$psrRequest = (new HttpFoundationFactory())
+	->createRequest($symfonyRequest)
+	->withRequestTarget($symfonyRequest->getRequestUri());
 ```
 
 ## Contributing
