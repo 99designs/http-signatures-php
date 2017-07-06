@@ -64,11 +64,11 @@ Symfony requests normalize query strings which means the resulting request targe
 When creating PSR-7 requests you use `withRequestTarget` to ensure the request target is correct. For example
 
 ```php
-use Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 $symfonyRequest = Request::create('/foo?b=1&a=2');
-$psrRequest = (new HttpFoundationFactory())
+$psrRequest = (new DiactorosFactory())
 	->createRequest($symfonyRequest)
 	->withRequestTarget($symfonyRequest->getRequestUri());
 ```
