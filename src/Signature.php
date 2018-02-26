@@ -9,7 +9,7 @@ class Signature
     /** @var Key */
     private $key;
 
-    /** @var HmacAlgorithm */
+    /** @var AlgorithmInterface */
     private $algorithm;
 
     /** @var SigningString */
