@@ -1,7 +1,7 @@
-HTTP Signatures
-===
+# HTTP Signatures
 
-PHP implementation of [HTTP Signatures][draft03] draft specification;
+
+PHP implementation of [HTTP Signatures][draft10] draft specification;
 allowing cryptographic signing and verifying of [PSR7 messages][psr7].
 
 See also:
@@ -10,52 +10,111 @@ See also:
 * https://github.com/99designs/http-signatures-ruby
 
 
-Usage
----
+## Usage/Requirements
 
-Add [99designs/http-signatures][package] to your [composer.json][composer].
+* Add [99designs/http-signatures][package] to your [composer.json][composer].
+* A Context object is used to configure the signature parameters, and prepare
+  the verifier functionality.
+* A message is assumed to be a PSR-7 compatible Request or Response objects.
 
-Configure a context with your algorithm, keys, headers to sign.
-This is best placed in an application startup file.
+### Signing a message
 
-```php
-use HttpSignatures\Context;
+Create a Context with your chosen algorithm, keys, and list of headers to sign.
+  (This is best placed in an application startup file)
 
-$context = new Context([
-  'keys' => ['examplekey' => 'secret-key-here'],
-  'algorithm' => 'hmac-sha256',
-  'headers' => ['(request-target)', 'Date', 'Accept'],
-]);
-```
-
-If there's only one key in the `keys` hash, that will be used for signing.
+**Note**: If there's only one key in the `keys` hash, that will be used for signing.
 Otherwise, specify one via `'signingKeyId' => 'examplekey'`.
 
-### Messages
-
-A message is assumed to be a PSR-7 compatible request or response object.
-
-#### Signing a message
+#### HMAC (shared Secret) Signature type
 
 ```php
-$context->signer()->sign($message);
+  use HttpSignatures\Context;
+  
+  $context = new Context([
+    'keys' => ['key12' => 'secret-here'],
+    'algorithm' => 'hmac-sha256',
+    'headers' => ['(request-target)', 'Date', 'Accept'],
+  ]);
+```
+
+#### RSA (Private Key) Signature type
+
+Note: This library does not handle encrypted private keys, so this should
+be presented un-encrypted to the key store.
+
+```php
+  use HttpSignatures\Context;
+  
+  $context = new Context([
+    'keys' => ['key43' => file_get_contents('/path/to/privatekeyfile')],
+    'algorithm' => 'rsa-sha256',
+    'headers' => ['(request-target)', 'Date', 'Accept'],
+  ]);
+```
+#### Signing the Message:
+
+```php
+  $context->signer()->sign($message);
 ```
 
 Now `$message` contains the signature headers:
 
 ```php
-$message->headers->get('Signature');
-// keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
-
-$message->headers->get('Authorization');
-// Signature keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
+  $message->headers->get('Signature');
+  // keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
+  
+  $message->headers->get('Authorization');
+  // Signature keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
 ```
 
-#### Verifying a signed message
+Many sites require a ``Digest`` header to be included in the signature. Add
+a SHA256 digest to the headers using the ``signWithdigest`` method:
 
 ```php
-$context->verifier()->isValid($message); // true or false
+  $context->signer()->signWithDigest($message);
 ```
+
+### Verifying a Signed Message
+
+Most parameters are derived from the Signature in the signed message, so the
+Context can be created with fewer parameters.
+
+It is probably most useful to create a Context with multilpe keys/certificates.
+the signature verifier will look up the key using the keyId attribute of the
+Signature header and use that to validate the signature. 
+
+#### Verifying a HMAC signed message
+
+A message signed with an hmac signature is verified using the same key as
+the one used to sign the original message:
+
+```php
+  use HttpSignatures\Context;
+  
+  $context = new Context([
+    'keys' => ['key300' => 'some-other-secret',
+                'key12' => 'secret-here']
+  ]);
+  
+  $context->verifier()->isValid($message); // true or false
+```
+
+#### Verifying a RSA signed message
+
+An RSA signature is verified using the certificate associated with the
+Private Key that created the message. Create a context by importing
+the X.509 PEM format certificates in place of the 'secret':
+
+```php
+  use HttpSignatures\Context;
+  
+  $context = new Context([
+    'keys' => ['key43' => file_get_contents('/path/to/certificate'),
+               'key87' => $someOtherCertificate],
+  $context->verifier()->isValid($message); // true or false
+  ]);
+```
+
 
 ### Symfony compatibility
 
@@ -77,7 +136,7 @@ $psrRequest = (new DiactorosFactory())
 
 Pull Requests are welcome.
 
-[draft03]: http://tools.ietf.org/html/draft-cavage-http-signatures-03
+[draft10]: http://tools.ietf.org/html/draft-cavage-http-signatures-10
 [Symfony\Component\HttpFoundation\Request]: https://github.com/symfony/HttpFoundation/blob/master/Request.php
 [composer]: https://getcomposer.org/
 [package]: https://packagist.org/packages/99designs/http-signatures

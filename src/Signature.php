@@ -31,8 +31,8 @@ class Signature
     public function string()
     {
         return $this->algorithm->sign(
-            $this->key->secret,
+            $this->key->getSigningKey(),
             $this->signingString->string()
-        );
+          );
     }
 }

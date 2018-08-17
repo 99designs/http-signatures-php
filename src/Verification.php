@@ -39,9 +39,38 @@ class Verification
     private function signatureMatches()
     {
         try {
-            $random = random_bytes(32);
+            $key = $this->key();
+            switch ($key->getType()) {
+                case 'secret':
+                  $random = random_bytes(32);
+                  $expectedResult = hash_hmac(
+                      'sha256', $this->expectedSignatureBase64(),
+                      $random,
+                      true
+                  );
+                  $providedResult = hash_hmac(
+                      'sha256', $this->providedSignatureBase64(),
+                      $random,
+                      true
+                  );
 
-            return hash_hmac('sha256', $this->expectedSignatureBase64(), $random, true) === hash_hmac('sha256', $this->providedSignatureBase64(), $random, true);
+                  return $expectedResult === $providedResult;
+                case 'asymmetric':
+                    $signedString = new SigningString(
+                        $this->headerList(),
+                        $this->message
+                    );
+                    $hashAlgo = explode('-', $this->parameter('algorithm'))[1];
+                    $algorithm = new RsaAlgorithm($hashAlgo);
+                    $result = $algorithm->verify(
+                        $signedString->string(),
+                        $this->parameter('signature'),
+                        $key->getVerifyingKey());
+
+                    return $result;
+                default:
+                    throw new Exception("Unknown key type '".$key->getType()."', cannot verify");
+            }
         } catch (SignatureParseException $e) {
             return false;
         } catch (KeyStoreException $e) {
@@ -74,8 +103,6 @@ class Verification
 
     /**
      * @return string
-     *
-     * @throws Exception
      */
     private function providedSignatureBase64()
     {
@@ -84,8 +111,6 @@ class Verification
 
     /**
      * @return Key
-     *
-     * @throws Exception
      */
     private function key()
     {
@@ -94,8 +119,6 @@ class Verification
 
     /**
      * @return HmacAlgorithm
-     *
-     * @throws Exception
      */
     private function algorithm()
     {
@@ -104,8 +127,6 @@ class Verification
 
     /**
      * @return HeaderList
-     *
-     * @throws Exception
      */
     private function headerList()
     {
@@ -131,8 +152,6 @@ class Verification
 
     /**
      * @return array
-     *
-     * @throws Exception
      */
     private function parameters()
     {
