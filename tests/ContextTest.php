@@ -39,6 +39,19 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $expectedString,
             $message->getHeader('Signature')[0]
         );
+    }
+
+    public function testAuthorizer()
+    {
+        $message = new Request('GET', '/path?query=123', ['date' => 'today', 'accept' => 'llamas']);
+        $message = $this->context->signer()->authorize($message);
+
+        $expectedString = implode(',', [
+            'keyId="pda"',
+            'algorithm="hmac-sha256"',
+            'headers="(request-target) date"',
+            'signature="SFlytCGpsqb/9qYaKCQklGDvwgmrwfIERFnwt+yqPJw="',
+        ]);
 
         $this->assertEquals(
             'Signature '.$expectedString,
@@ -176,6 +189,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Authorization')[0]
         );
     }
+
 
     public function testVerifier()
     {
