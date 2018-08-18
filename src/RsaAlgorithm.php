@@ -42,8 +42,8 @@ class RsaAlgorithm implements AlgorithmInterface
             throw new Exception($this->digestName . " is not a supported hash format");
             break;
         }
-        if ( ! openssl_get_privatekey($key) ) {
-          throw new Exception("OpenSSL doesn't understand the supplied key (not valid or not found)");
+        if (! openssl_get_privatekey($key)) {
+            throw new Exception("OpenSSL doesn't understand the supplied key (not valid or not found)");
         }
         $signature="";
         openssl_sign($data, $signature, $key, $algo);
