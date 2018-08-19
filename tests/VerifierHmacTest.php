@@ -6,7 +6,7 @@ use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
 
-class VerifierTest extends \PHPUnit_Framework_TestCase
+class VerifierHmacTest extends \PHPUnit_Framework_TestCase
 {
     const DATE = 'Fri, 01 Aug 2014 13:44:32 -0700';
     const DATE_DIFFERENT = 'Fri, 01 Aug 2014 13:44:33 -0700';
@@ -23,17 +23,17 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->setUpVerifier();
-        $this->setUpValidMessage();
+        $this->setUpHmacVerifier();
+        $this->setUpValidHmacMessage();
     }
 
-    private function setUpVerifier()
+    private function setUpHmacVerifier()
     {
         $keyStore = new KeyStore(['pda' => 'secret']);
         $this->verifier = new Verifier($keyStore);
     }
 
-    private function setUpValidMessage()
+    private function setUpValidHmacMessage()
     {
         $signatureHeader = sprintf(
             'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
@@ -49,12 +49,12 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function testVerifyValidMessage()
+    public function testVerifyValidHmacMessage()
     {
         $this->assertTrue($this->verifier->isValid($this->message));
     }
 
-    public function testVerifyValidMessageAuthorizationHeader()
+    public function testVerifyValidHmacMessageAuthorizationHeader()
     {
         $message = $this->message->withHeader('Authorization', "Signature {$this->message->getHeader('Signature')[0]}");
         $message = $message->withoutHeader('Signature');
@@ -62,19 +62,19 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->verifier->isValid($this->message));
     }
 
-    public function testRejectTamperedRequestMethod()
+    public function testRejectTamperedHmacRequestMethod()
     {
         $message = $this->message->withMethod('POST');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
-    public function testRejectTamperedDate()
+    public function testRejectTamperedHmacDate()
     {
         $message = $this->message->withHeader('Date', self::DATE_DIFFERENT);
         $this->assertFalse($this->verifier->isValid($message));
     }
 
-    public function testRejectTamperedSignature()
+    public function testRejectTamperedHmacSignature()
     {
         $message = $this->message->withHeader(
             'Signature',
@@ -83,32 +83,32 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->verifier->isValid($message));
     }
 
-    public function testRejectMessageWithoutSignatureHeader()
+    public function testRejectHmacMessageWithoutSignatureHeader()
     {
         $message = $this->message->withoutHeader('Signature');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
-    public function testRejectMessageWithGarbageSignatureHeader()
+    public function testRejectHmacMessageWithGarbageSignatureHeader()
     {
         $message = $this->message->withHeader('Signature', 'not="a",valid="signature"');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
-    public function testRejectMessageWithPartialSignatureHeader()
+    public function testRejectHmacMessageWithPartialSignatureHeader()
     {
         $message = $this->message->withHeader('Signature', 'keyId="aa",algorithm="bb"');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
-    public function testRejectsMessageWithUnknownKeyId()
+    public function testRejectsHmacMessageWithUnknownKeyId()
     {
         $keyStore = new KeyStore(['nope' => 'secret']);
         $verifier = new Verifier($keyStore);
         $this->assertFalse($verifier->isValid($this->message));
     }
 
-    public function testRejectsMessageMissingSignedHeaders()
+    public function testRejectsHmacMessageMissingSignedHeaders()
     {
         $message = $this->message->withoutHeader('Date');
         $this->assertFalse($this->verifier->isValid($message));
