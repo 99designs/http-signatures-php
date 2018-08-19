@@ -30,9 +30,17 @@ class Signature
 
     public function string()
     {
-        return $this->algorithm->sign(
-            $this->key->secret,
-            $this->signingString->string()
-        );
+        switch ($this->algorithm->type) {
+          case 'secret':
+            return $this->algorithm->sign(
+                $this->key->secret,
+                $this->signingString->string()
+            );
+            case 'asymmetric':
+              return $this->algorithm->sign(
+                  $this->key->privateKey,
+                  $this->signingString->string()
+              );
+        }
     }
 }
