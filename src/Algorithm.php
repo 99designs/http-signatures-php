@@ -4,6 +4,9 @@ namespace HttpSignatures;
 
 abstract class Algorithm
 {
+    /** @var string */
+    public $type;
+
     /**
      * @param string $name
      *

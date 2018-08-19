@@ -7,6 +7,9 @@ class RsaAlgorithm implements AlgorithmInterface
     /** @var string */
     private $digestName;
 
+    /** @var string */
+    public $type = 'asymmetric';
+
     /**
      * @param string $digestName
      */
