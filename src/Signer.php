@@ -37,7 +37,7 @@ class Signer
     public function sign($message, $withDigest = false)
     {
         if ($withDigest) {
-          $message = $this->addDigest($message);
+            $message = $this->addDigest($message);
         };
         $signatureParameters = $this->signatureParameters($message);
         $message = $message->withAddedHeader("Signature", $signatureParameters->string());
@@ -49,22 +49,23 @@ class Signer
      * @param RequestInterface $message
      * @return RequestInterface
      */
-    private function addDigest($message) {
-      if (!array_search('digest', $this->headerList->names) ) {
-        $this->headerList->names[] = 'digest';
-      };
-      while ($message->getHeader('Digest')) {
-        $message = $message->withoutHeader('Digest');
-      };
-      $message = $message->withHeader(
+    private function addDigest($message)
+    {
+        if (!array_search('digest', $this->headerList->names)) {
+            $this->headerList->names[] = 'digest';
+        };
+        while ($message->getHeader('Digest')) {
+            $message = $message->withoutHeader('Digest');
+        };
+        $message = $message->withHeader(
         'Digest',
         self::defaultHttpDigestPrefix . '=' . base64_encode(
           hash(
-            self::defaultHttpDigest,$message->getBody(), true
+            self::defaultHttpDigest, $message->getBody(), true
           )
         )
       );
-      return $message;
+        return $message;
     }
 
     /**
