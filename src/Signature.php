@@ -36,11 +36,11 @@ class Signature
                 $this->key->secret,
                 $this->signingString->string()
             );
-            case 'asymmetric':
-              return $this->algorithm->sign(
-                  $this->key->privateKey,
-                  $this->signingString->string()
-              );
+          case 'asymmetric':
+            return $this->algorithm->sign(
+                $this->key->privateKey,
+                $this->signingString->string()
+            );
         }
     }
 }
