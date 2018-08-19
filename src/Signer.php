@@ -6,6 +6,9 @@ use Psr\Http\Message\RequestInterface;
 
 class Signer
 {
+    const defaultHttpDigest       = 'sha256';
+    const defaultHttpDigestPrefix = 'SHA-256';
+
     /** @var Key */
     private $key;
 
@@ -31,12 +34,37 @@ class Signer
      * @param RequestInterface $message
      * @return RequestInterface
      */
-    public function sign($message)
+    public function sign($message, $withDigest = false)
     {
+        if ($withDigest) {
+          $message = $this->addDigest($message);
+        };
         $signatureParameters = $this->signatureParameters($message);
         $message = $message->withAddedHeader("Signature", $signatureParameters->string());
         $message = $message->withAddedHeader("Authorization", "Signature " . $signatureParameters->string());
         return $message;
+    }
+
+    /**
+     * @param RequestInterface $message
+     * @return RequestInterface
+     */
+    private function addDigest($message) {
+      if (!array_search('digest', $this->headerList->names) ) {
+        $this->headerList->names[] = 'digest';
+      };
+      while ($message->getHeader('Digest')) {
+        $message = $message->withoutHeader('Digest');
+      };
+      $message = $message->withHeader(
+        'Digest',
+        self::defaultHttpDigestPrefix . '=' . base64_encode(
+          hash(
+            self::defaultHttpDigest,$message->getBody(), true
+          )
+        )
+      );
+      return $message;
     }
 
     /**
