@@ -52,4 +52,23 @@ class RsaAlgorithm implements AlgorithmInterface
         openssl_sign($data, $signature, $key, $algo);
         return $signature;
     }
+
+    public function verify($message, $signature, $certificate, $digestName)
+    {
+        switch ($digestName) {
+          case 'sha256':
+            $algo = OPENSSL_ALGO_SHA256;
+            break;
+          case 'sha1':
+            $algo = OPENSSL_ALGO_SHA1;
+            break;
+          default:
+            throw new Exception($digestName . " is not a supported hash format");
+            break;
+        }
+        if (! openssl_pkey_get_public($certificate)) {
+            throw new Exception("OpenSSL doesn't understand the supplied key (not valid or not found)");
+        }
+        return openssl_verify($message, base64_decode($signature), $certificate, $algo);
+    }
 }
