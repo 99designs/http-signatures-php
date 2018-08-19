@@ -39,9 +39,28 @@ class Verification
     private function signatureMatches()
     {
         try {
-            $random = random_bytes(32);
-
-            return hash_hmac('sha256', $this->expectedSignatureBase64(), $random, true) === hash_hmac('sha256', $this->providedSignatureBase64(), $random, true);
+            $key = $this->key();
+            switch ($key->type) {
+              case 'secret':
+                $random = random_bytes(32);
+                $expectedResult = hash_hmac(
+                  'sha256', $this->expectedSignatureBase64(), $random, true);
+                $providedResult = hash_hmac(
+                  'sha256', $this->providedSignatureBase64(), $random, true);
+                return ($expectedResult === $providedResult);
+              case 'rsa':
+                $signedString = new SigningString(
+                  $this->headerList(), $this->message);
+                $hashAlgo = explode('-', $this->parameter('algorithm'))[1];
+                $result = RsaAlgorithm::verify(
+                  $signedString->string(),
+                  $this->parameter('signature'),
+                  $key->certificate,
+                  $hashAlgo);
+                return $result;
+              default:
+                throw new Exception("Unknown key type '$key->type', cannot verify");
+            }
         } catch (SignatureParseException $e) {
             return false;
         } catch (KeyStoreException $e) {
