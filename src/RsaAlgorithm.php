@@ -53,9 +53,9 @@ class RsaAlgorithm implements AlgorithmInterface
         return $signature;
     }
 
-    public function verify($message, $signature, $certificate, $digestName)
+    public function verify($message, $signature, $certificate)
     {
-        switch ($digestName) {
+        switch ($this->digestName) {
           case 'sha256':
             $algo = OPENSSL_ALGO_SHA256;
             break;

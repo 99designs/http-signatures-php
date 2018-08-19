@@ -56,8 +56,7 @@ class Verification
                 $result = $algorithm->verify(
                   $signedString->string(),
                   $this->parameter('signature'),
-                  $key->certificate,
-                  $hashAlgo);
+                  $key->certificate);
                 return $result;
               default:
                 throw new Exception("Unknown key type '$key->type', cannot verify");
