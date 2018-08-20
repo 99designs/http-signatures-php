@@ -30,17 +30,21 @@ class Signature
 
     public function string()
     {
-        switch ($this->algorithm->type) {
-          case 'secret':
+        switch (get_class($this->algorithm)) {
+          case 'HttpSignatures\HmacAlgorithm':
             return $this->algorithm->sign(
                 $this->key->secret,
                 $this->signingString->string()
             );
-          case 'asymmetric':
+          case 'HttpSignatures\RsaAlgorithm':
             return $this->algorithm->sign(
                 $this->key->privateKey,
                 $this->signingString->string()
-            );
+              );
+          default:
+            throw new Exception(
+              "Algorithm class " .
+               get_class($this->algorithm) . " unknown");
         }
     }
 }

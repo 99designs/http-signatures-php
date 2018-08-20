@@ -7,9 +7,6 @@ class HmacAlgorithm implements AlgorithmInterface
     /** @var string */
     private $digestName;
 
-    /** @var string */
-    public $type = 'secret';
-
     /**
      * @param string $digestName
      */
