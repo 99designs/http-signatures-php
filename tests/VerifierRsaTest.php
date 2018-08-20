@@ -6,7 +6,6 @@ use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
 use HttpSignatures\Tests\TestKeys;
-use HttpSignatures\Context;
 use HttpSignatures\HeaderList;
 use HttpSignatures\SigningString;
 
