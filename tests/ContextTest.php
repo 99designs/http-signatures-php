@@ -49,18 +49,18 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testSignerAddDigestToHeadersList()
     {
         $message = new Request(
-            'GET', '/path?query=123',
+            'POST', '/path/to/things?query=123',
             ['date' => 'today', 'accept' => 'llamas'],
-            'This is a body');
+            'Thing to POST');
         $message = $this->noDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="XihRwDYmFZCLX7us8S+ScqTLo8glcPgm5WXNRxUN9xs="']);
+            'signature="HH6R3OJmJbKUFqqL0tGVIIb7xi1WbbSh/HBXHUtLkUs="']);
         $expectedDigestHeader =
-          'SHA-256=8qVirT1Mv9ZqQhA8DrGKEvIIPPm7HmhQ0Hl4UFTBfsQ=';
+          'SHA-256=rEcNhYZoBKiR29D30w1JcgArNlF8rXIXf5MnIL/4kcc=';
 
         $this->assertEquals(
             $expectedString,
@@ -81,20 +81,20 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testSignerReplaceDigest()
     {
         $message = new Request(
-            'GET', '/path?query=123',
+            'PUT', '/things/thething?query=123',
               ['date' => 'today',
               'accept' => 'llamas',
               'Digest' => 'SHA-256=E/P+4y4x6EySO9qNAjCtQKxVwE1xKsNI/k+cjK+vtLU='],
-            'This is a body');
+            'Thing to PUT at /things/thething please...');
         $message = $this->noDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="XihRwDYmFZCLX7us8S+ScqTLo8glcPgm5WXNRxUN9xs="']);
+            'signature="Hyatt1lSR/4XLI9Gcx8XOEKiG8LVktH7Lfr+0tmhwRU="']);
         $expectedDigestHeader =
-          'SHA-256=8qVirT1Mv9ZqQhA8DrGKEvIIPPm7HmhQ0Hl4UFTBfsQ=';
+          'SHA-256=mulOx+77mQU1EbPET50SCGA4P/4bYxVCJA1pTwJsaMw=';
 
         $this->assertEquals(
             $expectedString,
@@ -115,19 +115,19 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testSignerNewDigestIsInHeaderList()
     {
         $message = new Request(
-            'GET', '/path?query=123',
+            'POST', '/path?query=123',
               ['date' => 'today',
               'accept' => 'llamas'],
-            'This is a body');
+            'Stuff that belongs in /path');
         $message = $this->withDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="XihRwDYmFZCLX7us8S+ScqTLo8glcPgm5WXNRxUN9xs="']);
+            'signature="p8gQHs59X2WzQLUecfmxm1YO0OBTCNKldRZZBQsepfk="']);
         $expectedDigestHeader =
-          'SHA-256=8qVirT1Mv9ZqQhA8DrGKEvIIPPm7HmhQ0Hl4UFTBfsQ=';
+          'SHA-256=jnSMEfBSum4Rh2k6/IVFyvLuQLmGYwMAGBS9WybyDqQ=';
 
         $this->assertEquals(
             $expectedString,
@@ -144,6 +144,39 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Authorization')[0]
         );
     }
+
+    public function testSignerNewDigestWithoutBody()
+    {
+        $message = new Request(
+            'GET', '/path?query=123',
+              ['date' => 'today',
+              'accept' => 'llamas']);
+        $message = $this->withDigestContext->signer()->signWithDigest($message);
+
+        $expectedString = implode(',', [
+            'keyId="pda"',
+            'algorithm="hmac-sha256"',
+            'headers="(request-target) date digest"',
+            'signature="7iFqqryI6I9opV/Zp3eEg6PDY1tKw/3GqioOM7ACHHA="']);
+        $zeroLengthStringDigest =
+          'SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=';
+
+        $this->assertEquals(
+            $expectedString,
+            $message->getHeader('Signature')[0]
+        );
+
+        $this->assertEquals(
+            $zeroLengthStringDigest,
+            $message->getHeader('Digest')[0]
+        );
+
+        $this->assertEquals(
+            'Signature ' . $expectedString,
+            $message->getHeader('Authorization')[0]
+        );
+    }
+
     public function testVerifier()
     {
         $message = $this->noDigestContext->signer()->sign(new Request('GET', '/path?query=123', [
