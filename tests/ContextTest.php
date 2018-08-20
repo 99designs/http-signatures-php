@@ -52,7 +52,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'GET', '/path?query=123',
             ['date' => 'today', 'accept' => 'llamas'],
             'This is a body');
-        $message = $this->noDigestContext->signer()->sign($message, true);
+        $message = $this->noDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',
@@ -86,7 +86,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
               'accept' => 'llamas',
               'Digest' => 'SHA-256=E/P+4y4x6EySO9qNAjCtQKxVwE1xKsNI/k+cjK+vtLU='],
             'This is a body');
-        $message = $this->noDigestContext->signer()->sign($message, true);
+        $message = $this->noDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',
@@ -119,7 +119,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
               ['date' => 'today',
               'accept' => 'llamas'],
             'This is a body');
-        $message = $this->withDigestContext->signer()->sign($message, true);
+        $message = $this->withDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',

@@ -34,15 +34,22 @@ class Signer
      * @param RequestInterface $message
      * @return RequestInterface
      */
-    public function sign($message, $withDigest = false)
+    public function sign($message)
     {
-        if ($withDigest) {
-            $message = $this->addDigest($message);
-        };
         $signatureParameters = $this->signatureParameters($message);
         $message = $message->withAddedHeader("Signature", $signatureParameters->string());
         $message = $message->withAddedHeader("Authorization", "Signature " . $signatureParameters->string());
         return $message;
+    }
+
+    /**
+     * @param RequestInterface $message
+     * @return RequestInterface
+     */
+    public function signWithDigest($message)
+    {
+        $message = $this->addDigest($message);
+        return $this->sign($message);
     }
 
     /**
