@@ -31,19 +31,9 @@ class RsaAlgorithm implements AlgorithmInterface
      */
     public function sign($key, $data)
     {
-        switch ($this->digestName) {
-          case 'sha256':
-            $algo = OPENSSL_ALGO_SHA256;
-            break;
-          case 'sha1':
-            $algo = OPENSSL_ALGO_SHA1;
-            break;
-          default:
-            throw new Exception($this->digestName . " is not a supported hash format");
-            break;
-        }
+        $algo = $this->getRsaHashAlgo($this->digestName);
         if (! openssl_get_privatekey($key)) {
-            throw new Exception("OpenSSL doesn't understand the supplied key (not valid or not found)");
+            throw new httpSignatures\AlgorithmException("OpenSSL doesn't understand the supplied key (not valid or not found)");
         }
         $signature="";
         openssl_sign($data, $signature, $key, $algo);
@@ -52,20 +42,22 @@ class RsaAlgorithm implements AlgorithmInterface
 
     public function verify($message, $signature, $certificate)
     {
-        switch ($this->digestName) {
-          case 'sha256':
-            $algo = OPENSSL_ALGO_SHA256;
-            break;
-          case 'sha1':
-            $algo = OPENSSL_ALGO_SHA1;
-            break;
-          default:
-            throw new Exception($digestName . " is not a supported hash format");
-            break;
-        }
+        $algo = $this->getRsaHashAlgo($this->digestName);
         if (! openssl_pkey_get_public($certificate)) {
-            throw new Exception("OpenSSL doesn't understand the supplied key (not valid or not found)");
+            throw new httpSignatures\AlgorithmException("OpenSSL doesn't understand the supplied key (not valid or not found)");
         }
         return openssl_verify($message, base64_decode($signature), $certificate, $algo);
+    }
+
+    private function getRsaHashAlgo($digestName) {
+      switch ($digestName) {
+        case 'sha256':
+          return OPENSSL_ALGO_SHA256;
+        case 'sha1':
+          return OPENSSL_ALGO_SHA1;
+        default:
+          throw new httpSignatures\AlgorithmException($digestName . " is not a supported hash format");
+      }
+
     }
 }

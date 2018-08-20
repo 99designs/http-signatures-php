@@ -71,4 +71,16 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
         );
       }
 
+      /**
+       * @expectedException     HttpSignatures\AlgorithmException
+       */
+      public function testRsaBadalgorithm()
+      {
+          $sha224context = new Context([
+              'keys' => ['rsa1' => TestKeys::rsaKey],
+              'algorithm' => 'rsa-sha224',
+              'headers' => ['(request-target)', 'date'],
+          ]);
+        }
+
 }
