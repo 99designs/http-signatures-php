@@ -26,8 +26,8 @@ class Key
     public function __construct($id, $item)
     {
         $this->id = $id;
-        $certificate = Key::getX509Certificate($item);
-        $privateKey = Key::getRSAPrivateKey($item);
+        $certificate = $this->getX509Certificate($item);
+        $privateKey = $this->getRSAPrivateKey($item);
         if (($certificate || $privateKey)) {
             $this->type = 'rsa';
             if ($privateKey) {
