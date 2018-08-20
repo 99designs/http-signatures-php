@@ -16,6 +16,9 @@ class Context
     /** @var string */
     private $signingKeyId;
 
+    /** @var AlgorithmInterface */
+    public $algorithm;
+
     /**
      * @param array $args
      *
@@ -35,8 +38,8 @@ class Context
         // algorithm for signing; not necessary for verifying.
         if (isset($args['algorithm'])) {
             $this->algorithmName = $args['algorithm'];
+            $this->algorithm = Algorithm::create($this->algorithmName);
         }
-
         // headers list for signing; not necessary for verifying.
         if (isset($args['headers'])) {
             $this->headers = $args['headers'];
@@ -59,7 +62,7 @@ class Context
     {
         return new Signer(
             $this->signingKey(),
-            $this->algorithm(),
+            $this->algorithm,
             $this->headerList()
         );
     }
@@ -87,15 +90,15 @@ class Context
         }
     }
 
-    /**
-     * @return HmacAlgorithm
-     *
-     * @throws Exception
-     */
-    private function algorithm()
-    {
-        return Algorithm::create($this->algorithmName);
-    }
+    // /**
+    //  * @return HmacAlgorithm
+    //  *
+    //  * @throws Exception
+    //  */
+    // private function algorithm()
+    // {
+    //     return Algorithm::create($this->algorithmName);
+    // }
 
     /**
      * @return HeaderList

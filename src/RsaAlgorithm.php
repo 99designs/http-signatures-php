@@ -49,8 +49,9 @@ class RsaAlgorithm implements AlgorithmInterface
         return openssl_verify($message, base64_decode($signature), $certificate, $algo);
     }
 
-    private function getRsaHashAlgo($digestName) {
-      switch ($digestName) {
+    private function getRsaHashAlgo($digestName)
+    {
+        switch ($digestName) {
         case 'sha256':
           return OPENSSL_ALGO_SHA256;
         case 'sha1':
@@ -58,6 +59,5 @@ class RsaAlgorithm implements AlgorithmInterface
         default:
           throw new httpSignatures\AlgorithmException($digestName . " is not a supported hash format");
       }
-
     }
 }
