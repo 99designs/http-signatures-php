@@ -10,12 +10,12 @@ See also:
 * https://github.com/99designs/http-signatures-ruby
 
 
-## Usage
+## Usage/Requirements
 
-1. Add [99designs/http-signatures][package] to your [composer.json][composer].
-* A message is assumed to be a PSR-7 compatible Request or Response objects.
+* Add [99designs/http-signatures][package] to your [composer.json][composer].
 * A Context object is used to configure the signature parameters, and prepare
   the verifier functionality.
+* A message is assumed to be a PSR-7 compatible Request or Response objects.
 
 ### Signing a message
 
