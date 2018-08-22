@@ -51,6 +51,16 @@ $message->headers->get('Authorization');
 // Signature keyId="examplekey",algorithm="hmac-sha256",headers="...",signature="..."
 ```
 
+#### Adding a Digest header while signing
+
+Include a ```Digest``` header automatically when signing:
+
+```php
+$context->signer()->signWithDigest($message);
+$message->headers->get('digest');
+// SHA-256=<base64SHA256Digest>
+```
+
 #### Verifying a signed message
 
 ```php
