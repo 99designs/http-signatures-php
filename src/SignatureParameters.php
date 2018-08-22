@@ -32,7 +32,7 @@ class SignatureParameters
     private function parameterComponents()
     {
         return [
-            sprintf('keyId="%s"', $this->key->id),
+            sprintf('keyId="%s"', $this->key->getId()),
             sprintf('algorithm="%s"', $this->algorithm->name()),
             sprintf('headers="%s"', $this->headerList->string()),
             sprintf('signature="%s"', $this->signatureBase64()),

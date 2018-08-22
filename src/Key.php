@@ -5,19 +5,19 @@ namespace HttpSignatures;
 class Key
 {
     /** @var string */
-    public $id;
+    private $id;
 
     /** @var string */
-    public $secret;
+    private $secret;
 
     /** @var string */
-    public $certificate;
+    private $certificate;
 
     /** @var string */
-    public $privateKey;
+    private $privateKey;
 
     /** @var string */
-    public $type;
+    private $type;
 
     /**
      * @param string $id
@@ -97,5 +97,39 @@ class Key
                 return $object;
             }
         }
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getVerifyingKey()
+    {
+        switch ($this->type) {
+        case 'rsa':
+          return openssl_pkey_get_public($this->certificate);
+        case 'secret':
+          return $this->secret;
+        default:
+          throw new KeyException("Unknown key type $this->type");
+      }
+    }
+
+    public function getSigningKey()
+    {
+        switch ($this->type) {
+        case 'rsa':
+          return $this->privateKey;
+        case 'secret':
+          return $this->secret;
+        default:
+          throw new KeyException("Unknown key type $this->type");
+      }
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 }

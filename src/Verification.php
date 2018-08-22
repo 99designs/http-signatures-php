@@ -40,7 +40,7 @@ class Verification
     {
         try {
             $key = $this->key();
-            switch ($key->type) {
+            switch ($key->getType()) {
               case 'secret':
                 $random = random_bytes(32);
                 $expectedResult = hash_hmac(
@@ -56,7 +56,7 @@ class Verification
                 $result = $algorithm->verify(
                   $signedString->string(),
                   $this->parameter('signature'),
-                  $key->certificate);
+                  $key->getVerifyingKey());
                 return $result;
               default:
                 throw new Exception("Unknown key type '$key->type', cannot verify");
