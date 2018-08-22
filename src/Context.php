@@ -37,8 +37,7 @@ class Context
 
         // algorithm for signing; not necessary for verifying.
         if (isset($args['algorithm'])) {
-            $this->algorithmName = $args['algorithm'];
-            $this->algorithm = Algorithm::create($this->algorithmName);
+            $this->algorithm = Algorithm::create($args['algorithm']);
         }
         // headers list for signing; not necessary for verifying.
         if (isset($args['headers'])) {
