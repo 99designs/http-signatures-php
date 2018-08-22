@@ -67,6 +67,23 @@ $message->headers->get('digest');
 $context->verifier()->isValid($message); // true or false
 ```
 
+#### Verifying a message digest
+
+To confirm the body has a valid digest header and the header is a valid digest
+of the message body:
+
+```php
+$context->verifier()->isValidDigest($message); // true or false
+```
+
+An all-in-one validation that the signature includes the digest, and the digest
+is valid for the message body:
+
+
+```php
+$context->verifier()->isValidWithDigest($message); // true or false
+```
+
 ### Symfony compatibility
 
 Symfony requests normalize query strings which means the resulting request target can be incorrect. See https://github.com/symfony/psr-http-message-bridge/pull/30
