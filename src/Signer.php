@@ -49,7 +49,7 @@ class Signer
     public function signWithDigest($message)
     {
         $bodyDigest = new BodyDigest;
-        $this->headerList = $bodyDigest->digestInHeaderList($this->headerList);
+        $this->headerList = $bodyDigest->putDigestInHeaderList($this->headerList);
         return $this->sign($bodyDigest->setDigestHeader($message));
     }
 

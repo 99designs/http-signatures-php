@@ -4,13 +4,16 @@ namespace HttpSignatures;
 
 class BodyDigest
 {
-    public $hashName;
-    public $digestHeaderPrefix;
+    /** @var string */
+    private $hashName;
+
+    /** @var string */
+    private $digestHeaderPrefix;
 
     /**
      * @param string $name
      * @return BodyDigest
-     * @throws Exception
+     * @throws DigestException
      */
     public function __construct($hashAlgorithm = null)
     {
@@ -31,12 +34,12 @@ class BodyDigest
             $this->digestHeaderPrefix = 'SHA-512';
             break;
         default:
-            throw new DigestException("Digest algorithm parameter '$name' not understood");
+            throw new DigestException("Digest algorithm parameter '$hashAlgorithm' not understood");
             break;
         }
     }
 
-    public function digestInHeaderList($headerList)
+    public function putDigestInHeaderList($headerList)
     {
         if (!array_search('digest', $headerList->names)) {
             $headerList->names[] = 'digest';

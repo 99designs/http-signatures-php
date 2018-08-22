@@ -74,6 +74,16 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->verifier->isValidDigest($message));
     }
 
+    /**
+     * @expectedException \HttpSignatures\DigestException
+     */
+    public function testRejectBadDigestName()
+    {
+        $message = $this->message->withoutHeader('Digest')
+          ->withHeader('Digest', 'SHA-255=xxx');
+        $this->assertFalse($this->verifier->isValidDigest($message));
+    }
+
     public function testVerifyValidMessageAuthorizationHeader()
     {
         $message = $this->message->withHeader('Authorization', "Signature {$this->message->getHeader('Signature')[0]}");
