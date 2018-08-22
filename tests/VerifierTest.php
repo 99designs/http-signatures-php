@@ -19,12 +19,18 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Request
      */
-    private $message;
+    private $signedMessage;
+
+    /**
+     * @var Request
+     */
+    private $authorizedMessage;
 
     public function setUp()
     {
         $this->setUpVerifier();
-        $this->setUpValidMessage();
+        $this->setUpValidSignedMessage();
+        $this->setUpValidAuthorizedMessage();
     }
 
     private function setUpVerifier()
@@ -33,7 +39,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         $this->verifier = new Verifier($keyStore);
     }
 
-    private function setUpValidMessage()
+    private function setUpValidSignedMessage()
     {
         $signatureHeader = sprintf(
             'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
@@ -43,74 +49,101 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
             'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
         );
 
-        $this->message = new Request('GET', '/path?query=123', [
-            'Date' => self::DATE,
-            'Signature' => $signatureHeader,
+        $this->signedMessage = new Request('GET', '/path?query=123', [
+            "Date" => self::DATE,
+            "Signature" => $signatureHeader,
+            "Authorization" => "Bearer abc123"
         ]);
     }
 
-    public function testVerifyValidMessage()
+    private function setUpValidAuthorizedMessage()
     {
-        $this->assertTrue($this->verifier->isValid($this->message));
+        $authorizationHeader = sprintf(
+            'Signature keyId="%s",algorithm="%s",headers="%s",signature="%s"',
+            "pda",
+            "hmac-sha256",
+            "(request-target) date",
+            "cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU="
+        );
+
+        $this->authorizedMessage = new Request('GET', '/path?query=123', [
+            "Date" => self::DATE,
+            "Authorization" => $authorizationHeader,
+            "Signature" => "My Lawyer signed this"
+        ]);
+    }
+
+    public function testVerifyValidMessageSignatureHeader()
+    {
+        $this->assertTrue($this->verifier->isSigned($this->signedMessage));
     }
 
     public function testVerifyValidMessageAuthorizationHeader()
     {
-        $message = $this->message->withHeader('Authorization', "Signature {$this->message->getHeader('Signature')[0]}");
-        $message = $message->withoutHeader('Signature');
+        // $message = $this->message->withHeader('Authorization', "Signature {$this->message->getHeader('Signature')[0]}");
+        // $message = $message->withoutHeader('Signature');
+        $this->assertTrue($this->verifier->isAuthorized($this->authorizedMessage));
+    }
 
-        $this->assertTrue($this->verifier->isValid($this->message));
+    public function testRejectOnlySignatureHeaderAsAuthorized()
+    {
+        $this->assertFalse($this->verifier->isAuthorized($this->signedMessage));
+    }
+
+    public function testRejectOnlyAuthorizationHeaderAsSigned()
+    {
+        $this->assertFalse($this->verifier->isSigned($this->authorizedMessage));
     }
 
     public function testRejectTamperedRequestMethod()
     {
-        $message = $this->message->withMethod('POST');
-        $this->assertFalse($this->verifier->isValid($message));
+        $message = $this->signedMessage->withMethod('POST');
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 
     public function testRejectTamperedDate()
     {
-        $message = $this->message->withHeader('Date', self::DATE_DIFFERENT);
-        $this->assertFalse($this->verifier->isValid($message));
+        $message = $this->signedMessage->withHeader('Date', self::DATE_DIFFERENT);
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 
     public function testRejectTamperedSignature()
     {
-        $message = $this->message->withHeader(
+        $message = $this->signedMessage->withHeader(
             'Signature',
-            preg_replace('/signature="/', 'signature="x', $this->message->getHeader('Signature')[0])
+            preg_replace('/signature="/', 'signature="x', $this->signedMessage->getHeader('Signature')[0])
         );
-        $this->assertFalse($this->verifier->isValid($message));
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 
     public function testRejectMessageWithoutSignatureHeader()
     {
-        $message = $this->message->withoutHeader('Signature');
-        $this->assertFalse($this->verifier->isValid($message));
+        $message = $this->signedMessage->withoutHeader('Signature');
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 
     public function testRejectMessageWithGarbageSignatureHeader()
     {
-        $message = $this->message->withHeader('Signature', 'not="a",valid="signature"');
-        $this->assertFalse($this->verifier->isValid($message));
+        $message = $this->signedMessage->withHeader('Signature', 'not="a",valid="signature"');
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 
     public function testRejectMessageWithPartialSignatureHeader()
     {
-        $message = $this->message->withHeader('Signature', 'keyId="aa",algorithm="bb"');
-        $this->assertFalse($this->verifier->isValid($message));
+        $message = $this->signedMessage->withHeader('Signature', 'keyId="aa",algorithm="bb"');
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 
     public function testRejectsMessageWithUnknownKeyId()
     {
         $keyStore = new KeyStore(['nope' => 'secret']);
         $verifier = new Verifier($keyStore);
-        $this->assertFalse($verifier->isValid($this->message));
+        $this->assertFalse($verifier->isSigned($this->signedMessage));
     }
 
     public function testRejectsMessageMissingSignedHeaders()
     {
-        $message = $this->message->withoutHeader('Date');
-        $this->assertFalse($this->verifier->isValid($message));
+        $message = $this->signedMessage->withoutHeader('Date');
+        $this->assertFalse($this->verifier->isSigned($message));
     }
 }
