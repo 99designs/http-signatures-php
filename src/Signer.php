@@ -60,13 +60,10 @@ class Signer
         };
         $message = $message->withoutHeader('Digest')
             ->withHeader(
-              'Digest',
-              'SHA-256=' . base64_encode(
-                hash(
-                  'sha256', $message->getBody(), true
-                )
-              )
+                'Digest',
+                'SHA-256=' . base64_encode(hash('sha256', $message->getBody(), true))
             );
+
         return $message;
     }
 
