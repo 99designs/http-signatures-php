@@ -5,6 +5,7 @@ namespace HttpSignatures\tests;
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
+use HttpSignatures\BodyDigest;
 
 class VerifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,14 +45,26 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->message = new Request('GET', '/path?query=123', [
-            'Date' => self::DATE,
-            'Signature' => $signatureHeader,
-        ]);
+            "Date" => self::DATE,
+            "Signature" => $signatureHeader,
+            "Digest" => "SHA-256=h7gWacNDycTMI1vWH4Z3f3Wek1nNZS8px82bBQEEARI="
+        ], 'Some body (though any body in a GET should be ignored)');
     }
 
     public function testVerifyValidMessage()
     {
         $this->assertTrue($this->verifier->isValid($this->message));
+    }
+
+    public function testVerifyValidDigest()
+    {
+        $bodyDigest = BodyDigest::fromMessage($this->message);
+        $this->assertEquals(
+          $this->message->getHeader('Digest')[0],
+          $bodyDigest->getDigestHeaderLine($this->message->getBody())
+        );
+        // $this->assertEquals(
+        //   message));
     }
 
     public function testVerifyValidMessageAuthorizationHeader()
