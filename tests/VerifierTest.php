@@ -5,6 +5,7 @@ namespace HttpSignatures\tests;
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
+use HttpSignatures\Context;
 use HttpSignatures\BodyDigest;
 
 class VerifierTest extends \PHPUnit_Framework_TestCase
@@ -38,10 +39,10 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $signatureHeader = sprintf(
             'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
-            'pda',
-            'hmac-sha256',
-            '(request-target) date',
-            'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
+            "pda",
+            "hmac-sha256",
+            "(request-target) date digest",
+            "tcniMTUZOzRWCgKmLNAHag0CManFsj25ze9Skpk4q8c="
         );
 
         $this->message = new Request('GET', '/path?query=123', [
@@ -58,13 +59,19 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     public function testVerifyValidDigest()
     {
-        $bodyDigest = BodyDigest::fromMessage($this->message);
-        $this->assertEquals(
-          $this->message->getHeader('Digest')[0],
-          $bodyDigest->getDigestHeaderLine($this->message->getBody())
-        );
-        // $this->assertEquals(
-        //   message));
+        $this->assertTrue($this->verifier->isValidDigest($this->message));
+    }
+
+    public function testVerifyValidWithDigest()
+    {
+        $this->assertTrue($this->verifier->isValidWithDigest($this->message));
+    }
+
+    public function testRejectBadDigest()
+    {
+        $message = $this->message->withoutHeader('Digest')
+          ->withHeader('Digest', 'SHA-256=xxx');
+        $this->assertFalse($this->verifier->isValidDigest($message));
     }
 
     public function testVerifyValidMessageAuthorizationHeader()

@@ -3,7 +3,6 @@
 namespace HttpSignatures;
 
 use Psr\Http\Message\RequestInterface;
-use HttpSignatures\BodyDigest;
 
 class Signer
 {

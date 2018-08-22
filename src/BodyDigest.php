@@ -4,8 +4,8 @@ namespace HttpSignatures;
 
 class BodyDigest
 {
-    var $hashName;
-    var $digestHeaderPrefix;
+    public $hashName;
+    public $digestHeaderPrefix;
 
     /**
      * @param string $name
@@ -14,8 +14,7 @@ class BodyDigest
      */
     public function __construct($hashAlgorithm = null)
     {
-
-        switch (strtolower(str_replace("-",'',$hashAlgorithm))) {
+        switch (strtolower(str_replace("-", '', $hashAlgorithm))) {
         case 'sha':
         case 'sha1':
             $this->hashName = 'sha1';
@@ -39,10 +38,10 @@ class BodyDigest
 
     public function digestInHeaderList($headerList)
     {
-      if (!array_search('digest', $headerList->names)) {
-          $headerList->names[] = 'digest';
-      };
-      return $headerList;
+        if (!array_search('digest', $headerList->names)) {
+            $headerList->names[] = 'digest';
+        };
+        return $headerList;
     }
 
     public function setDigestHeader($message)
@@ -50,28 +49,34 @@ class BodyDigest
         $message = $message->withoutHeader('Digest')
             ->withHeader(
                 'Digest',
-                $this->getDigestHeaderLine($message->getBody()));
+                $this->getDigestHeaderLinefromBody($message->getBody()));
         return $message;
     }
 
-    public function getDigestHeaderLine($messageBody)
+    public function getDigestHeaderLinefromBody($messageBody)
     {
-        if ( is_null($messageBody) ) {
-          $messageBody = '';
+        if (is_null($messageBody)) {
+            $messageBody = '';
         };
         return $this->digestHeaderPrefix . '=' . base64_encode(hash($this->hashName, $messageBody, true));
     }
 
-    public static function fromMessage($message) {
-      if (! $digestLine = $message->getHeader('Digest')[0] ) {
-        throw new DigestException("No Digest header in message");
-      }
-      try {
-        return new BodyDigest(explode("=",$digestLine)[0]);
-      } catch (DigestException $e) {
-        throw new DigestException;
-      }
+    public static function fromMessage($message)
+    {
+        if (! $digestLine = $message->getHeader('Digest')) {
+            throw new DigestException("No Digest header in message");
+        }
+        try {
+            return new BodyDigest(explode("=", $digestLine[0])[0]);
+        } catch (DigestException $e) {
+            throw $e;
+        }
+    }
 
-
+    public function isValid($message)
+    {
+        return $message->hasHeader('Signature') &&
+        ($message->getHeader('Digest')[0] ==
+        $this->getDigestHeaderLinefromBody($message->getBody()));
     }
 }
