@@ -29,24 +29,21 @@ class RsaAlgorithm implements AlgorithmInterface
      *
      * @return string
      */
-    public function sign($key, $data)
+    public function sign($signingKey, $data)
     {
         $algo = $this->getRsaHashAlgo($this->digestName);
-        if (! openssl_get_privatekey($key)) {
+        if (! openssl_get_privatekey($signingKey)) {
             throw new httpSignatures\AlgorithmException("OpenSSL doesn't understand the supplied key (not valid or not found)");
         }
         $signature="";
-        openssl_sign($data, $signature, $key, $algo);
+        openssl_sign($data, $signature, $signingKey, $algo);
         return $signature;
     }
 
-    public function verify($message, $signature, $certificate)
+    public function verify($message, $signature, $verifyingKey)
     {
         $algo = $this->getRsaHashAlgo($this->digestName);
-        if (! openssl_pkey_get_public($certificate)) {
-            throw new httpSignatures\AlgorithmException("OpenSSL doesn't understand the supplied key (not valid or not found)");
-        }
-        return openssl_verify($message, base64_decode($signature), $certificate, $algo);
+        return openssl_verify($message, base64_decode($signature), $verifyingKey, $algo);
     }
 
     private function getRsaHashAlgo($digestName)
