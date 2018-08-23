@@ -1,7 +1,7 @@
 # HTTP Signatures
 
 
-PHP implementation of [HTTP Signatures][draft03] draft specification;
+PHP implementation of [HTTP Signatures][draft10] draft specification;
 allowing cryptographic signing and verifying of [PSR7 messages][psr7].
 
 See also:
@@ -136,7 +136,7 @@ $psrRequest = (new DiactorosFactory())
 
 Pull Requests are welcome.
 
-[draft03]: http://tools.ietf.org/html/draft-cavage-http-signatures-03
+[draft10]: http://tools.ietf.org/html/draft-cavage-http-signatures-10
 [Symfony\Component\HttpFoundation\Request]: https://github.com/symfony/HttpFoundation/blob/master/Request.php
 [composer]: https://getcomposer.org/
 [package]: https://packagist.org/packages/99designs/http-signatures
