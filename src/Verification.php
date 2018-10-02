@@ -53,6 +53,7 @@ class Verification
                       $random,
                       true
                   );
+
                   return $expectedResult === $providedResult;
                 case 'rsa':
                     $signedString = new SigningString(
@@ -65,6 +66,7 @@ class Verification
                         $signedString->string(),
                         $this->parameter('signature'),
                         $key->getVerifyingKey());
+
                     return $result;
                 default:
                     throw new Exception("Unknown key type '$key->type', cannot verify");
