@@ -1,20 +1,13 @@
 <?php
 
-$finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->in(__DIR__ . "/src");
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . "/src")
+    ->in(__DIR__ . "/tests");
 
-return Symfony\CS\Config\Config::create()
-    ->level(\Symfony\CS\FixerInterface::PSR2_LEVEL)
-    ->fixers([
-        'unused_use',
-        'remove_lines_between_uses',
-        'remove_leading_slash_use',
-        'ordered_use',
-        'short_array_syntax',
-        'whitespacy_lines',
-        'ternary_spaces',
-        'standardize_not_equal',
-        'spaces_cast',
-        'extra_empty_lines',
+return PhpCsFixer\Config::create()
+    ->setRules([
+        '@PSR2' => true,
+        '@Symfony' => true,
     ])
-    ->finder($finder);
+    ->setFinder($finder)
+;

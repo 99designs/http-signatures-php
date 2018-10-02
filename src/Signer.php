@@ -29,39 +29,44 @@ class Signer
 
     /**
      * @param RequestInterface $message
+     *
      * @return RequestInterface
      */
     public function sign($message)
     {
         $signatureParameters = $this->signatureParameters($message);
-        $message = $message->withAddedHeader("Signature", $signatureParameters->string());
-        $message = $message->withAddedHeader("Authorization", "Signature " . $signatureParameters->string());
+        $message = $message->withAddedHeader('Signature', $signatureParameters->string());
+        $message = $message->withAddedHeader('Authorization', 'Signature '.$signatureParameters->string());
+
         return $message;
     }
 
     /**
      * @param RequestInterface $message
+     *
      * @return RequestInterface
      */
     public function signWithDigest($message)
     {
         $message = $this->addDigest($message);
+
         return $this->sign($message);
     }
 
     /**
      * @param RequestInterface $message
+     *
      * @return RequestInterface
      */
     private function addDigest($message)
     {
         if (!array_search('digest', $this->headerList->names)) {
             $this->headerList->names[] = 'digest';
-        };
+        }
         $message = $message->withoutHeader('Digest')
             ->withHeader(
                 'Digest',
-                'SHA-256=' . base64_encode(hash('sha256', $message->getBody(), true))
+                'SHA-256='.base64_encode(hash('sha256', $message->getBody(), true))
             );
 
         return $message;
@@ -69,6 +74,7 @@ class Signer
 
     /**
      * @param RequestInterface $message
+     *
      * @return SignatureParameters
      */
     private function signatureParameters($message)
@@ -83,6 +89,7 @@ class Signer
 
     /**
      * @param RequestInterface $message
+     *
      * @return Signature
      */
     private function signature($message)

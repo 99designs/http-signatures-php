@@ -41,7 +41,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature ' . $expectedString,
+            'Signature '.$expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -58,7 +58,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="HH6R3OJmJbKUFqqL0tGVIIb7xi1WbbSh/HBXHUtLkUs="']);
+            'signature="HH6R3OJmJbKUFqqL0tGVIIb7xi1WbbSh/HBXHUtLkUs="', ]);
         $expectedDigestHeader =
           'SHA-256=rEcNhYZoBKiR29D30w1JcgArNlF8rXIXf5MnIL/4kcc=';
 
@@ -73,7 +73,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature ' . $expectedString,
+            'Signature '.$expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -84,7 +84,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'PUT', '/things/thething?query=123',
               ['date' => 'today',
               'accept' => 'llamas',
-              'Digest' => 'SHA-256=E/P+4y4x6EySO9qNAjCtQKxVwE1xKsNI/k+cjK+vtLU='],
+              'Digest' => 'SHA-256=E/P+4y4x6EySO9qNAjCtQKxVwE1xKsNI/k+cjK+vtLU=', ],
             'Thing to PUT at /things/thething please...');
         $message = $this->noDigestContext->signer()->signWithDigest($message);
 
@@ -92,7 +92,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="Hyatt1lSR/4XLI9Gcx8XOEKiG8LVktH7Lfr+0tmhwRU="']);
+            'signature="Hyatt1lSR/4XLI9Gcx8XOEKiG8LVktH7Lfr+0tmhwRU="', ]);
         $expectedDigestHeader =
           'SHA-256=mulOx+77mQU1EbPET50SCGA4P/4bYxVCJA1pTwJsaMw=';
 
@@ -107,7 +107,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature ' . $expectedString,
+            'Signature '.$expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -117,7 +117,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $message = new Request(
             'POST', '/path?query=123',
               ['date' => 'today',
-              'accept' => 'llamas'],
+              'accept' => 'llamas', ],
             'Stuff that belongs in /path');
         $message = $this->withDigestContext->signer()->signWithDigest($message);
 
@@ -125,7 +125,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="p8gQHs59X2WzQLUecfmxm1YO0OBTCNKldRZZBQsepfk="']);
+            'signature="p8gQHs59X2WzQLUecfmxm1YO0OBTCNKldRZZBQsepfk="', ]);
         $expectedDigestHeader =
           'SHA-256=jnSMEfBSum4Rh2k6/IVFyvLuQLmGYwMAGBS9WybyDqQ=';
 
@@ -140,7 +140,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature ' . $expectedString,
+            'Signature '.$expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -150,14 +150,14 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $message = new Request(
             'GET', '/path?query=123',
               ['date' => 'today',
-              'accept' => 'llamas']);
+              'accept' => 'llamas', ]);
         $message = $this->withDigestContext->signer()->signWithDigest($message);
 
         $expectedString = implode(',', [
             'keyId="pda"',
             'algorithm="hmac-sha256"',
             'headers="(request-target) date digest"',
-            'signature="7iFqqryI6I9opV/Zp3eEg6PDY1tKw/3GqioOM7ACHHA="']);
+            'signature="7iFqqryI6I9opV/Zp3eEg6PDY1tKw/3GqioOM7ACHHA="', ]);
         $zeroLengthStringDigest =
           'SHA-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=';
 
@@ -172,7 +172,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature ' . $expectedString,
+            'Signature '.$expectedString,
             $message->getHeader('Authorization')[0]
         );
     }

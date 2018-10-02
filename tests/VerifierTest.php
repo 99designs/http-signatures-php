@@ -8,8 +8,8 @@ use HttpSignatures\Verifier;
 
 class VerifierTest extends \PHPUnit_Framework_TestCase
 {
-    const DATE = "Fri, 01 Aug 2014 13:44:32 -0700";
-    const DATE_DIFFERENT = "Fri, 01 Aug 2014 13:44:33 -0700";
+    const DATE = 'Fri, 01 Aug 2014 13:44:32 -0700';
+    const DATE_DIFFERENT = 'Fri, 01 Aug 2014 13:44:33 -0700';
 
     /**
      * @var Verifier
@@ -29,7 +29,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     private function setUpVerifier()
     {
-        $keyStore = new KeyStore(["pda" => "secret"]);
+        $keyStore = new KeyStore(['pda' => 'secret']);
         $this->verifier = new Verifier($keyStore);
     }
 
@@ -37,15 +37,15 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $signatureHeader = sprintf(
             'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
-            "pda",
-            "hmac-sha256",
-            "(request-target) date",
-            "cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU="
+            'pda',
+            'hmac-sha256',
+            '(request-target) date',
+            'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
         );
 
         $this->message = new Request('GET', '/path?query=123', [
-            "Date" => self::DATE,
-            "Signature" => $signatureHeader
+            'Date' => self::DATE,
+            'Signature' => $signatureHeader,
         ]);
     }
 
@@ -103,7 +103,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     public function testRejectsMessageWithUnknownKeyId()
     {
-        $keyStore = new KeyStore(["nope" => "secret"]);
+        $keyStore = new KeyStore(['nope' => 'secret']);
         $verifier = new Verifier($keyStore);
         $this->assertFalse($verifier->isValid($this->message));
     }

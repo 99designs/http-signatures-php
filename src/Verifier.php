@@ -19,6 +19,7 @@ class Verifier
 
     /**
      * @param RequestInterface $message
+     *
      * @return bool
      */
     public function isValid($message)

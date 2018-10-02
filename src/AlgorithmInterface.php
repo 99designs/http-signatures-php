@@ -12,6 +12,7 @@ interface AlgorithmInterface
     /**
      * @param string $key
      * @param string $data
+     *
      * @return string
      */
     public function sign($key, $data);

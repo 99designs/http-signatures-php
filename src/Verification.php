@@ -16,7 +16,7 @@ class Verification
     private $_parameters;
 
     /**
-     * @param RequestInterface $message
+     * @param RequestInterface  $message
      * @param KeyStoreInterface $keyStore
      */
     public function __construct($message, KeyStoreInterface $keyStore)
@@ -40,6 +40,7 @@ class Verification
     {
         try {
             $random = random_bytes(32);
+
             return hash_hmac('sha256', $this->expectedSignatureBase64(), $random, true) === hash_hmac('sha256', $this->providedSignatureBase64(), $random, true);
         } catch (SignatureParseException $e) {
             return false;
@@ -176,6 +177,7 @@ class Verification
     {
         // grab the most recently set header.
         $header = $this->message->getHeader($name);
+
         return end($header);
     }
 }

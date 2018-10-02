@@ -15,7 +15,7 @@ class KeyStoreTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException HttpSignatures\Exception
+     * @expectedException \HttpSignatures\Exception
      */
     public function testFetchFail()
     {
