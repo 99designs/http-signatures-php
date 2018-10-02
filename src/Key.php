@@ -37,10 +37,10 @@ class Key
                 $this->certificate = openssl_x509_read($certificate);
             }
             if ($certificate && $privateKey) {
-                // openssl_pkey_export($this->privateKey, $privateKey);
-                // openssl_x509_export($this->certificate, $certificate);
                 if (!openssl_x509_check_private_key(
-                $this->certificate, $this->privateKey)
+                        $this->certificate,
+                        $this->privateKey
+                    )
                 ) {
                     throw new KeyException('Supplied Certificate and Key are not related');
                 }
@@ -55,7 +55,6 @@ class Key
 
     private function getRSAPrivateKey($object)
     {
-        $key = null;
         if (is_array($object)) {
             foreach ($object as $item) {
                 $privateKey = Key::getRSAPrivateKey($item);

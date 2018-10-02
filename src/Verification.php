@@ -41,27 +41,33 @@ class Verification
         try {
             $key = $this->key();
             switch ($key->getType()) {
-              case 'secret':
-                $random = random_bytes(32);
-                $expectedResult = hash_hmac(
-                  'sha256', $this->expectedSignatureBase64(), $random, true);
-                $providedResult = hash_hmac(
-                  'sha256', $this->providedSignatureBase64(), $random, true);
-
-                return $expectedResult === $providedResult;
-              case 'rsa':
-                $signedString = new SigningString(
-                  $this->headerList(), $this->message);
-                $hashAlgo = explode('-', $this->parameter('algorithm'))[1];
-                $algorithm = new RsaAlgorithm($hashAlgo);
-                $result = $algorithm->verify(
-                  $signedString->string(),
-                  $this->parameter('signature'),
-                  $key->getVerifyingKey());
-
-                return $result;
-              default:
-                throw new Exception("Unknown key type '$key->type', cannot verify");
+                case 'secret':
+                  $random = random_bytes(32);
+                  $expectedResult = hash_hmac(
+                      'sha256', $this->expectedSignatureBase64(),
+                      $random,
+                      true
+                  );
+                  $providedResult = hash_hmac(
+                      'sha256', $this->providedSignatureBase64(),
+                      $random,
+                      true
+                  );
+                  return $expectedResult === $providedResult;
+                case 'rsa':
+                    $signedString = new SigningString(
+                        $this->headerList(),
+                        $this->message
+                    );
+                    $hashAlgo = explode('-', $this->parameter('algorithm'))[1];
+                    $algorithm = new RsaAlgorithm($hashAlgo);
+                    $result = $algorithm->verify(
+                        $signedString->string(),
+                        $this->parameter('signature'),
+                        $key->getVerifyingKey());
+                    return $result;
+                default:
+                    throw new Exception("Unknown key type '$key->type', cannot verify");
             }
         } catch (SignatureParseException $e) {
             return false;

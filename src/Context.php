@@ -89,16 +89,6 @@ class Context
         }
     }
 
-    // /**
-    //  * @return HmacAlgorithm
-    //  *
-    //  * @throws Exception
-    //  */
-    // private function algorithm()
-    // {
-    //     return Algorithm::create($this->algorithmName);
-    // }
-
     /**
      * @return HeaderList
      */
