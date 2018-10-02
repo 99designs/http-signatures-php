@@ -32,17 +32,19 @@ class RsaAlgorithm implements AlgorithmInterface
     public function sign($signingKey, $data)
     {
         $algo = $this->getRsaHashAlgo($this->digestName);
-        if (! openssl_get_privatekey($signingKey)) {
+        if (!openssl_get_privatekey($signingKey)) {
             throw new httpSignatures\AlgorithmException("OpenSSL doesn't understand the supplied key (not valid or not found)");
         }
-        $signature="";
+        $signature = '';
         openssl_sign($data, $signature, $signingKey, $algo);
+
         return $signature;
     }
 
     public function verify($message, $signature, $verifyingKey)
     {
         $algo = $this->getRsaHashAlgo($this->digestName);
+
         return openssl_verify($message, base64_decode($signature), $verifyingKey, $algo);
     }
 
@@ -54,7 +56,7 @@ class RsaAlgorithm implements AlgorithmInterface
         case 'sha1':
           return OPENSSL_ALGO_SHA1;
         default:
-          throw new httpSignatures\AlgorithmException($digestName . " is not a supported hash format");
+          throw new httpSignatures\AlgorithmException($digestName.' is not a supported hash format');
       }
     }
 }

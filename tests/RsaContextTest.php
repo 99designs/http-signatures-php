@@ -33,11 +33,11 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
             'keyId="rsa1"',
             'algorithm="rsa-sha1"',
             'headers="(request-target) date"',
-            'signature="YIR3DteE3Jmz1VAnUMTgjTn3vTKfQuZl1CJhMBvGOZpnzwKeYBXA' .
-              'H108FojnbSeVG/AXq9pcrA6AFK0peg0aueqxpaFlo+4L/q5XzJ+QoryY3dlSr' .
-              'xwVnE5s5M19xmFm/6YkZR/KPeANCsG4SPL82Um/PCEMU0tmKd6sSx+IIzAYbX' .
-              'G/VrFMDeQAdXqpU1EhgxopKEAapN8rChb49+1JfR/RxlSKiLukJJ6auurm2zM' .
-              'n2D40fR1d2umA5LAO7vRt2iQwVbtwiFkVlRqkMvGftCNZByu8jJ6StI5H7Efu' .
+            'signature="YIR3DteE3Jmz1VAnUMTgjTn3vTKfQuZl1CJhMBvGOZpnzwKeYBXA'.
+              'H108FojnbSeVG/AXq9pcrA6AFK0peg0aueqxpaFlo+4L/q5XzJ+QoryY3dlSr'.
+              'xwVnE5s5M19xmFm/6YkZR/KPeANCsG4SPL82Um/PCEMU0tmKd6sSx+IIzAYbX'.
+              'G/VrFMDeQAdXqpU1EhgxopKEAapN8rChb49+1JfR/RxlSKiLukJJ6auurm2zM'.
+              'n2D40fR1d2umA5LAO7vRt2iQwVbtwiFkVlRqkMvGftCNZByu8jJ6StI5H7Efu'.
               'ANSHAZXKXWNH8yxpBUW/QCHCZjPd0ugM0QJJIc7i8JbGlA=="',
         ]);
 
@@ -45,7 +45,6 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
             $expectedSha1String,
             $message->getHeader('Signature')[0]
         );
-
     }
 
     public function testSha256Signer()
@@ -57,11 +56,11 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
             'keyId="rsa1"',
             'algorithm="rsa-sha256"',
             'headers="(request-target) date"',
-            'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WB' .
-            'FDA/aktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/g' .
-            'j0OVL8s2usG4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsW' .
-            'oMFpv0IjcgBH2V41AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHft' .
-            'PIp3VpB53zbemlJS9Yw3tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiI' .
+            'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WB'.
+            'FDA/aktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/g'.
+            'j0OVL8s2usG4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsW'.
+            'oMFpv0IjcgBH2V41AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHft'.
+            'PIp3VpB53zbemlJS9Yw3tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiI'.
             'LK67i/WH9moltJtlfV57TV72cgYtjWa6yqhtFg=="',
         ]);
 
@@ -69,18 +68,17 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
             $expectedSha256String,
             $message->getHeader('Signature')[0]
         );
-      }
+    }
 
-      /**
-       * @expectedException     HttpSignatures\AlgorithmException
-       */
-      public function testRsaBadalgorithm()
-      {
-          $sha224context = new Context([
+    /**
+     * @expectedException     \HttpSignatures\AlgorithmException
+     */
+    public function testRsaBadalgorithm()
+    {
+        $sha224context = new Context([
               'keys' => ['rsa1' => TestKeys::rsaKey],
               'algorithm' => 'rsa-sha224',
               'headers' => ['(request-target)', 'date'],
           ]);
-        }
-
+    }
 }

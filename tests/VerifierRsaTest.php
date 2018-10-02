@@ -6,13 +6,11 @@ use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
 use HttpSignatures\Tests\TestKeys;
-use HttpSignatures\HeaderList;
-use HttpSignatures\SigningString;
 
 class VerifierRsaTest extends \PHPUnit\Framework\TestCase
 {
-    const DATE = "Fri, 01 Aug 2014 13:44:32 -0700";
-    const DATE_DIFFERENT = "Fri, 01 Aug 2014 13:44:33 -0700";
+    const DATE = 'Fri, 01 Aug 2014 13:44:32 -0700';
+    const DATE_DIFFERENT = 'Fri, 01 Aug 2014 13:44:33 -0700';
 
     /**
      * @var Verifier
@@ -29,37 +27,37 @@ class VerifierRsaTest extends \PHPUnit\Framework\TestCase
         $this->setUpRsaVerifier();
 
         $sha1SignatureHeader =
-        'keyId="rsa1",algorithm="rsa-sha1",headers="(request-target) date",' .
-        'signature="YIR3DteE3Jmz1VAnUMTgjTn3vTKfQuZl1CJhMBvGOZpnzwKeYBXAH10' .
-        '8FojnbSeVG/AXq9pcrA6AFK0peg0aueqxpaFlo+4L/q5XzJ+QoryY3dlSrxwVnE5s5' .
-        'M19xmFm/6YkZR/KPeANCsG4SPL82Um/PCEMU0tmKd6sSx+IIzAYbXG/VrFMDeQAdXq' .
-        'pU1EhgxopKEAapN8rChb49+1JfR/RxlSKiLukJJ6auurm2zMn2D40fR1d2umA5LAO7' .
-        'vRt2iQwVbtwiFkVlRqkMvGftCNZByu8jJ6StI5H7EfuANSHAZXKXWNH8yxpBUW/QCH' .
+        'keyId="rsa1",algorithm="rsa-sha1",headers="(request-target) date",'.
+        'signature="YIR3DteE3Jmz1VAnUMTgjTn3vTKfQuZl1CJhMBvGOZpnzwKeYBXAH10'.
+        '8FojnbSeVG/AXq9pcrA6AFK0peg0aueqxpaFlo+4L/q5XzJ+QoryY3dlSrxwVnE5s5'.
+        'M19xmFm/6YkZR/KPeANCsG4SPL82Um/PCEMU0tmKd6sSx+IIzAYbXG/VrFMDeQAdXq'.
+        'pU1EhgxopKEAapN8rChb49+1JfR/RxlSKiLukJJ6auurm2zMn2D40fR1d2umA5LAO7'.
+        'vRt2iQwVbtwiFkVlRqkMvGftCNZByu8jJ6StI5H7EfuANSHAZXKXWNH8yxpBUW/QCH'.
         'CZjPd0ugM0QJJIc7i8JbGlA=="';
 
         $this->sha1Message = new Request('GET', '/path?query=123', [
-            "Date" => 'today',
-            "Signature" => $sha1SignatureHeader
+            'Date' => 'today',
+            'Signature' => $sha1SignatureHeader,
         ]);
 
         $sha256SignatureHeader =
-        'keyId="rsa1",algorithm="rsa-sha256",headers="(request-target) date",' .
-        'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WBFDA/a' .
-        'ktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/gj0OVL8s2us' .
-        'G4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsWoMFpv0IjcgBH2V4' .
-        '1AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHftPIp3VpB53zbemlJS9Yw3' .
-        'tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiILK67i/WH9moltJtlfV57TV72c' .
+        'keyId="rsa1",algorithm="rsa-sha256",headers="(request-target) date",'.
+        'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WBFDA/a'.
+        'ktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/gj0OVL8s2us'.
+        'G4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsWoMFpv0IjcgBH2V4'.
+        '1AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHftPIp3VpB53zbemlJS9Yw3'.
+        'tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiILK67i/WH9moltJtlfV57TV72c'.
         'gYtjWa6yqhtFg=="';
 
         $this->sha256Message = new Request('GET', '/path?query=123', [
-            "Date" => 'today',
-            "Signature" => $sha256SignatureHeader
+            'Date' => 'today',
+            'Signature' => $sha256SignatureHeader,
         ]);
     }
 
     private function setUpRsaVerifier()
     {
-        $keyStore = new KeyStore(["rsa1" => TestKeys::rsaCert]);
+        $keyStore = new KeyStore(['rsa1' => TestKeys::rsaCert]);
         $this->verifier = new Verifier($keyStore);
     }
 
@@ -142,7 +140,7 @@ class VerifierRsaTest extends \PHPUnit\Framework\TestCase
 
     public function testRejectsRsaMessageWithUnknownKeyId()
     {
-        $keyStore = new KeyStore(["nope" => "secret"]);
+        $keyStore = new KeyStore(['nope' => 'secret']);
         $verifier = new Verifier($keyStore);
         $this->assertFalse($verifier->isValid($this->sha1Message));
         $this->assertFalse($verifier->isValid($this->sha256Message));

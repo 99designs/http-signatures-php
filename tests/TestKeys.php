@@ -2,8 +2,9 @@
 
 namespace HttpSignatures\Tests;
 
-abstract class TestKeys {
-  const rsaKey =
+abstract class TestKeys
+{
+    const rsaKey =
 '-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAxyfPtnW/CakdLpZVh90sR+hpRwiBBdS/za6wal0pFddl2xcL
 sHY/IA1u348xOc4LEY2D0807o1IXSEaqrt9eUkAh+yLGKgDCWLGzW026HBMgojhn
@@ -31,7 +32,7 @@ VmQZYjsCgYA9ADxvlgGQmo3uHup6u54S7MgwvzIK7WiXKkuoI5rp0B0mwTr3loVt
 3r3tZBH4+z17fVhmoQ4a4kYT8ixn0XpaL0LOv8s02b36XCNlrfPlafOwhHfOHmlz
 zQnzviLiUOgXyD8FwZlYx+hTM09CYPcdJWSPl6JVF7uxm2fX/HdS3w==
 -----END RSA PRIVATE KEY-----';
-  const rsaCert =
+    const rsaCert =
 '-----BEGIN CERTIFICATE-----
 MIICmjCCAYICCQDIxrpvPCnqRjANBgkqhkiG9w0BAQsFADAPMQ0wCwYDVQQDDAR0
 ZXN0MB4XDTE4MDgxODEyMjMzMloXDTI4MDgxNTEyMjMzMlowDzENMAsGA1UEAwwE

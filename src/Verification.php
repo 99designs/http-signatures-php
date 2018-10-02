@@ -47,7 +47,8 @@ class Verification
                   'sha256', $this->expectedSignatureBase64(), $random, true);
                 $providedResult = hash_hmac(
                   'sha256', $this->providedSignatureBase64(), $random, true);
-                return ($expectedResult === $providedResult);
+
+                return $expectedResult === $providedResult;
               case 'rsa':
                 $signedString = new SigningString(
                   $this->headerList(), $this->message);
@@ -57,6 +58,7 @@ class Verification
                   $signedString->string(),
                   $this->parameter('signature'),
                   $key->getVerifyingKey());
+
                 return $result;
               default:
                 throw new Exception("Unknown key type '$key->type', cannot verify");

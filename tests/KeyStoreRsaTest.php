@@ -9,18 +9,18 @@ use HttpSignatures\Tests\TestKeys;
 class KeyStoreRsaTest extends \PHPUnit_Framework_TestCase
 {
     /** @var string */
-    var $testRsaPrivateKeyPEM;
+    public $testRsaPrivateKeyPEM;
 
     /** @var string */
-    var $testRsaPublicKeyPEM;
+    public $testRsaPublicKeyPEM;
 
-    public function setUp() {
-
-      openssl_pkey_export(
+    public function setUp()
+    {
+        openssl_pkey_export(
         openssl_pkey_get_private(TestKeys::rsaKey),
         $this->testRsaPrivateKeyPEM
       );
-      $this->testRsaPublicKeyPEM = openssl_pkey_get_details(
+        $this->testRsaPublicKeyPEM = openssl_pkey_get_details(
         openssl_get_publickey(TestKeys::rsaCert)
         )['key'];
     }
@@ -30,8 +30,8 @@ class KeyStoreRsaTest extends \PHPUnit_Framework_TestCase
         $ks = new KeyStore(['rsakey' => TestKeys::rsaKey]);
         $key = $ks->fetch('rsakey');
         openssl_pkey_export($key->getSigningKey(), $keyStoreSigningKey);
-        $this->assertEquals([ 'rsakey', $this->testRsaPrivateKeyPEM, null, 'rsa'], [
-          $key->getId(), $keyStoreSigningKey, $key->getVerifyingKey(), $key->getType()]);
+        $this->assertEquals(['rsakey', $this->testRsaPrivateKeyPEM, null, 'rsa'], [
+          $key->getId(), $keyStoreSigningKey, $key->getVerifyingKey(), $key->getType(), ]);
     }
 
     public function testFetchRsaVerifyingKeySuccess()
@@ -39,8 +39,8 @@ class KeyStoreRsaTest extends \PHPUnit_Framework_TestCase
         $ks = new KeyStore(['rsacert' => TestKeys::rsaCert]);
         $key = $ks->fetch('rsacert');
         $keyStoreVerifyingKey = openssl_pkey_get_details($key->getVerifyingKey())['key'];
-        $this->assertEquals([ 'rsacert', null, $this->testRsaPublicKeyPEM, 'rsa'], [
-          $key->getId(), $key->getSigningKey(), $keyStoreVerifyingKey, $key->getType()]);
+        $this->assertEquals(['rsacert', null, $this->testRsaPublicKeyPEM, 'rsa'], [
+          $key->getId(), $key->getSigningKey(), $keyStoreVerifyingKey, $key->getType(), ]);
     }
 
     public function testFetchRsaBothSuccess()
@@ -49,8 +49,8 @@ class KeyStoreRsaTest extends \PHPUnit_Framework_TestCase
         $key = $ks->fetch('rsaboth');
         $keyStoreVerifyingKey = openssl_pkey_get_details($key->getVerifyingKey())['key'];
         openssl_pkey_export($key->getSigningKey(), $keyStoreSigningKey);
-        $this->assertEquals([ 'rsaboth', $this->testRsaPrivateKeyPEM, $this->testRsaPublicKeyPEM, 'rsa'], [
-          $key->getId(), $keyStoreSigningKey, $keyStoreVerifyingKey, $key->getType()]);
+        $this->assertEquals(['rsaboth', $this->testRsaPrivateKeyPEM, $this->testRsaPublicKeyPEM, 'rsa'], [
+          $key->getId(), $keyStoreSigningKey, $keyStoreVerifyingKey, $key->getType(), ]);
     }
 
     public function testFetchRsaBothSuccessSwitched()
@@ -59,18 +59,18 @@ class KeyStoreRsaTest extends \PHPUnit_Framework_TestCase
         $key = $ks->fetch('rsabothswitch');
         $keyStoreVerifyingKey = openssl_pkey_get_details($key->getVerifyingKey())['key'];
         openssl_pkey_export($key->getSigningKey(), $keyStoreSigningKey);
-        $this->assertEquals([ 'rsabothswitch', $this->testRsaPrivateKeyPEM, $this->testRsaPublicKeyPEM, 'rsa'], [
-          $key->getId(), $keyStoreSigningKey, $keyStoreVerifyingKey, $key->getType()]);
+        $this->assertEquals(['rsabothswitch', $this->testRsaPrivateKeyPEM, $this->testRsaPublicKeyPEM, 'rsa'], [
+          $key->getId(), $keyStoreSigningKey, $keyStoreVerifyingKey, $key->getType(), ]);
     }
 
     /**
-     * @expectedException HttpSignatures\KeyException
+     * @expectedException \HttpSignatures\KeyException
      */
-     public function testRsaMismatch()
+    public function testRsaMismatch()
     {
         $privateKey = openssl_pkey_new([
           'private_key_type' => 'OPENSSL_KEYTYPE_RSA',
-          'private_key_bits' => 1024 ]
+          'private_key_bits' => 1024, ]
         );
         $ks = new Key('badpki', [TestKeys::rsaCert, $privateKey]);
     }

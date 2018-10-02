@@ -32,25 +32,25 @@ class Key
             $this->type = 'rsa';
             if ($privateKey) {
                 $this->privateKey = $privateKey;
-            };
+            }
             if ($certificate) {
                 $this->certificate = openssl_x509_read($certificate);
-            };
+            }
             if ($certificate && $privateKey) {
                 // openssl_pkey_export($this->privateKey, $privateKey);
-            // openssl_x509_export($this->certificate, $certificate);
-            if (! openssl_x509_check_private_key(
+                // openssl_x509_export($this->certificate, $certificate);
+                if (!openssl_x509_check_private_key(
                 $this->certificate, $this->privateKey)
                 ) {
-                throw new KeyException("Supplied Certificate and Key are not related");
+                    throw new KeyException('Supplied Certificate and Key are not related');
+                }
             }
-            };
         } else {
             $this->type = 'secret';
             $this->secret = $item;
             $publicKey = null;
             $privateKey = null;
-        };
+        }
     }
 
     private function getRSAPrivateKey($object)
@@ -62,13 +62,13 @@ class Key
                 if ($privateKey) {
                     return $privateKey;
                 }
-            };
+            }
         } else {
             try {
                 $privateKey = openssl_get_privatekey($object);
             } catch (\Exception $e) {
                 $privateKey = null;
-            };
+            }
             if ($privateKey) {
                 return $privateKey;
             }
@@ -84,16 +84,18 @@ class Key
                 if ($result) {
                     $key = $result;
                 }
-            };
+            }
+
             return $key;
         } else {
             try {
                 $result = openssl_get_publickey($object);
             } catch (\Exception $e) {
                 $result = null;
-            };
+            }
             if ($result) {
                 openssl_x509_export($object, $out);
+
                 return $object;
             }
         }
