@@ -55,7 +55,8 @@ class BodyDigest
         $message = $message->withoutHeader('Digest')
             ->withHeader(
                 'Digest',
-                $this->getDigestHeaderLinefromBody($message->getBody()));
+                $this->getDigestHeaderLinefromBody($message->getBody())
+            );
 
         return $message;
     }
@@ -74,10 +75,20 @@ class BodyDigest
         if (!$digestLine = $message->getHeader('Digest')) {
             throw new DigestException('No Digest header in message');
         }
+        $digestAlgorithm = self::getDigestAlgorithm($digestLine[0]);
+        if ($digestAlgorithm) {
+            return new BodyDigest($digestAlgorithm);
+        } else {
+            throw new DigestException('Digest header does not appear to be correctly formatted');
+        }
+    }
+
+    private static function getDigestAlgorithm($digestLine)
+    {
         try {
-            return new BodyDigest(explode('=', $digestLine[0])[0]);
+            return explode('=', $digestLine)[0];
         } catch (DigestException $e) {
-            throw $e;
+            return false;
         }
     }
 
