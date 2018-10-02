@@ -5,8 +5,6 @@ namespace HttpSignatures\tests;
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
-use HttpSignatures\Context;
-use HttpSignatures\BodyDigest;
 
 class VerifierTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,16 +37,16 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $signatureHeader = sprintf(
             'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
-            "pda",
-            "hmac-sha256",
-            "(request-target) date digest",
-            "tcniMTUZOzRWCgKmLNAHag0CManFsj25ze9Skpk4q8c="
+            'pda',
+            'hmac-sha256',
+            '(request-target) date digest',
+            'tcniMTUZOzRWCgKmLNAHag0CManFsj25ze9Skpk4q8c='
         );
 
         $this->message = new Request('GET', '/path?query=123', [
-            "Date" => self::DATE,
-            "Signature" => $signatureHeader,
-            "Digest" => "SHA-256=h7gWacNDycTMI1vWH4Z3f3Wek1nNZS8px82bBQEEARI="
+            'Date' => self::DATE,
+            'Signature' => $signatureHeader,
+            'Digest' => 'SHA-256=h7gWacNDycTMI1vWH4Z3f3Wek1nNZS8px82bBQEEARI=',
         ], 'Some body (though any body in a GET should be ignored)');
     }
 

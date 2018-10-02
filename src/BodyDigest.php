@@ -12,12 +12,14 @@ class BodyDigest
 
     /**
      * @param string $name
+     *
      * @return BodyDigest
+     *
      * @throws DigestException
      */
     public function __construct($hashAlgorithm = null)
     {
-        switch (strtolower(str_replace("-", '', $hashAlgorithm))) {
+        switch (strtolower(str_replace('-', '', $hashAlgorithm))) {
         case 'sha':
         case 'sha1':
             $this->hashName = 'sha1';
@@ -43,7 +45,8 @@ class BodyDigest
     {
         if (!array_search('digest', $headerList->names)) {
             $headerList->names[] = 'digest';
-        };
+        }
+
         return $headerList;
     }
 
@@ -53,6 +56,7 @@ class BodyDigest
             ->withHeader(
                 'Digest',
                 $this->getDigestHeaderLinefromBody($message->getBody()));
+
         return $message;
     }
 
@@ -60,17 +64,18 @@ class BodyDigest
     {
         if (is_null($messageBody)) {
             $messageBody = '';
-        };
-        return $this->digestHeaderPrefix . '=' . base64_encode(hash($this->hashName, $messageBody, true));
+        }
+
+        return $this->digestHeaderPrefix.'='.base64_encode(hash($this->hashName, $messageBody, true));
     }
 
     public static function fromMessage($message)
     {
-        if (! $digestLine = $message->getHeader('Digest')) {
-            throw new DigestException("No Digest header in message");
+        if (!$digestLine = $message->getHeader('Digest')) {
+            throw new DigestException('No Digest header in message');
         }
         try {
-            return new BodyDigest(explode("=", $digestLine[0])[0]);
+            return new BodyDigest(explode('=', $digestLine[0])[0]);
         } catch (DigestException $e) {
             throw $e;
         }

@@ -31,16 +31,19 @@ class Verifier
 
     /**
      * @param RequestInterface $message
+     *
      * @return bool
      */
     public function isValidDigest($message)
     {
         $bodyDigest = BodyDigest::fromMessage($message);
+
         return $bodyDigest->isValid($message);
     }
 
     /**
      * @param RequestInterface $message
+     *
      * @return bool
      */
     public function isValidWithDigest($message)
@@ -53,7 +56,8 @@ class Verifier
                     return $this->isValid($message);
                 }
             }
-        };
+        }
+
         return false;
     }
 }
