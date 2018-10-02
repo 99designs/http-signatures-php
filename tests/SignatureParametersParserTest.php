@@ -23,7 +23,7 @@ class SignatureParametersParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException HttpSignatures\SignatureParseException
+     * @expectedException \HttpSignatures\SignatureParseException
      */
     public function testParseThrowsTypedException()
     {
@@ -32,7 +32,7 @@ class SignatureParametersParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException HttpSignatures\SignatureParseException
+     * @expectedException \HttpSignatures\SignatureParseException
      */
     public function testParseExceptionForMissingComponents()
     {

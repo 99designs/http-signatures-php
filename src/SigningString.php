@@ -13,7 +13,7 @@ class SigningString
     private $message;
 
     /**
-     * @param HeaderList $headerList
+     * @param HeaderList       $headerList
      * @param RequestInterface $message
      */
     public function __construct(HeaderList $headerList, $message)
@@ -43,12 +43,14 @@ class SigningString
 
     /**
      * @param string $name
+     *
      * @return string
+     *
      * @throws SignedHeaderNotPresentException
      */
     private function line($name)
     {
-        if ($name == '(request-target)') {
+        if ('(request-target)' == $name) {
             return $this->requestTargetLine();
         } else {
             return sprintf('%s: %s', $name, $this->headerValue($name));
@@ -57,13 +59,16 @@ class SigningString
 
     /**
      * @param string $name
+     *
      * @return string
+     *
      * @throws SignedHeaderNotPresentException
      */
     private function headerValue($name)
     {
         if ($this->message->hasHeader($name)) {
             $header = $this->message->getHeader($name);
+
             return end($header);
         } else {
             throw new SignedHeaderNotPresentException("Header '$name' not in message");

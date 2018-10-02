@@ -45,7 +45,7 @@ class Context
         // signingKeyId specifies the key used for signing messages.
         if (isset($args['signingKeyId'])) {
             $this->signingKeyId = $args['signingKeyId'];
-        } elseif (isset($args['keys']) && count($args['keys']) === 1) {
+        } elseif (isset($args['keys']) && 1 === count($args['keys'])) {
             list($this->signingKeyId) = array_keys($args['keys']); // first key
         }
     }

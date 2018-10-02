@@ -16,7 +16,7 @@ class SigningStringTest extends \PHPUnit_Framework_TestCase
         $ss = new SigningString($headerList, $this->message('/path'));
 
         $this->assertEquals(
-            "(request-target): get /path",
+            '(request-target): get /path',
             $ss->string()
         );
     }

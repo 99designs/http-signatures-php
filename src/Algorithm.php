@@ -6,7 +6,9 @@ abstract class Algorithm
 {
     /**
      * @param string $name
+     *
      * @return HmacAlgorithm
+     *
      * @throws Exception
      */
     public static function create($name)

@@ -74,7 +74,7 @@ class SignatureParametersParser
         $segmentPattern = '/\A(keyId|algorithm|headers|signature)="(.*)"\z/';
         $matches = [];
         $result = preg_match($segmentPattern, $segment, $matches);
-        if ($result !== 1) {
+        if (1 !== $result) {
             throw new SignatureParseException("Signature parameters segment '$segment' invalid");
         }
         array_shift($matches);
