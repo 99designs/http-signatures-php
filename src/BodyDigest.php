@@ -19,6 +19,7 @@ class BodyDigest
      */
     public function __construct($hashAlgorithm = null)
     {
+        // Normalise to openssl type for switch - remove dashes and lowercase
         switch (strtolower(str_replace('-', '', $hashAlgorithm))) {
         case 'sha':
         case 'sha1':
@@ -94,8 +95,8 @@ class BodyDigest
 
     public function isValid($message)
     {
-        return $message->hasHeader('Signature') &&
-        ($message->getHeader('Digest')[0] ==
-        $this->getDigestHeaderLinefromBody($message->getBody()));
+        return
+            $message->getHeader('Digest')[0] == $this->getDigestHeaderLinefromBody($message->getBody())
+        ;
     }
 }
