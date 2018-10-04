@@ -59,6 +59,7 @@ class Signer
      *
      * @return RequestInterface
      */
+
     /**
      * @param RequestInterface $message
      *
