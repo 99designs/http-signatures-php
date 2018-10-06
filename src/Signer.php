@@ -43,6 +43,17 @@ class Signer
 
     /**
      * @param RequestInterface $message
+     * @return RequestInterface
+     */
+    public function authorize($message)
+    {
+        $signatureParameters = $this->signatureParameters($message);
+        $message = $message->withAddedHeader("Authorization", "Signature " . $signatureParameters->string());
+        return $message;
+    }
+
+    /**
+     * @param RequestInterface $message
      *
      * @return RequestInterface
      */
