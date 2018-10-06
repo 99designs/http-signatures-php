@@ -69,6 +69,7 @@ class Verification
     {
         try {
             $random = random_bytes(32);
+
             return
               hash_hmac('sha256', $this->expectedAuthorizationBase64(), $random, true) ===
               hash_hmac('sha256', $this->providedAuthorizationBase64(), $random, true);

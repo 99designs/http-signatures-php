@@ -50,9 +50,9 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->signedMessage = new Request('GET', '/path?query=123', [
-            "Date" => self::DATE,
-            "Signature" => $signatureHeader,
-            "Authorization" => "Bearer abc123"
+            'Date' => self::DATE,
+            'Signature' => $signatureHeader,
+            'Authorization' => 'Bearer abc123',
         ]);
     }
 
@@ -60,16 +60,16 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $authorizationHeader = sprintf(
             'Signature keyId="%s",algorithm="%s",headers="%s",signature="%s"',
-            "pda",
-            "hmac-sha256",
-            "(request-target) date",
-            "cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU="
+            'pda',
+            'hmac-sha256',
+            '(request-target) date',
+            'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
         );
 
         $this->authorizedMessage = new Request('GET', '/path?query=123', [
-            "Date" => self::DATE,
-            "Authorization" => $authorizationHeader,
-            "Signature" => "My Lawyer signed this"
+            'Date' => self::DATE,
+            'Authorization' => $authorizationHeader,
+            'Signature' => 'My Lawyer signed this',
         ]);
     }
 

@@ -31,6 +31,7 @@ class Verifier
 
     /**
      * @param RequestInterface $message
+     *
      * @return bool
      */
     public function isAuthorized($message)

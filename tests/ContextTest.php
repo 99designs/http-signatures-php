@@ -197,7 +197,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     public function testSignatureVerifier()
     {
         $message = $this->noDigestContext->signer()->sign(new Request('GET', '/path?query=123', [
