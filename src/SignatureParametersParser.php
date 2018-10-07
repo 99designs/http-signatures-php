@@ -100,8 +100,8 @@ class SignatureParametersParser
     private function validateAllKeysArePresent($result)
     {
         // Regexp in pair() ensures no unwanted keys exist.
-        // Ensure that all wanted keys exist.
-        $wanted = ['keyId', 'algorithm', 'headers', 'signature'];
+        // Ensure that all mandatory keys exist.
+        $wanted = ['keyId', 'algorithm', 'signature'];
         $missing = array_diff($wanted, array_keys($result));
         if (!empty($missing)) {
             $csv = implode(', ', $missing);
