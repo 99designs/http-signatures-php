@@ -19,12 +19,18 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Request
      */
-    private $message;
+    private $validMessage;
+
+    /**
+     * @var Request
+     */
+    private $validMessageNoHeaders;
 
     public function setUp()
     {
         $this->setUpVerifier();
         $this->setUpValidMessage();
+        $this->setUpValidMessageNoHeaders();
     }
 
     private function setUpVerifier()
@@ -43,61 +49,85 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
             'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
         );
 
-        $this->message = new Request('GET', '/path?query=123', [
+        $this->validMessage = new Request('GET', '/path?query=123', [
             'Date' => self::DATE,
             'Signature' => $signatureHeader,
         ]);
     }
 
+    private function setUpValidMessageNoHeaders()
+    {
+        $signatureHeaderNoHeaders = sprintf(
+            'keyId="%s",algorithm="%s",signature="%s"',
+            'pda',
+            'hmac-sha256',
+            'SNERdFCcPF40c5kw0zbmSXn3Zv2KZWhiuHSijhZs/4k='
+        );
+
+        $this->validMessageNoHeaders = new Request('GET', '/path?query=123', [
+            'Date' => 'today',
+            'Signature' => $signatureHeaderNoHeaders,
+            'NoSignatureHeaders' => 'true',
+        ]);
+    }
+
     public function testVerifyValidMessage()
     {
-        $this->assertTrue($this->verifier->isValid($this->message));
+        $this->assertTrue($this->verifier->isValid($this->validMessage));
+    }
+
+    public function testVerifyValidMessageNoHeaders()
+    {
+        $this->assertTrue($this->verifier->isValid($this->validMessageNoHeaders));
     }
 
     public function testVerifyValidMessageAuthorizationHeader()
     {
-        $message = $this->message->withHeader('Authorization', "Signature {$this->message->getHeader('Signature')[0]}");
+        $message = $this->validMessage->withHeader(
+          'Authorization',
+          'Signature '.$this->validMessage->getHeader('Signature')[0]
+          );
         $message = $message->withoutHeader('Signature');
 
-        $this->assertTrue($this->verifier->isValid($this->message));
+        $this->assertTrue($this->verifier->isValid($this->validMessage));
     }
 
     public function testRejectTamperedRequestMethod()
     {
-        $message = $this->message->withMethod('POST');
+        $message = $this->validMessage->withMethod('POST');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectTamperedDate()
     {
-        $message = $this->message->withHeader('Date', self::DATE_DIFFERENT);
+        $message = $this->validMessage->withHeader('Date', self::DATE_DIFFERENT);
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectTamperedSignature()
     {
-        $message = $this->message->withHeader(
+        $message = $this->validMessage->withHeader(
             'Signature',
-            preg_replace('/signature="/', 'signature="x', $this->message->getHeader('Signature')[0])
+            preg_replace('/signature="/', 'signature="x', $this->validMessage->getHeader('Signature')[0])
         );
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectMessageWithoutSignatureHeader()
     {
-        $message = $this->message->withoutHeader('Signature');
+        $message = $this->validMessage->withoutHeader('Signature');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectMessageWithGarbageSignatureHeader()
     {
-        $message = $this->message->withHeader('Signature', 'not="a",valid="signature"');
+        $message = $this->validMessage->withHeader('Signature', 'not="a",valid="signature"');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectMessageWithPartialSignatureHeader()
     {
-        $message = $this->message->withHeader('Signature', 'keyId="aa",algorithm="bb"');
+        $message = $this->validMessage->withHeader('Signature', 'keyId="aa",algorithm="bb"');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
@@ -105,12 +135,12 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     {
         $keyStore = new KeyStore(['nope' => 'secret']);
         $verifier = new Verifier($keyStore);
-        $this->assertFalse($verifier->isValid($this->message));
+        $this->assertFalse($verifier->isValid($this->validMessage));
     }
 
     public function testRejectsMessageMissingSignedHeaders()
     {
-        $message = $this->message->withoutHeader('Date');
+        $message = $this->validMessage->withoutHeader('Date');
         $this->assertFalse($this->verifier->isValid($message));
     }
 }

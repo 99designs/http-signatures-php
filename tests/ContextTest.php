@@ -21,6 +21,10 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'algorithm' => 'hmac-sha256',
             'headers' => ['(request-target)', 'date', 'digest'],
         ]);
+        $this->noHeadersContext = new Context([
+            'keys' => ['pda' => 'secret'],
+            'algorithm' => 'hmac-sha256',
+        ]);
     }
 
     public function testSignerNoDigestAction()
@@ -186,5 +190,22 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         // assert it works without errors; correctness of results tested elsewhere.
         $this->assertTrue(is_bool($this->noDigestContext->verifier()->isValid($message)));
+    }
+
+    public function testSignerNoHeaderList()
+    {
+        $message = new Request('GET', '/path?query=123', ['date' => 'today', 'accept' => 'llamas']);
+        $message = $this->noHeadersContext->signer()->sign($message);
+
+        $expectedString = implode(',', [
+            'keyId="pda"',
+            'algorithm="hmac-sha256"',
+            'signature="SNERdFCcPF40c5kw0zbmSXn3Zv2KZWhiuHSijhZs/4k="',
+        ]);
+
+        $this->assertEquals(
+            $expectedString,
+            $message->getHeader('Signature')[0]
+        );
     }
 }
