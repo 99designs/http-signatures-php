@@ -73,15 +73,13 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function testVerifyValidMessageSignatureHeader()
+    public function testVerifyValidSignedMessage()
     {
         $this->assertTrue($this->verifier->isSigned($this->signedMessage));
     }
 
-    public function testVerifyValidMessageAuthorizationHeader()
+    public function testVerifyValidAuthorizedMessage()
     {
-        // $message = $this->message->withHeader('Authorization', "Signature {$this->message->getHeader('Signature')[0]}");
-        // $message = $message->withoutHeader('Signature');
         $this->assertTrue($this->verifier->isAuthorized($this->authorizedMessage));
     }
 
