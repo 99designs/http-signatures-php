@@ -64,6 +64,10 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'Signature '.$expectedString,
             $message->getHeader('Authorization')[0]
         );
+
+        $this->assertFalse(
+            $message->hasHeader('Signature')
+        );
     }
 
     public function testSignerAddDigestToHeadersList()
@@ -92,9 +96,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Digest')[0]
         );
 
-        $this->assertEquals(
-            'Signature '.$expectedString,
-            $message->getHeader('Authorization')[0]
+        $this->assertFalse(
+            $message->hasHeader('Authorization')
         );
     }
 
@@ -126,9 +129,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Digest')[0]
         );
 
-        $this->assertEquals(
-            'Signature '.$expectedString,
-            $message->getHeader('Authorization')[0]
+        $this->assertFalse(
+            $message->hasHeader('Authorization')
         );
     }
 
@@ -159,9 +161,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Digest')[0]
         );
 
-        $this->assertEquals(
-            'Signature '.$expectedString,
-            $message->getHeader('Authorization')[0]
+        $this->assertFalse(
+            $message->hasHeader('Authorization')
         );
     }
 
@@ -191,9 +192,8 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Digest')[0]
         );
 
-        $this->assertEquals(
-            'Signature '.$expectedString,
-            $message->getHeader('Authorization')[0]
+        $this->assertFalse(
+            $message->hasHeader('Authorization')
         );
     }
 
