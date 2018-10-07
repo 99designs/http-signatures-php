@@ -123,6 +123,9 @@ class Verification
     {
         $parameters = $this->parameters();
         if (!isset($parameters[$name])) {
+            if ($name = 'headers') {
+                return 'date';
+            }
             throw new Exception("Signature parameters does not contain '$name'");
         }
 
