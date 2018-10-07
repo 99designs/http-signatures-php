@@ -31,12 +31,15 @@ class SignatureParameters
      */
     private function parameterComponents()
     {
-        return [
-            sprintf('keyId="%s"', $this->key->id),
-            sprintf('algorithm="%s"', $this->algorithm->name()),
-            sprintf('headers="%s"', $this->headerList->string()),
-            sprintf('signature="%s"', $this->signatureBase64()),
-        ];
+        $components = [];
+        $components[] = sprintf('keyId="%s"', $this->key->id);
+        $components[] = sprintf('algorithm="%s"', $this->algorithm->name());
+        if ($this->headerList->headersSpecified) {
+            $components[] = sprintf('headers="%s"', $this->headerList->string());
+        }
+        $components[] = sprintf('signature="%s"', $this->signatureBase64());
+
+        return $components;
     }
 
     /**
