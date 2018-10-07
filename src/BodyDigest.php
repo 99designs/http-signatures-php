@@ -5,7 +5,7 @@ namespace HttpSignatures;
 class BodyDigest
 {
     /** @var string */
-    private const validHashes =
+    const validHashes =
       'sha sha1 sha256 sha512';
 
     /** @var string */
@@ -15,7 +15,7 @@ class BodyDigest
     private $digestHeaderPrefix;
 
     /**
-     * @param string $name
+     * @param string $hashAlgorithm
      *
      * @return BodyDigest
      *
@@ -79,6 +79,13 @@ class BodyDigest
         return $this->digestHeaderPrefix.'='.base64_encode(hash($this->hashName, $messageBody, true));
     }
 
+    /**
+     * @param RequestInterface $message
+     *
+     * @return BodyDigest
+     *
+     * @throws DigestException
+     */
     public static function fromMessage($message)
     {
         $digestLine = $message->getHeader('Digest');
@@ -86,15 +93,18 @@ class BodyDigest
             throw new DigestException('No Digest header in message');
         }
 
-        try {
-            $digestAlgorithm = self::getDigestAlgorithm($digestLine[0]);
+        $digestAlgorithm = self::getDigestAlgorithm($digestLine[0]);
 
-            return new BodyDigest($digestAlgorithm);
-        } catch (DigestException $e) {
-            throw $e;
-        }
+        return new BodyDigest($digestAlgorithm);
     }
 
+    /**
+     * @param string $digestLine
+     *
+     * @return string
+     *
+     * @throws DigestException
+     */
     private static function getDigestAlgorithm($digestLine)
     {
         // simple test if properly delimited, but see below
@@ -118,7 +128,12 @@ class BodyDigest
         ;
     }
 
-    public function isValidDigestSpec($digestSpec)
+    /**
+     * @param string $digestSpec
+     *
+     * @return bool
+     */
+    public static function isValidDigestSpec($digestSpec)
     {
         $digestSpec = strtolower(str_replace('-', '', $digestSpec));
         $validHashes = explode(' ', self::validHashes);
