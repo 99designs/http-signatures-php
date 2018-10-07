@@ -5,6 +5,10 @@ namespace HttpSignatures;
 class BodyDigest
 {
     /** @var string */
+    private const validHashes =
+      'sha sha1 sha256 sha512';
+
+    /** @var string */
     private $hashName;
 
     /** @var string */
@@ -19,26 +23,30 @@ class BodyDigest
      */
     public function __construct($hashAlgorithm = null)
     {
+        // Default to sha256 if no spec provided
+        if (is_null($hashAlgorithm) || '' == $hashAlgorithm) {
+            $hashAlgorithm = 'sha256';
+        }
+
         // Normalise to openssl type for switch - remove dashes and lowercase
-        switch (strtolower(str_replace('-', '', $hashAlgorithm))) {
-        case 'sha':
-        case 'sha1':
-            $this->hashName = 'sha1';
-            $this->digestHeaderPrefix = 'SHA';
-            break;
-        case 'sha256':
-        case null:
-        case '':
-            $this->hashName = 'sha256';
-            $this->digestHeaderPrefix = 'SHA-256';
-            break;
-        case 'sha512':
-            $this->hashName = 'sha512';
-            $this->digestHeaderPrefix = 'SHA-512';
-            break;
-        default:
-            throw new DigestException("Digest algorithm parameter '$hashAlgorithm' not understood");
-            break;
+        $hashAlgorithm = strtolower(str_replace('-', '', $hashAlgorithm));
+        if (!$this->isValidDigestSpec($hashAlgorithm)) {
+            throw new DigestException("'$hashAlgorithm' is not a valid Digest algorithm specifier");
+        }
+        switch ($hashAlgorithm) {
+            case 'sha':
+            case 'sha1':
+                $this->hashName = 'sha1';
+                $this->digestHeaderPrefix = 'SHA';
+                break;
+            case 'sha256':
+                $this->hashName = 'sha256';
+                $this->digestHeaderPrefix = 'SHA-256';
+                break;
+            case 'sha512':
+                $this->hashName = 'sha512';
+                $this->digestHeaderPrefix = 'SHA-512';
+                break;
         }
     }
 
@@ -73,24 +81,34 @@ class BodyDigest
 
     public static function fromMessage($message)
     {
-        if (!$digestLine = $message->getHeader('Digest')) {
+        $digestLine = $message->getHeader('Digest');
+        if (!$digestLine) {
             throw new DigestException('No Digest header in message');
         }
-        $digestAlgorithm = self::getDigestAlgorithm($digestLine[0]);
-        if ($digestAlgorithm) {
+
+        try {
+            $digestAlgorithm = self::getDigestAlgorithm($digestLine[0]);
+
             return new BodyDigest($digestAlgorithm);
-        } else {
-            throw new DigestException('Digest header does not appear to be correctly formatted');
+        } catch (DigestException $e) {
+            throw $e;
         }
     }
 
     private static function getDigestAlgorithm($digestLine)
     {
-        try {
-            return explode('=', $digestLine)[0];
-        } catch (DigestException $e) {
-            return false;
+        // simple test if properly delimited, but see below
+        if (!strpos($digestLine, '=')) {
+            throw new DigestException('Digest header does not appear to be correctly formatted');
         }
+
+        // '=' is valid base64, so raw base64 may match
+        $hashAlgorithm = explode('=', $digestLine)[0];
+        if (!self::isValidDigestSpec($hashAlgorithm)) {
+            throw new DigestException("'$hashAlgorithm' in Digest header is not a valid algorithm");
+        }
+
+        return $hashAlgorithm;
     }
 
     public function isValid($message)
@@ -98,5 +116,13 @@ class BodyDigest
         return
             $message->getHeader('Digest')[0] == $this->getDigestHeaderLinefromBody($message->getBody())
         ;
+    }
+
+    public function isValidDigestSpec($digestSpec)
+    {
+        $digestSpec = strtolower(str_replace('-', '', $digestSpec));
+        $validHashes = explode(' ', self::validHashes);
+
+        return in_array($digestSpec, $validHashes);
     }
 }
