@@ -10,11 +10,12 @@ class SignatureParameters
      * @param HeaderList         $headerList
      * @param Signature          $signature
      */
-    public function __construct($key, $algorithm, $headerList, $signature)
+    public function __construct($key, $algorithm, $headerList, $signatureHeadersSpecified, $signature)
     {
         $this->key = $key;
         $this->algorithm = $algorithm;
         $this->headerList = $headerList;
+        $this->signatureHeadersSpecified = $signatureHeadersSpecified;
         $this->signature = $signature;
     }
 
@@ -34,7 +35,7 @@ class SignatureParameters
         $components = [];
         $components[] = sprintf('keyId="%s"', $this->key->id);
         $components[] = sprintf('algorithm="%s"', $this->algorithm->name());
-        if ($this->headerList->headersSpecified()) {
+        if ($this->signatureHeadersSpecified) {
             $components[] = sprintf('headers="%s"', $this->headerList->string());
         }
         $components[] = sprintf('signature="%s"', $this->signatureBase64());

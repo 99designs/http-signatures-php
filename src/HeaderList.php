@@ -7,23 +7,15 @@ class HeaderList
     /** @var array */
     public $names;
 
-    /** @var bool */
-    private $headersSpecified = false;
-
     /**
      * @param array $names
      */
-    public function __construct(array $names = null)
+    public function __construct(array $names)
     {
-        if (is_null($names)) {
-            $this->names = ['date'];
-        } else {
-            $this->names = array_map(
-                [$this, 'normalize'],
-                $names
-            );
-            $this->headersSpecified = true;
-        }
+        $this->names = array_map(
+            [$this, 'normalize'],
+            $names
+        );
     }
 
     /**
@@ -33,11 +25,7 @@ class HeaderList
      */
     public static function fromString($string)
     {
-        if (is_null($string)) {
-            return ['date'];
-        } else {
-            return new static(explode(' ', $string));
-        }
+        return new static(explode(' ', $string));
     }
 
     /**
@@ -46,14 +34,6 @@ class HeaderList
     public function string()
     {
         return implode(' ', $this->names);
-    }
-
-    /**
-     * @return bool
-     */
-    public function headersSpecified()
-    {
-        return $this->headersSpecified;
     }
 
     /**
