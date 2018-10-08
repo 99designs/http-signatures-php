@@ -34,7 +34,7 @@ class SignatureParameters
         $components = [];
         $components[] = sprintf('keyId="%s"', $this->key->id);
         $components[] = sprintf('algorithm="%s"', $this->algorithm->name());
-        if ($this->headerList->headersSpecified) {
+        if ($this->headerList->headersSpecified()) {
             $components[] = sprintf('headers="%s"', $this->headerList->string());
         }
         $components[] = sprintf('signature="%s"', $this->signatureBase64());

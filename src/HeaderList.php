@@ -8,7 +8,7 @@ class HeaderList
     public $names;
 
     /** @var bool */
-    public $headersSpecified = false;
+    private $headersSpecified = false;
 
     /**
      * @param array $names
@@ -46,6 +46,14 @@ class HeaderList
     public function string()
     {
         return implode(' ', $this->names);
+    }
+
+    /**
+     * @return bool
+     */
+    public function headersSpecified()
+    {
+        return $this->headersSpecified;
     }
 
     /**
