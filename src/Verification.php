@@ -50,12 +50,11 @@ class Verification
     private function signatureMatches()
     {
         try {
-            $random = random_bytes(32);
-
-            return
-                hash_hmac('sha256', $this->expectedSignatureBase64(), $random, true) ===
-                hash_hmac('sha256', $this->providedSignatureBase64(), $random, true)
-            ;
+            // hash_equals is a timing-attack resistant string comparitor
+            return hash_equals(
+                $this->expectedSignatureBase64(),
+                $this->providedSignatureBase64()
+            );
         } catch (SignatureParseException $e) {
             return false;
         } catch (KeyStoreException $e) {
@@ -71,11 +70,11 @@ class Verification
     private function authorizationMatches()
     {
         try {
-            $random = random_bytes(32);
-
-            return
-              hash_hmac('sha256', $this->expectedAuthorizationBase64(), $random, true) ===
-              hash_hmac('sha256', $this->providedAuthorizationBase64(), $random, true);
+            // hash_equals is a timing-attack resistant string comparitor
+            return hash_equals(
+                $this->expectedAuthorizationBase64(),
+                $this->providedAuthorizationBase64()
+            );
         } catch (SignatureParseException $e) {
             return false;
         } catch (KeyStoreException $e) {
