@@ -17,7 +17,7 @@ class Context
     private $signingKeyId;
 
     /** @var AlgorithmInterface */
-    public $algorithm;
+    private $algorithm;
 
     /**
      * @param array $args

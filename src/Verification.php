@@ -103,8 +103,6 @@ class Verification
 
     /**
      * @return string
-     *
-     * @throws Exception
      */
     private function providedSignatureBase64()
     {
@@ -113,8 +111,6 @@ class Verification
 
     /**
      * @return Key
-     *
-     * @throws Exception
      */
     private function key()
     {
@@ -123,8 +119,6 @@ class Verification
 
     /**
      * @return HmacAlgorithm
-     *
-     * @throws Exception
      */
     private function algorithm()
     {
@@ -133,8 +127,6 @@ class Verification
 
     /**
      * @return HeaderList
-     *
-     * @throws Exception
      */
     private function headerList()
     {
@@ -160,8 +152,6 @@ class Verification
 
     /**
      * @return array
-     *
-     * @throws Exception
      */
     private function parameters()
     {
