@@ -23,8 +23,8 @@ class Key
     private $type;
 
     /**
-     * @param string $id
-     * @param string $secret
+     * @param string       $id
+     * @param string|array $secret
      */
     public function __construct($id, $item)
     {
@@ -59,6 +59,14 @@ class Key
         }
     }
 
+    /**
+     * Retrieves private key resource from a input string or
+     * array of strings.
+     *
+     * @param string|array $object PEM-format Private Key or file path to same
+     *
+     * @return resource|false
+     */
     public static function getPrivateKey($object)
     {
         if (is_array($object)) {
@@ -80,6 +88,14 @@ class Key
         }
     }
 
+    /**
+     * Retrieves public key resource from a input string or
+     * array of strings.
+     *
+     * @param string|array $object PEM-format Public Key or file path to same
+     *
+     * @return resource|false
+     */
     public static function getPublicKey($object)
     {
         if (is_array($object)) {
@@ -102,11 +118,25 @@ class Key
         }
     }
 
+    /**
+     * Signing HTTP Messages 'keyId' field.
+     *
+     * @return string
+     *
+     * @throws KeyException
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Retrieve Verifying Key - Public Key for Asymmetric/PKI, or shared secret for HMAC.
+     *
+     * @return string Shared Secret or PEM-format Public Key
+     *
+     * @throws KeyException
+     */
     public function getVerifyingKey()
     {
         switch ($this->type) {
@@ -124,6 +154,13 @@ class Key
         }
     }
 
+    /**
+     * Retrieve Signing Key - Private Key for Asymmetric/PKI, or shared secret for HMAC.
+     *
+     * @return string Shared Secret or PEM-format Private Key
+     *
+     * @throws KeyException
+     */
     public function getSigningKey()
     {
         switch ($this->type) {
@@ -143,11 +180,21 @@ class Key
         }
     }
 
+    /**
+     * @return string 'secret' for HMAC or 'asymmetric'
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * Test if $object is, points to or contains, X.509 PEM-format certificate.
+     *
+     * @param string|array $object PEM Format X.509 Certificate or file path to one
+     *
+     * @return bool
+     */
     public static function hasX509Certificate($object)
     {
         if (is_array($object)) {
@@ -169,6 +216,13 @@ class Key
         }
     }
 
+    /**
+     * Test if $object is, points to or contains, PEM-format Public Key.
+     *
+     * @param string|array $object PEM-format Public Key or file path to one
+     *
+     * @return bool
+     */
     public static function hasPublicKey($object)
     {
         if (is_array($object)) {
@@ -183,6 +237,13 @@ class Key
         }
     }
 
+    /**
+     * Test if $object is, points to or contains, PEM-format Private Key.
+     *
+     * @param string|array $object PEM-format Private Key or file path to one
+     *
+     * @return bool
+     */
     public static function hasPrivateKey($object)
     {
         if (is_array($object)) {
