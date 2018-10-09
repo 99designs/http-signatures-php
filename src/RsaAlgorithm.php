@@ -54,11 +54,11 @@ class RsaAlgorithm implements AlgorithmInterface
     {
         switch ($digestName) {
         case 'sha256':
-          return OPENSSL_ALGO_SHA256;
+            return OPENSSL_ALGO_SHA256;
         case 'sha1':
-          return OPENSSL_ALGO_SHA1;
+            return OPENSSL_ALGO_SHA1;
         default:
-          throw new HttpSignatures\AlgorithmException($digestName.' is not a supported hash format');
+            throw new HttpSignatures\AlgorithmException($digestName.' is not a supported hash format');
       }
     }
 }

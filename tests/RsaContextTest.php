@@ -13,12 +13,12 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->sha1context = new Context([
-            'keys' => ['rsa1' => TestKeys::rsaKey],
+            'keys' => ['rsa1' => TestKeys::rsaPrivateKey],
             'algorithm' => 'rsa-sha1',
             'headers' => ['(request-target)', 'date'],
         ]);
         $this->sha256context = new Context([
-            'keys' => ['rsa1' => TestKeys::rsaKey],
+            'keys' => ['rsa1' => TestKeys::rsaPrivateKey],
             'algorithm' => 'rsa-sha256',
             'headers' => ['(request-target)', 'date'],
         ]);
@@ -76,7 +76,7 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
     public function testRsaBadalgorithm()
     {
         $sha224context = new Context([
-              'keys' => ['rsa1' => TestKeys::rsaKey],
+              'keys' => ['rsa1' => TestKeys::rsaPrivateKey],
               'algorithm' => 'rsa-sha224',
               'headers' => ['(request-target)', 'date'],
           ]);

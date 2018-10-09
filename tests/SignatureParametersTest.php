@@ -35,7 +35,7 @@ class SignatureParametersTest extends \PHPUnit_Framework_TestCase
 
     public function testRsaToString()
     {
-        $key = new Key('pda', TestKeys::rsaKey);
+        $key = new Key('pda', TestKeys::rsaPrivateKey);
         $algorithm = new RsaAlgorithm('sha256');
         $headerList = new HeaderList(['(request-target)', 'date']);
 

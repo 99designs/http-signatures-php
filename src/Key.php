@@ -10,10 +10,13 @@ class Key
     /** @var string */
     private $secret;
 
-    /** @var string */
+    /** @var resource */
     private $certificate;
 
-    /** @var string */
+    /** @var resource */
+    private $publicKey;
+
+    /** @var resource */
     private $privateKey;
 
     /** @var string */
@@ -26,76 +29,75 @@ class Key
     public function __construct($id, $item)
     {
         $this->id = $id;
-        $certificate = $this->getX509Certificate($item);
-        $privateKey = $this->getRSAPrivateKey($item);
-        if (($certificate || $privateKey)) {
-            $this->type = 'rsa';
-            if ($privateKey) {
-                $this->privateKey = $privateKey;
-            }
-            if ($certificate) {
-                $this->certificate = openssl_x509_read($certificate);
-            }
-            if ($certificate && $privateKey) {
-                if (!openssl_x509_check_private_key(
-                        $this->certificate,
-                        $this->privateKey
-                    )
-                ) {
+        if (Key::hasX509Certificate($item) || Key::hasPublicKey($item)) {
+            $publicKey = Key::getPublicKey($item);
+        } else {
+            $publicKey = null;
+        }
+        if (Key::hasPrivateKey($item)) {
+            $privateKey = Key::getPrivateKey($item);
+        } else {
+            $privateKey = null;
+        }
+        if (($publicKey || $privateKey)) {
+            $this->type = 'asymmetric';
+            if ($publicKey && $privateKey) {
+                $publicKeyPEM = openssl_pkey_get_details($publicKey)['key'];
+                $privateKeyPublicPEM = openssl_pkey_get_details($privateKey)['key'];
+                if ($privateKeyPublicPEM != $publicKeyPEM) {
                     throw new KeyException('Supplied Certificate and Key are not related');
                 }
             }
+            $this->privateKey = $privateKey;
+            $this->publicKey = $publicKey;
+            $this->secret = null;
         } else {
             $this->type = 'secret';
             $this->secret = $item;
-            $publicKey = null;
-            $privateKey = null;
+            $this->publicKey = null;
+            $this->privateKey = null;
         }
     }
 
-    private function getRSAPrivateKey($object)
+    public static function getPrivateKey($object)
     {
         if (is_array($object)) {
-            foreach ($object as $item) {
-                $privateKey = Key::getRSAPrivateKey($item);
+            foreach ($object as $candidateKey) {
+                $privateKey = Key::getPrivateKey($candidateKey);
                 if ($privateKey) {
                     return $privateKey;
                 }
             }
         } else {
+            // OpenSSL libraries don't have detection methods, so try..catch
             try {
                 $privateKey = openssl_get_privatekey($object);
-            } catch (\Exception $e) {
-                $privateKey = null;
-            }
-            if ($privateKey) {
+
                 return $privateKey;
+            } catch (\Exception $e) {
+                return null;
             }
         }
     }
 
-    private function getX509Certificate($object)
+    public static function getPublicKey($object)
     {
-        $key = null;
         if (is_array($object)) {
-            foreach ($object as $item) {
-                $result = Key::getX509Certificate($item);
-                if ($result) {
-                    $key = $result;
+            // If we implement key rotation in future, this should add to a collection
+            foreach ($object as $candidateKey) {
+                $publicKey = Key::getPublicKey($candidateKey);
+                if ($publicKey) {
+                    return $publicKey;
                 }
             }
-
-            return $key;
         } else {
+            // OpenSSL libraries don't have detection methods, so try..catch
             try {
-                $result = openssl_get_publickey($object);
-            } catch (\Exception $e) {
-                $result = null;
-            }
-            if ($result) {
-                openssl_x509_export($object, $out);
+                $publicKey = openssl_get_publickey($object);
 
-                return $object;
+                return $publicKey;
+            } catch (\Exception $e) {
+                return null;
             }
         }
     }
@@ -108,29 +110,90 @@ class Key
     public function getVerifyingKey()
     {
         switch ($this->type) {
-        case 'rsa':
-          return openssl_pkey_get_public($this->certificate);
+        case 'asymmetric':
+            if ($this->publicKey) {
+                return openssl_pkey_get_details($this->publicKey)['key'];
+            } else {
+                return null;
+            }
+            break;
         case 'secret':
-          return $this->secret;
+            return $this->secret;
         default:
-          throw new KeyException("Unknown key type $this->type");
-      }
+            throw new KeyException("Unknown key type $this->type");
+        }
     }
 
     public function getSigningKey()
     {
         switch ($this->type) {
-        case 'rsa':
-          return $this->privateKey;
+        case 'asymmetric':
+            if ($this->privateKey) {
+                openssl_pkey_export($this->privateKey, $pem);
+
+                return $pem;
+            } else {
+                return null;
+            }
+            break;
         case 'secret':
-          return $this->secret;
+            return $this->secret;
         default:
-          throw new KeyException("Unknown key type $this->type");
-      }
+            throw new KeyException("Unknown key type $this->type");
+        }
     }
 
     public function getType()
     {
         return $this->type;
+    }
+
+    public static function hasX509Certificate($object)
+    {
+        if (is_array($object)) {
+            foreach ($object as $candidateCertificate) {
+                $result = Key::hasX509Certificate($candidateCertificate);
+                if ($result) {
+                    return $result;
+                }
+            }
+        } else {
+            // OpenSSL libraries don't have detection methods, so try..catch
+            try {
+                openssl_x509_export($object, $null);
+
+                return true;
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+    }
+
+    public static function hasPublicKey($object)
+    {
+        if (is_array($object)) {
+            foreach ($object as $candidatePublicKey) {
+                $result = Key::hasPublicKey($candidatePublicKey);
+                if ($result) {
+                    return $result;
+                }
+            }
+        } else {
+            return false == !openssl_pkey_get_public($object);
+        }
+    }
+
+    public static function hasPrivateKey($object)
+    {
+        if (is_array($object)) {
+            foreach ($object as $candidatePrivateKey) {
+                $result = Key::hasPrivateKey($candidatePrivateKey);
+                if ($result) {
+                    return $result;
+                }
+            }
+        } else {
+            return  false != openssl_pkey_get_private($object);
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace HttpSignatures\Tests;
 
 abstract class TestKeys
 {
-    const rsaKey =
+    const rsaPrivateKey =
 '-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAxyfPtnW/CakdLpZVh90sR+hpRwiBBdS/za6wal0pFddl2xcL
 sHY/IA1u348xOc4LEY2D0807o1IXSEaqrt9eUkAh+yLGKgDCWLGzW026HBMgojhn
@@ -49,5 +49,16 @@ USM0aZhhDcdOZ4q+OkpAN6uux3r0QNJLdU8vInBGoyE3s+7MjEun30HQy24HSgEA
 p/Ee+dkqU2Jp7wr5omMzurGrEwre0KjNLbrDvcb/0u8r7RA5sghHiE7MUe8acGqR
 GyMYMn7AX97SD2yxYgwt7i/v65wkAC5oxXA2Yg1TTJZrLD6obGv+wELnePhKgw==
 -----END CERTIFICATE-----
+';
+    const rsaPublicKey =
+'-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxyfPtnW/CakdLpZVh90s
+R+hpRwiBBdS/za6wal0pFddl2xcLsHY/IA1u348xOc4LEY2D0807o1IXSEaqrt9e
+UkAh+yLGKgDCWLGzW026HBMgojhnY702pmRI2CGqP0xtzrynCSmSMvhdKM9IMc7D
+Gf7Wdo4Y0En0KPat+IyCZpbf7jUXcGL/tjxMKS3fXNgthGWVDU2TBSQRFM+fgeH9
+egODd4DfpzfaUoUDcoB/CZ1FEa4+wNfXR5CZ4WjIaeVbCQ09maup07J+KaGe8SQ9
+LjcUuityyuNBjy5nvQkbmDfAh0822lZQYR62FM5EAlNptThODg6q4wkIQ+spLv1d
+SwIDAQAB
+-----END PUBLIC KEY-----
 ';
 }

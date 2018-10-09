@@ -55,7 +55,7 @@ class Verification
                   );
 
                   return $expectedResult === $providedResult;
-                case 'rsa':
+                case 'asymmetric':
                     $signedString = new SigningString(
                         $this->headerList(),
                         $this->message
@@ -69,7 +69,7 @@ class Verification
 
                     return $result;
                 default:
-                    throw new Exception("Unknown key type '$key->type', cannot verify");
+                    throw new Exception("Unknown key type '".$key->getType()."', cannot verify");
             }
         } catch (SignatureParseException $e) {
             return false;
