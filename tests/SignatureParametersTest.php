@@ -24,7 +24,7 @@ class SignatureParametersTest extends \PHPUnit_Framework_TestCase
             ->method('string')
             ->will($this->returnValue('thesignature'));
 
-        $sp = new SignatureParameters($key, $algorithm, $headerList, true, $signature);
+        $sp = new SignatureParameters($key, $algorithm, $headerList, $signature);
 
         $this->assertEquals(
             'keyId="pda",algorithm="hmac-sha256",headers="(request-target) date",signature="dGhlc2lnbmF0dXJl"',

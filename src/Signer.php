@@ -87,7 +87,6 @@ class Signer
             $this->key,
             $this->algorithm,
             $this->headerList,
-            $this->signatureHeadersSpecified,
             $this->signature($message)
         );
     }

@@ -7,15 +7,19 @@ class HeaderList
     /** @var array */
     public $names;
 
+    /** @var bool */
+    private $headerListSpecified;
+
     /**
      * @param array $names
      */
-    public function __construct(array $names)
+    public function __construct(array $names, $headerListSpecified = true)
     {
         $this->names = array_map(
             [$this, 'normalize'],
             $names
         );
+        $this->headerListSpecified = $headerListSpecified;
     }
 
     /**
@@ -34,6 +38,14 @@ class HeaderList
     public function string()
     {
         return implode(' ', $this->names);
+    }
+
+    /**
+     * @return bool
+     */
+    public function headerListSpecified()
+    {
+        return $this->headerListSpecified;
     }
 
     /**
