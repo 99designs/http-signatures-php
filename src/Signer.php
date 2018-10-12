@@ -12,9 +12,6 @@ class Signer
     /** @var HmacAlgorithm */
     private $algorithm;
 
-    /** @var bool */
-    private $signatureHeadersSpecified;
-
     /** @var HeaderList */
     private $headerList;
 
@@ -23,12 +20,11 @@ class Signer
      * @param HmacAlgorithm $algorithm
      * @param HeaderList    $headerList
      */
-    public function __construct($key, $algorithm, $headerList, $signatureHeadersSpecified)
+    public function __construct($key, $algorithm, $headerList)
     {
         $this->key = $key;
         $this->algorithm = $algorithm;
         $this->headerList = $headerList;
-        $this->signatureHeadersSpecified = $signatureHeadersSpecified;
     }
 
     /**

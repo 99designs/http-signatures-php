@@ -16,9 +16,6 @@ class Context
     /** @var string */
     private $signingKeyId;
 
-    /** @var bool */
-    private $signatureHeadersSpecified;
-
     /**
      * @param array $args
      *
@@ -43,8 +40,6 @@ class Context
         // headers list for signing; not necessary for verifying.
         if (isset($args['headers'])) {
             $this->headers = $args['headers'];
-        } else {
-            $this->headers = null;
         }
 
         // signingKeyId specifies the key used for signing messages.
@@ -65,9 +60,8 @@ class Context
         return new Signer(
             $this->signingKey(),
             $this->algorithm(),
-            $this->headerList(),
-            $this->signatureHeadersSpecified
-        );
+            $this->headerList()
+      );
     }
 
     /**
