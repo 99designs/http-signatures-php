@@ -16,8 +16,8 @@ class Context
     /** @var string */
     private $signingKeyId;
 
-    /** @var AlgorithmInterface */
-    private $algorithm;
+    /** @var string */
+    private $algorithmName;
 
     /**
      * @param array $args
@@ -37,7 +37,7 @@ class Context
 
         // algorithm for signing; not necessary for verifying.
         if (isset($args['algorithm'])) {
-            $this->algorithm = Algorithm::create($args['algorithm']);
+            $this->algorithmName = $args['algorithm'];
         }
         // headers list for signing; not necessary for verifying.
         if (isset($args['headers'])) {
@@ -61,7 +61,7 @@ class Context
     {
         return new Signer(
             $this->signingKey(),
-            $this->algorithm,
+            $this->algorithm(),
             $this->headerList()
         );
     }
@@ -86,6 +86,16 @@ class Context
         } else {
             throw new Exception('no implicit or specified signing key');
         }
+    }
+
+    /** 
+     * @return Algorithm    
+     *  
+     * @throws Exception    
+     */ 
+    private function algorithm()    
+    {   
+        return Algorithm::create($this->algorithmName); 
     }
 
     /**
