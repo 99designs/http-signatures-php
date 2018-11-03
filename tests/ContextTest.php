@@ -22,11 +22,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'algorithm' => 'hmac-sha256',
             'headers' => ['(request-target)', 'date', 'digest'],
         ]);
-        $this->sha1context = new Context([
-            'keys' => ['rsa1' => TestKeys::rsaPrivateKey],
-            'algorithm' => 'rsa-sha1',
-            'headers' => ['(request-target)', 'date'],
-        ]);
         $this->sha256context = new Context([
             'keys' => ['rsa1' => TestKeys::rsaPrivateKey],
             'algorithm' => 'rsa-sha256',
@@ -205,29 +200,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
         // assert it works without errors; correctness of results tested elsewhere.
         $this->assertTrue(is_bool($this->noDigestContext->verifier()->isValid($message)));
-    }
-
-    public function testSha1Signer()
-    {
-        $message = new Request('GET', '/path?query=123', ['date' => 'today', 'accept' => 'llamas']);
-
-        $message = $this->sha1context->signer()->sign($message);
-        $expectedSha1String = implode(',', [
-            'keyId="rsa1"',
-            'algorithm="rsa-sha1"',
-            'headers="(request-target) date"',
-            'signature="YIR3DteE3Jmz1VAnUMTgjTn3vTKfQuZl1CJhMBvGOZpnzwKeYBXA' .
-            'H108FojnbSeVG/AXq9pcrA6AFK0peg0aueqxpaFlo+4L/q5XzJ+QoryY3dlSr' .
-            'xwVnE5s5M19xmFm/6YkZR/KPeANCsG4SPL82Um/PCEMU0tmKd6sSx+IIzAYbX' .
-            'G/VrFMDeQAdXqpU1EhgxopKEAapN8rChb49+1JfR/RxlSKiLukJJ6auurm2zM' .
-            'n2D40fR1d2umA5LAO7vRt2iQwVbtwiFkVlRqkMvGftCNZByu8jJ6StI5H7Efu' .
-            'ANSHAZXKXWNH8yxpBUW/QCHCZjPd0ugM0QJJIc7i8JbGlA=="',
-        ]);
-
-        $this->assertEquals(
-            $expectedSha1String,
-            $message->getHeader('Signature')[0]
-        );
     }
 
     public function testSha256Signer()

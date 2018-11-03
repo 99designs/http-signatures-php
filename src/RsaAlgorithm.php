@@ -53,12 +53,10 @@ class RsaAlgorithm implements AlgorithmInterface
     private function getRsaHashAlgo($digestName)
     {
         switch ($digestName) {
-        case 'sha256':
-            return OPENSSL_ALGO_SHA256;
-        case 'sha1':
-            return OPENSSL_ALGO_SHA1;
-        default:
-            throw new Exception($digestName.' is not a supported hash format');
-      }
+            case 'sha256':
+                return OPENSSL_ALGO_SHA256;
+            default:
+                throw new Exception($digestName . ' is not a supported hash format');
+        }
     }
 }
