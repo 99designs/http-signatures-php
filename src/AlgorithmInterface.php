@@ -16,4 +16,6 @@ interface AlgorithmInterface
      * @return string
      */
     public function sign($key, $data);
+
+    public function verify($message, $signature, $verifyingKey);
 }

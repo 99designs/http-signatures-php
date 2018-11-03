@@ -39,38 +39,12 @@ class Verification
     private function signatureMatches()
     {
         try {
-            $key = $this->key();
-            switch ($key->getType()) {
-                case 'secret':
-                  $random = random_bytes(32);
-                  $expectedResult = hash_hmac(
-                      'sha256', $this->expectedSignatureBase64(),
-                      $random,
-                      true
-                  );
-                  $providedResult = hash_hmac(
-                      'sha256', $this->providedSignatureBase64(),
-                      $random,
-                      true
-                  );
-
-                  return $expectedResult === $providedResult;
-                case 'asymmetric':
-                    $signedString = new SigningString(
-                        $this->headerList(),
-                        $this->message
-                    );
-                    $hashAlgo = explode('-', $this->parameter('algorithm'))[1];
-                    $algorithm = new RsaAlgorithm($hashAlgo);
-                    $result = $algorithm->verify(
-                        $signedString->string(),
-                        $this->parameter('signature'),
-                        $key->getVerifyingKey());
-
-                    return $result;
-                default:
-                    throw new Exception("Unknown key type '".$key->getType()."', cannot verify");
-            }
+            $signedString = new SigningString($this->headerList(), $this->message);
+            return $this->algorithm()->verify(
+                $signedString->string(),
+                $this->parameter('signature'),
+                $this->key()->getVerifyingKey()
+            );
         } catch (SignatureParseException $e) {
             return false;
         } catch (UnknownKeyException $e) {
@@ -78,35 +52,6 @@ class Verification
         } catch (SignedHeaderNotPresentException $e) {
             return false;
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function expectedSignatureBase64()
-    {
-        return base64_encode($this->expectedSignature()->string());
-    }
-
-    /**
-     * @return Signature
-     */
-    private function expectedSignature()
-    {
-        return new Signature(
-            $this->message,
-            $this->key(),
-            $this->algorithm(),
-            $this->headerList()
-        );
-    }
-
-    /**
-     * @return string
-     */
-    private function providedSignatureBase64()
-    {
-        return $this->parameter('signature');
     }
 
     /**

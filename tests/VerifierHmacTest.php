@@ -43,10 +43,11 @@ class VerifierHmacTest extends \PHPUnit_Framework_TestCase
             'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
         );
 
-        $this->message = new Request('GET', '/path?query=123', [
-            'Date' => self::DATE,
-            'Signature' => $signatureHeader,
-        ]);
+        $this->message = new Request(
+            'GET',
+            '/path?query=123',
+            ['Date' => self::DATE, 'Signature' => $signatureHeader]
+        );
     }
 
     public function testVerifyValidHmacMessage()

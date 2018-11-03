@@ -33,4 +33,12 @@ class HmacAlgorithm implements AlgorithmInterface
     {
         return hash_hmac($this->digestName, $data, $secret, true);
     }
+
+    public function verify($message, $signature, $verifyingKey)
+    {
+        return hash_equals(
+            base64_encode($this->sign($verifyingKey, $message)),
+            $signature
+        );
+    }
 }

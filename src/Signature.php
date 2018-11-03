@@ -33,6 +33,6 @@ class Signature
         return $this->algorithm->sign(
             $this->key->getSigningKey(),
             $this->signingString->string()
-          );
+        );
     }
 }
