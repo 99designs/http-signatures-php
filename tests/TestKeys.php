@@ -4,8 +4,8 @@ namespace HttpSignatures\Tests;
 
 abstract class TestKeys
 {
-    const rsaPrivateKey =
-'-----BEGIN RSA PRIVATE KEY-----
+    const rsaPrivateKey = <<<'EOD'
+-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAxyfPtnW/CakdLpZVh90sR+hpRwiBBdS/za6wal0pFddl2xcL
 sHY/IA1u348xOc4LEY2D0807o1IXSEaqrt9eUkAh+yLGKgDCWLGzW026HBMgojhn
 Y702pmRI2CGqP0xtzrynCSmSMvhdKM9IMc7DGf7Wdo4Y0En0KPat+IyCZpbf7jUX
@@ -31,9 +31,10 @@ ROzjIzsu1VD3FZzvAf+kmPajmlZTegxa/8pNa9xQBz7hARo3TQFHM/FJQnnwbSuE
 VmQZYjsCgYA9ADxvlgGQmo3uHup6u54S7MgwvzIK7WiXKkuoI5rp0B0mwTr3loVt
 3r3tZBH4+z17fVhmoQ4a4kYT8ixn0XpaL0LOv8s02b36XCNlrfPlafOwhHfOHmlz
 zQnzviLiUOgXyD8FwZlYx+hTM09CYPcdJWSPl6JVF7uxm2fX/HdS3w==
------END RSA PRIVATE KEY-----';
-    const rsaCert =
-'-----BEGIN CERTIFICATE-----
+-----END RSA PRIVATE KEY-----
+EOD;
+    const rsaCert = <<<'EOD'
+-----BEGIN CERTIFICATE-----
 MIICmjCCAYICCQDIxrpvPCnqRjANBgkqhkiG9w0BAQsFADAPMQ0wCwYDVQQDDAR0
 ZXN0MB4XDTE4MDgxODEyMjMzMloXDTI4MDgxNTEyMjMzMlowDzENMAsGA1UEAwwE
 dGVzdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMcnz7Z1vwmpHS6W
@@ -49,9 +50,9 @@ USM0aZhhDcdOZ4q+OkpAN6uux3r0QNJLdU8vInBGoyE3s+7MjEun30HQy24HSgEA
 p/Ee+dkqU2Jp7wr5omMzurGrEwre0KjNLbrDvcb/0u8r7RA5sghHiE7MUe8acGqR
 GyMYMn7AX97SD2yxYgwt7i/v65wkAC5oxXA2Yg1TTJZrLD6obGv+wELnePhKgw==
 -----END CERTIFICATE-----
-';
-    const rsaPublicKey =
-'-----BEGIN PUBLIC KEY-----
+EOD;
+    const rsaPublicKey = <<<'EOD'
+-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxyfPtnW/CakdLpZVh90s
 R+hpRwiBBdS/za6wal0pFddl2xcLsHY/IA1u348xOc4LEY2D0807o1IXSEaqrt9e
 UkAh+yLGKgDCWLGzW026HBMgojhnY702pmRI2CGqP0xtzrynCSmSMvhdKM9IMc7D
@@ -60,5 +61,5 @@ egODd4DfpzfaUoUDcoB/CZ1FEa4+wNfXR5CZ4WjIaeVbCQ09maup07J+KaGe8SQ9
 LjcUuityyuNBjy5nvQkbmDfAh0822lZQYR62FM5EAlNptThODg6q4wkIQ+spLv1d
 SwIDAQAB
 -----END PUBLIC KEY-----
-';
+EOD;
 }

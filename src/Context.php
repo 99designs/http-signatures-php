@@ -88,14 +88,14 @@ class Context
         }
     }
 
-    /** 
-     * @return Algorithm    
-     *  
-     * @throws Exception    
-     */ 
-    private function algorithm()    
-    {   
-        return Algorithm::create($this->algorithmName); 
+    /**
+     * @return Algorithm
+     *
+     * @throws Exception
+     */
+    private function algorithm()
+    {
+        return Algorithm::create($this->algorithmName);
     }
 
     /**
