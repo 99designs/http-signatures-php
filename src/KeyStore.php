@@ -23,14 +23,14 @@ class KeyStore implements KeyStoreInterface
      *
      * @return Key
      *
-     * @throws KeyStoreException
+     * @throws UnknownKeyException
      */
     public function fetch($keyId)
     {
         if (isset($this->keys[$keyId])) {
             return $this->keys[$keyId];
         } else {
-            throw new KeyStoreException("Key '$keyId' not found");
+            throw new UnknownKeyException("Key '$keyId' not found");
         }
     }
 }

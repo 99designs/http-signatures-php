@@ -27,7 +27,7 @@ abstract class Algorithm
             return new RsaAlgorithm('sha256');
             break;
         default:
-            throw new AlgorithmException("No algorithm named '$name'");
+            throw new Exception("No algorithm named '$name'");
             break;
         }
     }

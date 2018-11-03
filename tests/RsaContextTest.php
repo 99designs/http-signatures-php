@@ -71,7 +71,7 @@ class RsaContextTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException     \HttpSignatures\AlgorithmException
+     * @expectedException     \HttpSignatures\Exception
      */
     public function testRsaBadalgorithm()
     {

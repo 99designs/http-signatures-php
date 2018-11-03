@@ -45,7 +45,7 @@ class Key
                 $publicKeyPEM = openssl_pkey_get_details($publicKey)['key'];
                 $privateKeyPublicPEM = openssl_pkey_get_details($privateKey)['key'];
                 if ($privateKeyPublicPEM != $publicKeyPEM) {
-                    throw new KeyException('Supplied Certificate and Key are not related');
+                    throw new Exception('Supplied Certificate and Key are not related');
                 }
             }
             $this->privateKey = $privateKey;
@@ -123,7 +123,7 @@ class Key
      *
      * @return string
      *
-     * @throws KeyException
+     * @throws Exception
      */
     public function getId()
     {
@@ -135,7 +135,7 @@ class Key
      *
      * @return string Shared Secret or PEM-format Public Key
      *
-     * @throws KeyException
+     * @throws Exception
      */
     public function getVerifyingKey()
     {
@@ -150,7 +150,7 @@ class Key
         case 'secret':
             return $this->secret;
         default:
-            throw new KeyException("Unknown key type $this->type");
+            throw new Exception("Unknown key type $this->type");
         }
     }
 
@@ -159,7 +159,7 @@ class Key
      *
      * @return string Shared Secret or PEM-format Private Key
      *
-     * @throws KeyException
+     * @throws Exception
      */
     public function getSigningKey()
     {
@@ -176,7 +176,7 @@ class Key
         case 'secret':
             return $this->secret;
         default:
-            throw new KeyException("Unknown key type $this->type");
+            throw new Exception("Unknown key type $this->type");
         }
     }
 

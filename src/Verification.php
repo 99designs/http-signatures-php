@@ -73,7 +73,7 @@ class Verification
             }
         } catch (SignatureParseException $e) {
             return false;
-        } catch (KeyStoreException $e) {
+        } catch (UnknownKeyException $e) {
             return false;
         } catch (SignedHeaderNotPresentException $e) {
             return false;

@@ -78,7 +78,6 @@ class Context
      * @return Key
      *
      * @throws Exception
-     * @throws KeyStoreException
      */
     private function signingKey()
     {

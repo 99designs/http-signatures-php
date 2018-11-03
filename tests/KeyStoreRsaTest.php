@@ -101,7 +101,7 @@ class KeyStoreRsaTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \HttpSignatures\KeyException
+     * @expectedException \HttpSignatures\Exception
      */
     public function testRsaMismatch()
     {
