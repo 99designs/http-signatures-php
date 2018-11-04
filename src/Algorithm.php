@@ -7,7 +7,7 @@ abstract class Algorithm
     /**
      * @param string $name
      *
-     * @return HmacAlgorithm
+     * @return AlgorithmInterface
      *
      * @throws Exception
      */

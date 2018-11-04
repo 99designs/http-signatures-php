@@ -23,18 +23,8 @@ class VerifierHmacTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->setUpHmacVerifier();
-        $this->setUpValidHmacMessage();
-    }
+        $this->verifier = new Verifier(new KeyStore(['secret1' => 'secret']));
 
-    private function setUpHmacVerifier()
-    {
-        $keyStore = new KeyStore(['secret1' => 'secret']);
-        $this->verifier = new Verifier($keyStore);
-    }
-
-    private function setUpValidHmacMessage()
-    {
         $signatureHeader = sprintf(
             'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
             'secret1',
@@ -43,11 +33,10 @@ class VerifierHmacTest extends \PHPUnit_Framework_TestCase
             'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
         );
 
-        $this->message = new Request(
-            'GET',
-            '/path?query=123',
-            ['Date' => self::DATE, 'Signature' => $signatureHeader]
-        );
+        $this->message = new Request('GET', '/path?query=123', [
+            'Date' => self::DATE,
+            'Signature' => $signatureHeader,
+        ]);
     }
 
     public function testVerifyValidHmacMessage()

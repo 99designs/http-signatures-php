@@ -31,32 +31,34 @@ class RsaAlgorithm implements AlgorithmInterface
      *
      * @throws \HttpSignatures\Exception
      */
-    public function sign($signingKey, $data)
+    public function sign($key, $data)
     {
-        $algo = $this->getRsaHashAlgo($this->digestName);
-        if (!openssl_get_privatekey($signingKey)) {
-            throw new Exception(openssl_error_string() ?: 'Failed to load signing key');
+        if (!openssl_sign($data, $signature, $key, $this->algo())) {
+            throw new Exception('Failed to sign: '.openssl_error_string());
         }
-        $signature = '';
-        openssl_sign($data, $signature, $signingKey, $algo);
 
         return $signature;
     }
 
-    public function verify($message, $signature, $verifyingKey)
+    /**
+     * @param string $signature
+     * @param string $key
+     * @param string $data
+     *
+     * @return bool
+     */
+    public function verify($signature, $key, $data)
     {
-        $algo = $this->getRsaHashAlgo($this->digestName);
-
-        return openssl_verify($message, base64_decode($signature), $verifyingKey, $algo);
+        return openssl_verify($data, base64_decode($signature), $key, $this->algo());
     }
 
-    private function getRsaHashAlgo($digestName)
+    private function algo()
     {
-        switch ($digestName) {
-            case 'sha256':
-                return OPENSSL_ALGO_SHA256;
-            default:
-                throw new Exception($digestName.' is not a supported hash format');
+        $algo = constant(sprintf('OPENSSL_ALGO_%s', strtoupper($this->digestName)));
+        if (!$algo) {
+            throw new Exception("Unsupported hash '$digestName'");
         }
+
+        return $algo;
     }
 }

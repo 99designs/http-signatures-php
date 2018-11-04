@@ -47,7 +47,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature '.$expectedString,
+            'Signature ' . $expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -81,7 +81,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature '.$expectedString,
+            'Signature ' . $expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -114,7 +114,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature '.$expectedString,
+            'Signature ' . $expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -148,7 +148,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature '.$expectedString,
+            'Signature ' . $expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -180,7 +180,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals(
-            'Signature '.$expectedString,
+            'Signature ' . $expectedString,
             $message->getHeader('Authorization')[0]
         );
     }
@@ -188,14 +188,10 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testVerifier()
     {
         $message = $this->noDigestContext->signer()->sign(
-            new Request(
-                'GET',
-                '/path?query=123',
-                [
-                    'Signature' => 'keyId="pda",algorithm="hmac-sha1",headers="date",signature="x"',
-                    'Date' => 'x',
-                ]
-            )
+            new Request('GET', '/path?query=123', [
+                'Signature' => 'keyId="pda",algorithm="hmac-sha1",headers="date",signature="x"',
+                'Date' => 'x',
+            ])
         );
 
         // assert it works without errors; correctness of results tested elsewhere.
@@ -212,11 +208,11 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             'algorithm="rsa-sha256"',
             'headers="(request-target) date"',
             'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WB'
-            .'FDA/aktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/g'
-            .'j0OVL8s2usG4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsW'
-            .'oMFpv0IjcgBH2V41AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHft'
-            .'PIp3VpB53zbemlJS9Yw3tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiI'
-            .'LK67i/WH9moltJtlfV57TV72cgYtjWa6yqhtFg=="',
+            . 'FDA/aktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/g'
+            . 'j0OVL8s2usG4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsW'
+            . 'oMFpv0IjcgBH2V41AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHft'
+            . 'PIp3VpB53zbemlJS9Yw3tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiI'
+            . 'LK67i/WH9moltJtlfV57TV72cgYtjWa6yqhtFg=="',
         ]);
 
         $this->assertEquals(
@@ -224,16 +220,4 @@ class ContextTest extends \PHPUnit_Framework_TestCase
             $message->getHeader('Signature')[0]
         );
     }
-
-    // /**
-    //  * @expectedException     \HttpSignatures\Exception
-    //  */
-    // public function testRsaBadalgorithm()
-    // {
-    //     $sha224context = new Context([
-    //         'keys' => ['rsa1' => TestKeys::rsaPrivateKey],
-    //         'algorithm' => 'rsa-sha224',
-    //         'headers' => ['(request-target)', 'date'],
-    //     ]);
-    // }
 }

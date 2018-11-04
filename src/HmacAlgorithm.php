@@ -24,7 +24,7 @@ class HmacAlgorithm implements AlgorithmInterface
     }
 
     /**
-     * @param string $key
+     * @param string $secret
      * @param string $data
      *
      * @return string
@@ -34,11 +34,17 @@ class HmacAlgorithm implements AlgorithmInterface
         return hash_hmac($this->digestName, $data, $secret, true);
     }
 
-    public function verify($message, $signature, $verifyingKey)
+    /**
+     * @param string $signature
+     * @param string $secret
+     * @param string $data
+     *
+     * @return bool
+     */
+    public function verify($signature, $secret, $data)
     {
-        return hash_equals(
-            base64_encode($this->sign($verifyingKey, $message)),
-            $signature
-        );
+        $expectedSignature = base64_encode($this->sign($secret, $data));
+
+        return hash_equals($expectedSignature, $signature);
     }
 }

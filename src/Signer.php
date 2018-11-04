@@ -9,16 +9,16 @@ class Signer
     /** @var Key */
     private $key;
 
-    /** @var HmacAlgorithm */
+    /** @var AlgorithmInterface */
     private $algorithm;
 
     /** @var HeaderList */
     private $headerList;
 
     /**
-     * @param Key           $key
-     * @param HmacAlgorithm $algorithm
-     * @param HeaderList    $headerList
+     * @param Key                $key
+     * @param AlgorithmInterface $algorithm
+     * @param HeaderList         $headerList
      */
     public function __construct($key, $algorithm, $headerList)
     {

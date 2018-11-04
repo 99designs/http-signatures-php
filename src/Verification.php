@@ -42,9 +42,9 @@ class Verification
             $signedString = new SigningString($this->headerList(), $this->message);
 
             return $this->algorithm()->verify(
-                $signedString->string(),
                 $this->parameter('signature'),
-                $this->key()->getVerifyingKey()
+                $this->key()->getVerifyingKey(),
+                $signedString->string()
             );
         } catch (SignatureParseException $e) {
             return false;
@@ -64,7 +64,7 @@ class Verification
     }
 
     /**
-     * @return HmacAlgorithm
+     * @return AlgorithmInterface
      */
     private function algorithm()
     {

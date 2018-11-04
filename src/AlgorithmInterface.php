@@ -17,5 +17,12 @@ interface AlgorithmInterface
      */
     public function sign($key, $data);
 
-    public function verify($message, $signature, $verifyingKey);
+    /**
+     * @param string $signature
+     * @param string $key
+     * @param string $data
+     *
+     * @return bool
+     */
+    public function verify($signature, $key, $data);
 }

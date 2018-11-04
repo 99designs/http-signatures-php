@@ -7,9 +7,9 @@ use HttpSignatures\KeyStore;
 use HttpSignatures\Tests\TestKeys;
 use HttpSignatures\Verifier;
 
-class VerifierRsaTest extends \PHPUnit\Framework\TestCase
+class VerifierRsaTest extends \PHPUnit_Framework_TestCase
 {
-    const DATE = 'Fri, 01 Aug 2014 13:44:32 -0700';
+    const DATE = 'today';
     const DATE_DIFFERENT = 'Fri, 01 Aug 2014 13:44:33 -0700';
 
     /**
@@ -24,9 +24,9 @@ class VerifierRsaTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->setUpRsaVerifier();
+        $this->verifier = new Verifier(new KeyStore(['rsa1' => TestKeys::rsaCert]));
 
-        $sha256SignatureHeader =
+        $signatureHeader =
             'keyId="rsa1",algorithm="rsa-sha256",headers="(request-target) date",'
             .'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WBFDA/a'
             .'ktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/gj0OVL8s2us'
@@ -35,82 +35,76 @@ class VerifierRsaTest extends \PHPUnit\Framework\TestCase
             .'tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiILK67i/WH9moltJtlfV57TV72c'
             .'gYtjWa6yqhtFg=="';
 
-        $this->sha256Message = new Request('GET', '/path?query=123', [
-            'Date' => 'today',
-            'Signature' => $sha256SignatureHeader,
+        $this->message = new Request('GET', '/path?query=123', [
+            'Date' => self::DATE,
+            'Signature' => $signatureHeader,
         ]);
-    }
-
-    private function setUpRsaVerifier()
-    {
-        $keyStore = new KeyStore(['rsa1' => TestKeys::rsaCert]);
-        $this->verifier = new Verifier($keyStore);
     }
 
     public function testVerifyValidRsaMessage()
     {
-        $this->assertTrue($this->verifier->isValid($this->sha256Message));
+        $this->assertTrue($this->verifier->isValid($this->message));
     }
 
     public function testVerifyValidRsaMessageAuthorizationHeader()
     {
-        $message = $this->sha256Message->withHeader(
+        $message = $this->message->withHeader(
             'Authorization',
-            "Signature {$this->sha256Message->getHeader('Signature')[0]}");
-        $message = $this->sha256Message->withoutHeader('Signature');
+            "Signature {$this->message->getHeader('Signature')[0]}"
+        );
+        $message = $this->message->withoutHeader('Signature');
 
-        $this->assertTrue($this->verifier->isValid($this->sha256Message));
+        $this->assertTrue($this->verifier->isValid($this->message));
     }
 
     public function testRejectTamperedRsaRequestMethod()
     {
-        $message = $this->sha256Message->withMethod('POST');
+        $message = $this->message->withMethod('POST');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectTamperedRsaDate()
     {
-        $message = $this->sha256Message->withHeader('Date', self::DATE_DIFFERENT);
+        $message = $this->message->withHeader('Date', self::DATE_DIFFERENT);
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectTamperedRsaSignature()
     {
-        $message = $this->sha256Message->withHeader(
+        $message = $this->message->withHeader(
             'Signature',
-            preg_replace('/signature="/', 'signature="x', $this->sha256Message->getHeader('Signature')[0])
+            preg_replace('/signature="/', 'signature="x', $this->message->getHeader('Signature')[0])
         );
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectRsaMessageWithoutSignatureHeader()
     {
-        $message = $this->sha256Message->withoutHeader('Signature');
+        $message = $this->message->withoutHeader('Signature');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectRsaMessageWithGarbageSignatureHeader()
     {
-        $message = $this->sha256Message->withHeader('Signature', 'not="a",valid="signature"');
+        $message = $this->message->withHeader('Signature', 'not="a",valid="signature"');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectRsaMessageWithPartialSignatureHeader()
     {
-        $message = $this->sha256Message->withHeader('Signature', 'keyId="aa",algorithm="bb"');
+        $message = $this->message->withHeader('Signature', 'keyId="aa",algorithm="bb"');
         $this->assertFalse($this->verifier->isValid($message));
     }
 
     public function testRejectsRsaMessageWithUnknownKeyId()
     {
-        $keyStore = new KeyStore(['nope' => 'secret']);
-        $verifier = new Verifier($keyStore);
-        $this->assertFalse($verifier->isValid($this->sha256Message));
+        $verifier = new Verifier(new KeyStore(['nope' => 'secret']));
+        $this->assertFalse($verifier->isValid($this->message));
     }
 
     public function testRejectsRsaMessageMissingSignedHeaders()
     {
-        $message = $this->sha256Message->withoutHeader('Date');
+        $message = $this->message->withoutHeader('Date');
         $this->assertFalse($this->verifier->isValid($message));
     }
 }

@@ -35,10 +35,11 @@ class Context
             $this->setKeyStore($args['keyStore']);
         }
 
-        // algorithm for signing; not necessary for verifying.
+        // algorithm for signing and verifying
         if (isset($args['algorithm'])) {
             $this->algorithmName = $args['algorithm'];
         }
+
         // headers list for signing; not necessary for verifying.
         if (isset($args['headers'])) {
             $this->headers = $args['headers'];

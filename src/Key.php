@@ -21,31 +21,35 @@ class Key
     {
         $this->id = $id;
 
-        if ($privateKeyRes = openssl_pkey_get_private($item)) {
-            if (!openssl_pkey_export($privateKeyRes, $this->privateKey)) {
-                throw new Exception('Failed to export key: '.openssl_error_string());
-            }
-            $this->publicKey = static::getKeyFromOpenSSLResource($privateKeyRes);
-        }
-
-        if (!$this->publicKey) {
-            if ($publicKeyRes = openssl_pkey_get_public($item)) {
-                $this->publicKey = static::getKeyFromOpenSSLResource($publicKeyRes);
-            }
-        }
-
-        // assume $item is a secret
-        if (!$this->publicKey) {
+        if (!$this->initPemKeys($item)) {
             $this->privateKey = $item;
             $this->publicKey = $item;
         }
     }
 
-    private function getKeyFromOpenSSLResource($r)
+    private function initPemKeys($item)
+    {
+        if ($privateKeyRes = openssl_pkey_get_private($item)) {
+            if (!openssl_pkey_export($privateKeyRes, $this->privateKey)) {
+                throw new Exception('Failed to export key: ' . openssl_error_string());
+            }
+            $this->publicKey = static::pemKeyFromOpenSSLResource($privateKeyRes);
+        }
+
+        if (!$this->publicKey) {
+            if ($publicKeyRes = openssl_pkey_get_public($item)) {
+                $this->publicKey = static::pemKeyFromOpenSSLResource($publicKeyRes);
+            }
+        }
+
+        return (bool) $this->publicKey;
+    }
+
+    private function pemKeyFromOpenSSLResource($r)
     {
         $details = openssl_pkey_get_details($r);
         if (!$details) {
-            throw new Exception('Failed to get key details: '.openssl_error_string());
+            throw new Exception('Failed to get key details: ' . openssl_error_string());
         }
 
         return $details['key'];
@@ -62,7 +66,7 @@ class Key
     }
 
     /**
-     * Retrieve Verifying Key - Public Key for Asymmetric/PKI, or shared secret for HMAC.
+     * Get the Verifying Key - Public Key for Asymmetric/PKI, or shared secret for HMAC.
      *
      * @return string Shared Secret or PEM-format Public Key
      */
@@ -72,7 +76,7 @@ class Key
     }
 
     /**
-     * Retrieve Signing Key - Private Key for Asymmetric/PKI, or shared secret for HMAC.
+     * Get the Signing Key - Private Key for Asymmetric/PKI, or shared secret for HMAC.
      *
      * @return string Shared Secret or PEM-format Private Key
      */
