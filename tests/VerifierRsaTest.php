@@ -27,13 +27,13 @@ class VerifierRsaTest extends \PHPUnit\Framework\TestCase
         $this->setUpRsaVerifier();
 
         $sha256SignatureHeader =
-            'keyId="rsa1",algorithm="rsa-sha256",headers="(request-target) date",' .
-            'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WBFDA/a' .
-            'ktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/gj0OVL8s2us' .
-            'G4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsWoMFpv0IjcgBH2V4' .
-            '1AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHftPIp3VpB53zbemlJS9Yw3' .
-            'tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiILK67i/WH9moltJtlfV57TV72c' .
-            'gYtjWa6yqhtFg=="';
+            'keyId="rsa1",algorithm="rsa-sha256",headers="(request-target) date",'
+            .'signature="WGIegQCC3GEwxbkuXtq67CAqeDhkwblxAH2uoDx5kfWurhLRA5WBFDA/a'
+            .'ktsZAjuUoimG1w4CGxSecziER1ez44PBlHP2fCW4ArLgnQgcjkdN2cOf/gj0OVL8s2us'
+            .'G4o4tud/+jjF3nxTxLl3HC+erBKsJakwXbw9kt4Cr028BToVfNXsWoMFpv0IjcgBH2V4'
+            .'1AVlX/mYBMMJAihBCIcpgAcGrrxmG2gkfvSn09wtTttkGHftPIp3VpB53zbemlJS9Yw3'
+            .'tmmHr6cvWSXqQy/bTsEOoQJ2REfn5eiyzsJu3GiOpiILK67i/WH9moltJtlfV57TV72c'
+            .'gYtjWa6yqhtFg=="';
 
         $this->sha256Message = new Request('GET', '/path?query=123', [
             'Date' => 'today',

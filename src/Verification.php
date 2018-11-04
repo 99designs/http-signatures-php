@@ -40,6 +40,7 @@ class Verification
     {
         try {
             $signedString = new SigningString($this->headerList(), $this->message);
+
             return $this->algorithm()->verify(
                 $signedString->string(),
                 $this->parameter('signature'),

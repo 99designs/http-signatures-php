@@ -56,7 +56,7 @@ class RsaAlgorithm implements AlgorithmInterface
             case 'sha256':
                 return OPENSSL_ALGO_SHA256;
             default:
-                throw new Exception($digestName . ' is not a supported hash format');
+                throw new Exception($digestName.' is not a supported hash format');
         }
     }
 }
