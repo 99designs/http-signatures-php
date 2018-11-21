@@ -123,9 +123,10 @@ class BodyDigest
 
     public function isValid($message)
     {
-        return
-            $message->getHeader('Digest')[0] == $this->getDigestHeaderLinefromBody($message->getBody())
-        ;
+        $receivedDigest = $message->getHeader('Digest')[0];
+        $expectedDigest = $this->getDigestHeaderLinefromBody($message->getBody());
+
+        return hash_equals($receivedDigest, $expectedDigest);
     }
 
     /**
