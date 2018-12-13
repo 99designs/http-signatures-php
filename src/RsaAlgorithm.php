@@ -31,10 +31,8 @@ class RsaAlgorithm implements AlgorithmInterface
      */
     public function sign($privateKey, $data)
     {
-         openssl_sign ( $data , $signature , $privateKey, 'RSA-SHA512');
+        openssl_sign($data, $signature, $privateKey, 'RSA-SHA512');
 
-         return $signature;
+        return $signature;
     }
-
-
 }
