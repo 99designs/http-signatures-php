@@ -48,12 +48,12 @@ class Verifier
      */
     public function isValid($message)
     {
-        trigger_error (
-            "http-signatures-php: Verifier->isValid() is deprecated, use isSigned() or isAuthorized() to validate individual signature header",
+        trigger_error(
+            'http-signatures-php: Verifier->isValid() is deprecated, use isSigned() or isAuthorized() to validate individual signature header',
              E_USER_DEPRECATED
         );
         $verification = new Verification($message, $this->keyStore);
 
-        return ( $verification->isAuthorized() && $verification->isSigned() );
+        return  $verification->isAuthorized() && $verification->isSigned();
     }
 }

@@ -125,7 +125,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
      */
     public function testLegacyIsValidEmitsDeprecatedWarning()
     {
-        $this->assertTrue($this->verifier->isValid($this->$signedAndAuthorizedMessage));
+        $this->assertTrue($this->verifier->isValid($this->signedAndAuthorizedMessage));
     }
 
     public function testRejectOnlySignatureHeaderAsAuthorized()
