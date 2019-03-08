@@ -26,11 +26,17 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
      */
     private $authorizedMessage;
 
+    /**
+     * @var Request
+     */
+    private $signedAndAuthorizedMessage;
+
     public function setUp()
     {
         $this->setUpVerifier();
         $this->setUpValidSignedMessage();
         $this->setUpValidAuthorizedMessage();
+        $this->setUpValidSignedAndAuthorizedMessage();
     }
 
     private function setUpVerifier()
@@ -73,6 +79,30 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    private function setUpValidSignedAndAuthorizedMessage()
+    {
+        $authorizationHeader = sprintf(
+            'Signature keyId="%s",algorithm="%s",headers="%s",signature="%s"',
+            'pda',
+            'hmac-sha256',
+            '(request-target) date',
+            'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
+        );
+        $signatureHeader = sprintf(
+            'keyId="%s",algorithm="%s",headers="%s",signature="%s"',
+            'pda',
+            'hmac-sha256',
+            '(request-target) date',
+            'cS2VvndvReuTLy52Ggi4j6UaDqGm9hMb4z0xJZ6adqU='
+        );
+
+        $this->signedAndAuthorizedMessage = new Request('GET', '/path?query=123', [
+            'Date' => self::DATE,
+            'Authorization' => $authorizationHeader,
+            'Signature' => $signatureHeader,
+        ]);
+    }
+
     public function testVerifyValidSignedMessage()
     {
         $this->assertTrue($this->verifier->isSigned($this->signedMessage));
@@ -81,6 +111,21 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
     public function testVerifyValidAuthorizedMessage()
     {
         $this->assertTrue($this->verifier->isAuthorized($this->authorizedMessage));
+    }
+
+    public function testLegacyIsValid()
+    {
+        error_reporting(error_reporting() & ~E_USER_DEPRECATED);
+        $this->assertTrue($this->verifier->isValid($this->signedAndAuthorizedMessage));
+        error_reporting(error_reporting() | E_USER_DEPRECATED);
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function testLegacyIsValidEmitsDeprecatedWarning()
+    {
+        $this->assertTrue($this->verifier->isValid($this->$signedAndAuthorizedMessage));
     }
 
     public function testRejectOnlySignatureHeaderAsAuthorized()
