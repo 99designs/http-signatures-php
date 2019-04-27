@@ -4,12 +4,11 @@ namespace HttpSignatures\tests;
 
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\Context;
+use PHPUnit\Framework\TestCase;
 
-class ContextTest extends \PHPUnit_Framework_TestCase
+class ContextTest extends TestCase
 {
-    private $context;
-
-    public function setUp()
+    protected function setUp()
     {
         $this->noDigestContext = new Context([
             'keys' => ['pda' => 'secret'],
@@ -185,6 +184,6 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         ]));
 
         // assert it works without errors; correctness of results tested elsewhere.
-        $this->assertTrue(is_bool($this->noDigestContext->verifier()->isValid($message)));
+        $this->assertIsBool($this->noDigestContext->verifier()->isValid($message));
     }
 }

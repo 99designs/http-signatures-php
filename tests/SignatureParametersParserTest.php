@@ -3,8 +3,9 @@
 namespace HttpSignatures\tests;
 
 use HttpSignatures\SignatureParametersParser;
+use PHPUnit\Framework\TestCase;
 
-class SignatureParametersParserTest extends \PHPUnit_Framework_TestCase
+class SignatureParametersParserTest extends TestCase
 {
     public function testParseReturnsExpectedAssociativeArray()
     {

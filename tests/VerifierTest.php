@@ -5,8 +5,9 @@ namespace HttpSignatures\tests;
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\KeyStore;
 use HttpSignatures\Verifier;
+use PHPUnit\Framework\TestCase;
 
-class VerifierTest extends \PHPUnit_Framework_TestCase
+class VerifierTest extends TestCase
 {
     const DATE = 'Fri, 01 Aug 2014 13:44:32 -0700';
     const DATE_DIFFERENT = 'Fri, 01 Aug 2014 13:44:33 -0700';
@@ -21,7 +22,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
      */
     private $message;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->setUpVerifier();
         $this->setUpValidMessage();
