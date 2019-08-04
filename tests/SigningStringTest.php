@@ -7,8 +7,9 @@ use HttpSignatures\HeaderList;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use HttpSignatures\SigningString;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use PHPUnit\Framework\TestCase;
 
-class SigningStringTest extends \PHPUnit_Framework_TestCase
+class SigningStringTest extends TestCase
 {
     public function testWithoutQueryString()
     {

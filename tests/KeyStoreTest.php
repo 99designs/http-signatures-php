@@ -3,8 +3,9 @@
 namespace HttpSignatures\tests;
 
 use HttpSignatures\KeyStore;
+use PHPUnit\Framework\TestCase;
 
-class KeyStoreTest extends \PHPUnit_Framework_TestCase
+class KeyStoreTest extends TestCase
 {
     public function testFetchSuccess()
     {

@@ -3,8 +3,9 @@
 namespace HttpSignatures\tests;
 
 use HttpSignatures\HeaderList;
+use PHPUnit\Framework\TestCase;
 
-class HeaderListTest extends \PHPUnit_Framework_TestCase
+class HeaderListTest extends TestCase
 {
     public function testToString()
     {
