@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ContextTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->noDigestContext = new Context([
             'keys' => ['pda' => 'secret'],

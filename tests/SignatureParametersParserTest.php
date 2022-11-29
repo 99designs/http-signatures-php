@@ -23,20 +23,16 @@ class SignatureParametersParserTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \HttpSignatures\SignatureParseException
-     */
     public function testParseThrowsTypedException()
     {
+        $this->expectException(\HttpSignatures\SignatureParseException::class);
         $parser = new SignatureParametersParser('nope');
         $parser->parse();
     }
 
-    /**
-     * @expectedException \HttpSignatures\SignatureParseException
-     */
     public function testParseExceptionForMissingComponents()
     {
+        $this->expectException(\HttpSignatures\SignatureParseException::class);
         $parser = new SignatureParametersParser(
             'keyId="example",algorithm="hmac-sha1",headers="(request-target) date"'
         );

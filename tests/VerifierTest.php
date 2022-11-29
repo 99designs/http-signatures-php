@@ -22,7 +22,7 @@ class VerifierTest extends TestCase
      */
     private $message;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->setUpVerifier();
         $this->setUpValidMessage();
