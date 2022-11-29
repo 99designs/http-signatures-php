@@ -4,8 +4,9 @@ namespace HttpSignatures\tests;
 
 use GuzzleHttp\Psr7\Request;
 use HttpSignatures\HeaderList;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use HttpSignatures\SigningString;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use PHPUnit\Framework\TestCase;
 
@@ -66,11 +67,9 @@ class SigningStringTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \HttpSignatures\Exception
-     */
     public function testSigningStringErrorForMissingHeader()
     {
+        $this->expectException(\HttpSignatures\Exception::class);
         $headerList = new HeaderList(['nope']);
         $ss = new SigningString($headerList, $this->message('/'));
         $ss->string();
@@ -85,10 +84,8 @@ class SigningStringTest extends TestCase
     {
         $symfonyRequest = SymfonyRequest::create($path, 'GET');
         $symfonyRequest->headers->replace(['date' => 'Mon, 28 Jul 2014 15:39:13 -0700']);
-
-        $psr7Factory = new DiactorosFactory();
-        $psrRequest = $psr7Factory->createRequest($symfonyRequest)->withRequestTarget($symfonyRequest->getRequestUri());
-
-        return $psrRequest;
+        $psr17Factory = new Psr17Factory;
+        $psr7Factory = new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+        return $psr7Factory->createRequest($symfonyRequest)->withRequestTarget($symfonyRequest->getRequestUri());
     }
 }

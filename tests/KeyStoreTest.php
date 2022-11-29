@@ -15,11 +15,9 @@ class KeyStoreTest extends TestCase
         $this->assertEquals('secret', $key->secret);
     }
 
-    /**
-     * @expectedException \HttpSignatures\Exception
-     */
     public function testFetchFail()
     {
+        $this->expectException(\HttpSignatures\Exception::class);
         $ks = new KeyStore(['id' => 'secret']);
         $key = $ks->fetch('nope');
     }
